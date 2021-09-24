@@ -1,21 +1,34 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+
+//Screens
+import GreetingScreen from './screens/GreetingScreen/GreetingScreen';
+import SignInScreen from './screens/SignInScreen/SignInScreen';
+import HomeScreen from './screens/HomeScreen/HomeScreen';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [userToken, setUserToken] = useState('USERTOKEN');
+  // const [userToken, setUserToken] = useState();
+
+  const [isSignout, setSignout] = useState(false);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style='auto' />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        {userToken == null ? (
+          <>
+            <Stack.Screen name='GreetingScreen' component={GreetingScreen} />
+            <Stack.Screen name='SignIn' component={SignInScreen} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name='Home' component={HomeScreen} />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
