@@ -2,6 +2,7 @@ const mainPurple = '#6e45e2';
 const lightText = '#fff';
 const grey = '#ccc';
 const black = '#000';
+const subtitle = '#808080';
 
 export default {
   mainColors: {
@@ -12,12 +13,15 @@ export default {
       color: lightText,
     },
   },
-  greyBackground: {
+  lightBackground: {
     background: {
       backgroundColor: grey,
     },
     text: {
       color: black,
+    },
+    subtitle: {
+      color: subtitle,
     },
   },
 };

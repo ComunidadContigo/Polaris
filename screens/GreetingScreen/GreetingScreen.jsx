@@ -36,8 +36,12 @@ const GreetingScreen = ({ navigation }) => {
           </ImageBackground>
         </View>
         <View style={styles.heroTitleSection}>
-          <Text>Contigo Community</Text>
-          <Text>Arrive safely everytime.</Text>
+          <Text style={text.bigTextSize}>Contigo Community</Text>
+          <Text
+            style={[text.mediumTextSize, colors.lightBackground.subtitle]}
+          >
+            Arrive safely everytime.
+          </Text>
         </View>
       </View>
       <View style={styles.buttonWrapper}>
@@ -55,7 +59,7 @@ const GreetingScreen = ({ navigation }) => {
           style={buttons.borderedButton}
           accessibilityLabel='SignUp button'
         >
-          <Text style={[text.normalTextSize, colors.greyBackground.text]}>
+          <Text style={[text.normalTextSize, colors.lightBackground.text]}>
             Sign up
           </Text>
         </TouchableOpacity>
