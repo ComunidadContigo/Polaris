@@ -1,15 +1,16 @@
-import React, { useState }  from 'react';
+import React, { useState, useContext }  from 'react';
 import { View, Text , TextInput, StyleSheet, Button} from 'react-native';
+import { AuthContext } from '../../Components/context';
 
 
 const SignInScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
-  //const { signIn } = useContext(AuthContext);
+  const { signIn } = useContext(AuthContext);
   function submit()
   { 
-    console.log("you did clicked the button and entered function")
+    console.log( "Signin in")
+    signIn()
    
     // const data = { name: username, pass: password };
 
@@ -45,7 +46,7 @@ const SignInScreen = () => {
             <Button 
             title = "Sign in"
             onPress = {() => submit()}
-            />
+      />
 
     </View>
   );
