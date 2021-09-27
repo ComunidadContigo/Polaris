@@ -17,7 +17,6 @@ export default function App() {
 
   const authContext = React.useMemo(() => ({
     signIn: () => {
-      console.log("wopa")
       setUserToken('tok');
       setIsLoading(false);
     },

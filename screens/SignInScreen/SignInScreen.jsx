@@ -1,7 +1,9 @@
 import React, { useState, useContext }  from 'react';
-import { View, Text , TextInput, StyleSheet, Button} from 'react-native';
+import { View, Text , TextInput, StyleSheet, Button, ImageBackground, Image, TouchableOpacity} from 'react-native';
 import { AuthContext } from '../../Components/context';
-
+import colors from '../../styles/colors';
+import text from '../../styles/text';
+import buttons from '../../styles/buttons';
 
 const SignInScreen = () => {
   const [username, setUsername] = useState('');
@@ -31,8 +33,21 @@ const SignInScreen = () => {
     
   }
   return (
+    
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Sign in Screen</Text>
+
+<View style={styles.imageDesign}>
+          <ImageBackground
+            source={require('../../assets/Path21.png')}
+            resizeMode='cover'
+            style={styles.imageBackground}
+          >
+            <Image
+              source={require('../../assets/undraw_dreamer.png')}
+              style={styles.imageHero}
+            ></Image>
+          </ImageBackground>
+        </View>
             <TextInput 
       style = {styles.input} 
       placeholder = "Username"
@@ -43,11 +58,17 @@ const SignInScreen = () => {
       placeholder = "Password"
       onChangeText = {() => setPassword}
       />
-            <Button 
-            title = "Sign in"
-            onPress = {() => submit()}
-      />
-
+    <View style= {styles.buttonWrapper}>
+    <TouchableOpacity
+          onPress={() => submit()}
+          style={[buttons.button, colors.mainColors.background]}
+          accessibilityLabel='LogIn button'
+        >
+          <Text style={[text.normalTextSize, colors.mainColors.text, ]}>
+            Log in
+          </Text>
+          </TouchableOpacity>
+    </View>
     </View>
   );
 };
@@ -58,12 +79,45 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
-    borderWidth:1,
-    borderColor:'#777',
+    borderWidth:3,
+    borderColor:'transparent',
+    borderBottomColor: 'purple',
     padding: 8,
     margin: 10,
-    width: 200,
-  }
+    width: 300,  
+    
+  },
+  buttonWrapper: {
+    flex: 1,
+    height: '30%',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    width: '100%',
+    paddingHorizontal: '8%',
+    paddingBottom: '5%',
+  },
+  imageDesign: {
+    height: '70%',
+    width: '100%',
+    justifyContent: 'flex-end',
+  },
+  imageBackground: {
+    flex: 1,
+    flexDirection: 'row',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'flex-end',
+  
+  },
+  imageHero: {
+    width: 150,
+    height: 150,
+    right: 50,
+    top: 60,
+  },
+  heroTitleSection: {
+    paddingHorizontal: '8%',
+  },
 });
 
 
