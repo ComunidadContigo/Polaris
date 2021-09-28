@@ -1,9 +1,13 @@
 import React, { useState, useContext } from 'react';
-import { View, TextInput, Button } from 'react-native';
+import { View, TextInput, Button, Alert } from 'react-native';
 
 const SignUpScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   const signUp = () => {
     Alert.alert('SignUp Received', 'Navigation should go on here...', [
@@ -17,6 +21,23 @@ const SignUpScreen = () => {
   };
   return (
     <View>
+      <TextInput placeholder='Name' value={name} onChangeText={setName} />
+      <TextInput
+        placeholder='Last Name'
+        value={lastName}
+        onChangeText={setLastName}
+      />
+      <TextInput
+        placeholder='Email'
+        value={email}
+        onChangeText={setEmail}
+      />
+      <TextInput
+        placeholder='Phone Number'
+        value={phoneNumber}
+        onChangeText={setPhoneNumber}
+        keyboardType='numeric'
+      />
       <TextInput
         placeholder='Username'
         value={username}
