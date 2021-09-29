@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Button } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { AuthContext } from '../../Components/context';
+import { AuthContext } from '../../components/context';
 import { useContext } from 'react';
 const HomeScreen = ({ navigation }) => {
   const { signOut } = useContext(AuthContext);
