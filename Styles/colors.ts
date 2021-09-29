@@ -1,4 +1,3 @@
-   
 const mainPurple = '#6e45e2';
 const lightText = '#fff';
 const grey = '#ccc';

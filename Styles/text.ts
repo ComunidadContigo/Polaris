@@ -1,4 +1,3 @@
-
 const normalTextSize = 18;
 const smallTextSize = 16;
 const mediumTextSize = 19;

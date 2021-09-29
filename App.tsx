@@ -15,40 +15,38 @@ export default function App() {
   const [isSignout, setSignout] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const authContext = React.useMemo(() => ({
-    signIn: () => {
-      setUserToken('tok');
-      setIsLoading(false);
-    },
-    signOut: () => {
-      setUserToken("");
-    },
-    signUp: () => {
-      setUserToken('tok');
-    },
-  }) ,[]);
-
-
+  const authContext = React.useMemo(
+    () => ({
+      signIn: () => {
+        setUserToken('tok');
+        setIsLoading(false);
+      },
+      signOut: () => {
+        setUserToken('');
+      },
+      signUp: () => {
+        setUserToken('tok');
+      },
+    }),
+    []
+  );
 
   return (
-    <AuthContext.Provider value = {authContext}>
-    <NavigationContainer>
-      <Stack.Navigator>
-        {userToken  == ""? (
-          <>
-            <Stack.Screen name='GreetingScreen' component={GreetingScreen} />
-            <Stack.Screen name='SignIn' component={SignInScreen} />
-            
-          </>
-        ) : (
-          <>
-            <Stack.Screen name='Home' component={HomeScreen} />
-          
-          </>
-        )}
-       
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AuthContext.Provider value={authContext}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          {userToken == '' ? (
+            <>
+              <Stack.Screen name='GreetingScreen' component={GreetingScreen} />
+              <Stack.Screen name='SignIn' component={SignInScreen} />
+            </>
+          ) : (
+            <>
+              <Stack.Screen name='Home' component={HomeScreen} />
+            </>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
     </AuthContext.Provider>
   );
 }
