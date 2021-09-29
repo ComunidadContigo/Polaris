@@ -5,8 +5,9 @@ import { NavigationContainer } from '@react-navigation/native';
 //Screens
 import GreetingScreen from './screens/GreetingScreen/GreetingScreen';
 import SignInScreen from './screens/SignInScreen/SignInScreen';
+import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import HomeScreen from './screens/HomeScreen/HomeScreen';
-import { AuthContext } from './Components/context';
+import { AuthContext } from './components/context';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -35,10 +36,19 @@ export default function App() {
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
         <Stack.Navigator>
+          {
+            // screenOptions={{
+            //   headerShown: false,
+            // }}
+          }
           {userToken == '' ? (
             <>
-              <Stack.Screen name='GreetingScreen' component={GreetingScreen} />
+              <Stack.Screen
+                name='GreetingScreen'
+                component={GreetingScreen}
+              />
               <Stack.Screen name='SignIn' component={SignInScreen} />
+              <Stack.Screen name='SignUp' component={SignUpScreen} />
             </>
           ) : (
             <>
