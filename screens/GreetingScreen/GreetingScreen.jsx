@@ -1,16 +1,10 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  ImageBackground,
-  Image,
-} from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import colors from '../../styles/colors';
 import text from '../../styles/text';
 import buttons from '../../styles/buttons';
+import GreetingGraphics from '../../components/GreetingGraphics';
 
 const GreetingScreen = ({ navigation }) => {
   const navigateToLogIn = () => {
@@ -24,16 +18,7 @@ const GreetingScreen = ({ navigation }) => {
     <View style={styles.container}>
       <View>
         <View style={styles.greetingDesign}>
-          <ImageBackground
-            source={require('../../assets/Path21.png')}
-            resizeMode='cover'
-            style={styles.imageBackground}
-          >
-            <Image
-              source={require('../../assets/undraw_dreamer.png')}
-              style={styles.imageHero}
-            ></Image>
-          </ImageBackground>
+          <GreetingGraphics />
         </View>
         <View style={styles.heroTitleSection}>
           <Text style={text.bigTextSize}>Contigo Community</Text>
@@ -90,19 +75,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: '8%',
     paddingBottom: '5%',
-  },
-  imageBackground: {
-    flex: 1,
-    flexDirection: 'row',
-    width: '100%',
-    height: '100%',
-    justifyContent: 'flex-end',
-  },
-  imageHero: {
-    width: 150,
-    height: 150,
-    right: 50,
-    top: 50,
   },
   heroTitleSection: {
     paddingHorizontal: '8%',
