@@ -9,10 +9,10 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import { AuthContext } from '../../Components/context';
-import colors from '../../Styles/colors';
-import text from '../../Styles/text';
-import buttons from '../../Styles/buttons';
+import { AuthContext } from '../../components/context';
+import colors from '../../styles/colors';
+import text from '../../styles/text';
+import buttons from '../../styles/buttons';
 
 const SignInScreen = () => {
   const [username, setUsername] = useState('');
@@ -40,7 +40,9 @@ const SignInScreen = () => {
     // });
   }
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View
+      style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+    >
       <View style={styles.imageDesign}>
         <ImageBackground
           source={require('../../assets/Path21.png')}
