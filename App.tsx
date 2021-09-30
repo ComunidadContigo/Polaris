@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -16,7 +16,7 @@ export default function App() {
   const [isSignout, setSignout] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const authContext = React.useMemo(
+  const authContext = useMemo(
     () => ({
       signIn: () => {
         setUserToken('tok');

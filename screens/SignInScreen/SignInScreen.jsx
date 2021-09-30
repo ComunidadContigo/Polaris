@@ -13,12 +13,13 @@ import { AuthContext } from '../../components/context';
 import colors from '../../styles/colors';
 import text from '../../styles/text';
 import buttons from '../../styles/buttons';
+import GreetingGraphics from '../../components/GreetingGraphics';
 
 const SignInScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { signIn } = useContext(AuthContext);
-  function submit() {
+  const submit = () => {
     console.log('Signin in');
     signIn(username);
 
@@ -38,23 +39,15 @@ const SignInScreen = () => {
     // .catch((error) => {
     //   console.error('Error:', error);
     // });
-  }
+  };
   return (
     <View
       style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
     >
-      <View style={styles.imageDesign}>
-        <ImageBackground
-          source={require('../../assets/Path21.png')}
-          resizeMode='cover'
-          style={styles.imageBackground}
-        >
-          <Image
-            source={require('../../assets/undraw_dreamer.png')}
-            style={styles.imageHero}
-          ></Image>
-        </ImageBackground>
+      <View style={styles.greetingDesign}>
+        <GreetingGraphics />
       </View>
+
       <TextInput
         style={styles.input}
         placeholder='Username'
@@ -89,7 +82,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: 'transparent',
     borderBottomColor: 'purple',
-    padding: 8,
+    padding: 4,
     margin: 10,
     width: 300,
   },
@@ -102,23 +95,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: '8%',
     paddingBottom: '5%',
   },
-  imageDesign: {
+  greetingDesign: {
     height: '70%',
     width: '100%',
     justifyContent: 'flex-end',
   },
-  imageBackground: {
-    flex: 1,
-    flexDirection: 'row',
+  imageDesign: {
+    height: '70%',
     width: '100%',
-    height: '100%',
     justifyContent: 'flex-end',
-  },
-  imageHero: {
-    width: 150,
-    height: 150,
-    right: 50,
-    top: 60,
   },
   heroTitleSection: {
     paddingHorizontal: '8%',
