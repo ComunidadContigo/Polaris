@@ -9,6 +9,8 @@ import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import HomeScreen from './screens/HomeScreen/HomeScreen';
 import { AuthContext } from './components/context';
 import TabsScreen from './screens/HomeScreen/TabsScreen';
+import { Header } from 'react-native/Libraries/NewAppScreen';
+import { Title } from 'react-native-paper';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -36,7 +38,7 @@ export default function App() {
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
           {
             // screenOptions={{
             //   headerShown: false,
