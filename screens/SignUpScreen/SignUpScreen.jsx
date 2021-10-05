@@ -1,5 +1,17 @@
 import React, { useState, useContext } from 'react';
-import { View, TextInput, Button, Alert } from 'react-native';
+import {
+  View,
+  TextInput,
+  Alert,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
+import GreetingDesign from '../../components/GreetingGraphics';
+import forms from '../../styles/forms';
+import buttons from '../../styles/buttons';
+import colors from '../../styles/colors';
+import text from '../../styles/text';
 
 const SignUpScreen = () => {
   const [username, setUsername] = useState('');
@@ -20,41 +32,85 @@ const SignUpScreen = () => {
     ]);
   };
   return (
-    <View>
-      <TextInput placeholder='Name' value={name} onChangeText={setName} />
-      <TextInput
-        placeholder='Last Name'
-        value={lastName}
-        onChangeText={setLastName}
-      />
-      <TextInput
-        placeholder='Email'
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        placeholder='Phone Number'
-        value={phoneNumber}
-        onChangeText={setPhoneNumber}
-        keyboardType='numeric'
-      />
-      <TextInput
-        placeholder='Username'
-        value={username}
-        onChangeText={setUsername}
-      />
-      <TextInput
-        placeholder='Password'
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button
-        title='Sign up'
-        onPress={() => signUp({ username, password })}
-      />
+    <View style={styles.container}>
+      <View style={styles.greetingDesign}>
+        <GreetingDesign />
+      </View>
+      <View style={styles.buttonWrapper}>
+        <TextInput
+          style={forms.inputField}
+          placeholder='Name'
+          value={name}
+          onChangeText={setName}
+        />
+        <TextInput
+          style={forms.inputField}
+          placeholder='Last Name'
+          value={lastName}
+          onChangeText={setLastName}
+        />
+        <TextInput
+          style={forms.inputField}
+          placeholder='Email'
+          value={email}
+          onChangeText={setEmail}
+        />
+        <TextInput
+          style={forms.inputField}
+          placeholder='Phone Number'
+          value={phoneNumber}
+          onChangeText={setPhoneNumber}
+          keyboardType='numeric'
+        />
+        <TextInput
+          style={forms.inputField}
+          placeholder='Username'
+          value={username}
+          onChangeText={setUsername}
+        />
+        <TextInput
+          style={forms.inputField}
+          placeholder='Password'
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <TouchableOpacity
+          style={[buttons.button, colors.mainColors.background]}
+          onPress={() => signUp({ username, password })}
+        >
+          <Text style={[text.normalTextSize, colors.mainColors.text]}>
+            Signup
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    height: '100%',
+    minHeight: 600,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+  },
+  greetingDesign: {
+    height: '30%',
+    width: '100%',
+    justifyContent: 'flex-start',
+  },
+  buttonWrapper: {
+    flex: 1,
+    height: '70%',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    width: '100%',
+    paddingHorizontal: '8%',
+    paddingBottom: '5%',
+  },
+});
 
 export default SignUpScreen;
