@@ -7,15 +7,6 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { phoneRegExp } from '../../util/constants';
 
-interface User {
-  name: string;
-  lastName: string;
-  email: string;
-  phone: number;
-  username: string;
-  password: string;
-}
-
 const SignUpSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, 'Too Short!')
@@ -33,7 +24,12 @@ const SignUpSchema = Yup.object().shape({
     .required('Required'),
 });
 
-const SignUpScreen: FC = () => {
+interface Props {
+  navigation: any;
+}
+
+const SignUpScreen = (props: Props) => {
+  const { navigation } = props;
   const {
     handleChange,
     handleSubmit,
@@ -50,8 +46,7 @@ const SignUpScreen: FC = () => {
       phone: null,
       password: '',
     },
-    onSubmit: (values) =>
-      alert(`Email: ${values.email}, Password: ${values.password}`),
+    onSubmit: () => navigation.navigate('SignIn'),
   });
 
   return (
