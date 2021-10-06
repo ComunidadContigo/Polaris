@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Button, SafeAreaView, StyleSheet } from 'react-native';
+import {
+  View,
+  Button,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { AuthContext } from '../../components/context';
 import { useContext } from 'react';
@@ -10,7 +16,17 @@ import {
   Text,
   TouchableRipple,
 } from 'react-native-paper';
+import colors from '../../styles/colors';
+import text from '../../styles/text';
+import buttons from '../../styles/buttons';
+import EditProfile from './Edit Profile/EditProfileScreen';
+
 const ProfileScreen = ({ navigation }) => {
+  const navigateToEditProfile = () => {
+    navigation.navigate('EditProfile');
+    console.log('You pressed Edit');
+  };
+
   const { signOut } = useContext(AuthContext);
   return (
     <SafeAreaView style={styles.container}>
@@ -20,9 +36,30 @@ const ProfileScreen = ({ navigation }) => {
           <View>
             <Title>Name LastName</Title>
             <Caption>Username</Caption>
+            <Caption>Verified</Caption>
           </View>
-          <Button title='Edit Profile' />
-          <Button title='Sign Out' onPress={() => signOut()} />
+        </View>
+        <View style={styles.editButtons}>
+          <TouchableOpacity
+            onPress={navigateToEditProfile}
+            style={[buttons.button, colors.mainColors.background]}
+            accessibilityLabel='Edit Profile'
+          >
+            <Text style={[text.mediumTextSize, colors.mainColors.text]}>
+              Edit Profile
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => signOut()}
+            style={[buttons.button, colors.lightBackground.background]}
+            accessibilityLabel='Sign Out button'
+          >
+            <Text
+              style={[text.mediumTextSize, colors.lightBackground.text]}
+            >
+              Sign Out
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -32,6 +69,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+  },
+  editButtons: {
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    width: '45%',
     justifyContent: 'flex-start',
   },
   userInfo: {

@@ -7,6 +7,7 @@ import GreetingScreen from './screens/GreetingScreen/GreetingScreen';
 import SignInScreen from './screens/SignInScreen/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import HomeScreen from './screens/HomeScreen/HomeScreen';
+import EditProfileScreen from './screens/HomeScreen/Edit Profile/EditProfileScreen';
 import { AuthContext } from './components/context';
 import TabsScreen from './screens/HomeScreen/TabsScreen';
 import { Header } from 'react-native/Libraries/NewAppScreen';
@@ -21,7 +22,10 @@ export default function App() {
 
   const authContext = useMemo(
     () => ({
-      signIn: () => {
+      signIn: (username: any, password: any) => {
+        console.log(username);
+        console.log(password);
+        //if username y password matchea db pues setea token pa poder entrar
         setUserToken('tok');
         setIsLoading(false);
       },
@@ -59,6 +63,10 @@ export default function App() {
                 //<Stack.Screen name='Home' component={HomeScreen} />
               }
               <Stack.Screen name='TabsScreen' component={TabsScreen} />
+              <Stack.Screen
+                name='EditProfile'
+                component={EditProfileScreen}
+              />
             </>
           )}
         </Stack.Navigator>
