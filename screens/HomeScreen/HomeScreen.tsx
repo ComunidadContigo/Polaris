@@ -1,14 +1,7 @@
-import React from 'react';
-import { View, Text, Button } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { AuthContext } from '../../components/context';
-import { useContext } from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
+import React, { FC } from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
 import colors from '../../styles/colors';
-// import HomeScreen from './HomeScreen';
 import ProfileScreen from '../ProfileScreens/ProfileScreen';
 import MapScreen from '../MapScreen/MapScreen';
 import CommunityScreen from '../CommunityScreen/CommunityScreen';
@@ -16,8 +9,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 const Tab = createMaterialBottomTabNavigator();
 
-const HomeScreen = ({ navigation }) => {
-  const { signOut } = useContext(AuthContext);
+const HomeScreen: FC = (): JSX.Element => {
   return (
     <Tab.Navigator
       initialRouteName='Home'
