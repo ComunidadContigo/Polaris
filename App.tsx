@@ -6,10 +6,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import GreetingScreen from './screens/GreetingScreen/GreetingScreen';
 import SignInScreen from './screens/SignInScreen/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
-import HomeScreen from './screens/HomeScreen/HomeScreen';
-import EditProfileScreen from './screens/HomeScreen/Edit Profile/EditProfileScreen';
+// import HomeScreen from './screens/HomeScreen/HomeScreen';
+import EditProfileScreen from './screens/ProfileScreens/EditProfileScreen';
 import { AuthContext } from './components/context';
-import TabsScreen from './screens/HomeScreen/TabsScreen';
+import HomeScreen from './screens/HomeScreen/HomeScreen';
 import { Header } from 'react-native/Libraries/NewAppScreen';
 import { Title } from 'react-native-paper';
 const Stack = createNativeStackNavigator();
@@ -43,11 +43,6 @@ export default function App() {
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {
-            // screenOptions={{
-            //   headerShown: false,
-            // }}
-          }
           {userToken == '' ? (
             <>
               <Stack.Screen
@@ -59,10 +54,7 @@ export default function App() {
             </>
           ) : (
             <>
-              {
-                //<Stack.Screen name='Home' component={HomeScreen} />
-              }
-              <Stack.Screen name='TabsScreen' component={TabsScreen} />
+              <Stack.Screen name='Home' component={HomeScreen} />
               <Stack.Screen
                 name='EditProfile'
                 component={EditProfileScreen}

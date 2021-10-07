@@ -10,9 +10,9 @@ import {
 import { StatusBar } from 'expo-status-bar';
 //import { AuthContext } from '../../components/context';
 import { useContext } from 'react';
-import colors from '../../../styles/colors';
-import text from '../../../styles/text';
-import buttons from '../../../styles/buttons';
+import colors from '../../styles/colors';
+import text from '../../styles/text';
+import buttons from '../../styles/buttons';
 import { Avatar } from 'react-native-paper';
 
 const EditProfileScreen = ({}) => {

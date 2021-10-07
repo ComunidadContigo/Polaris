@@ -19,7 +19,7 @@ import {
 import colors from '../../styles/colors';
 import text from '../../styles/text';
 import buttons from '../../styles/buttons';
-import EditProfile from './Edit Profile/EditProfileScreen';
+import EditProfile from './EditProfileScreen';
 
 const ProfileScreen = ({ navigation }) => {
   const navigateToEditProfile = () => {
