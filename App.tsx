@@ -6,8 +6,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import GreetingScreen from './screens/GreetingScreen/GreetingScreen';
 import SignInScreen from './screens/SignInScreen/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
-import HomeScreen from './screens/HomeScreen/HomeScreen';
+// import HomeScreen from './screens/HomeScreen/HomeScreen';
+import EditProfileScreen from './screens/ProfileScreens/EditProfileScreen';
 import { AuthContext } from './components/context';
+import HomeScreen from './screens/HomeScreen/HomeScreen';
+import { Header } from 'react-native/Libraries/NewAppScreen';
+import { Title } from 'react-native-paper';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -18,7 +22,10 @@ export default function App() {
 
   const authContext = useMemo(
     () => ({
-      signIn: () => {
+      signIn: (username: any, password: any) => {
+        console.log(username);
+        console.log(password);
+        //if username y password matchea db pues setea token pa poder entrar
         setUserToken('tok');
         setIsLoading(false);
       },
@@ -35,12 +42,7 @@ export default function App() {
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
-        <Stack.Navigator>
-          {
-            // screenOptions={{
-            //   headerShown: false,
-            // }}
-          }
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
           {userToken == '' ? (
             <>
               <Stack.Screen
@@ -53,6 +55,10 @@ export default function App() {
           ) : (
             <>
               <Stack.Screen name='Home' component={HomeScreen} />
+              <Stack.Screen
+                name='EditProfile'
+                component={EditProfileScreen}
+              />
             </>
           )}
         </Stack.Navigator>

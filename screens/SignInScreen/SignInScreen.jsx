@@ -19,9 +19,10 @@ const SignInScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { signIn } = useContext(AuthContext);
-  const submit = () => {
+  const submit = (username, password) => {
     console.log('Signin in');
-    signIn(username);
+
+    signIn(username, password);
 
     // const data = { name: username, pass: password };
 
@@ -51,16 +52,16 @@ const SignInScreen = () => {
       <TextInput
         style={styles.input}
         placeholder='Username'
-        onChangeText={() => setUsername}
+        onChangeText={(val) => setUsername(val)}
       />
       <TextInput
         style={styles.input}
         placeholder='Password'
-        onChangeText={() => setPassword}
+        onChangeText={(val) => setPassword(val)}
       />
       <View style={styles.buttonWrapper}>
         <TouchableOpacity
-          onPress={() => submit()}
+          onPress={() => submit(username, password)}
           style={[buttons.button, colors.mainColors.background]}
           accessibilityLabel='LogIn button'
         >
