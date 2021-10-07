@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import colors from '../../styles/colors';
 import text from '../../styles/text';
-import buttons from '../../styles/buttons';
+import Button from '../../components/Button';
 import GreetingGraphics from '../../components/GreetingGraphics';
 
 const GreetingScreen = ({ navigation }) => {
@@ -30,24 +30,8 @@ const GreetingScreen = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.buttonWrapper}>
-        <TouchableOpacity
-          onPress={navigateToLogIn}
-          style={[buttons.button, colors.mainColors.background]}
-          accessibilityLabel='LogIn button'
-        >
-          <Text style={[text.normalTextSize, colors.mainColors.text]}>
-            Log in
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={navigateToSignUp}
-          style={buttons.borderedButton}
-          accessibilityLabel='SignUp button'
-        >
-          <Text style={[text.normalTextSize, colors.lightBackground.text]}>
-            Sign up
-          </Text>
-        </TouchableOpacity>
+        <Button label='LogIn' onPress={navigateToLogIn} />
+        <Button label='SignUp' onPress={navigateToSignUp} />
       </View>
       <StatusBar style='auto' />
     </View>
