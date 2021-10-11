@@ -58,7 +58,6 @@ const SignUpScreen = (props: Props) => {
         method: 'POST',
         body: JSON.stringify(values),
       };
-      console.log(`${envs?.DEV_USER_SERVICE_URL}/user`, settings);
       await fetch(`${envs?.DEV_USER_SERVICE_URL}/user`, settings);
     } catch (e) {
       console.log(e);
