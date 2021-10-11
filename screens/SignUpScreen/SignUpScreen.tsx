@@ -1,11 +1,14 @@
 import React, { useContext, FC } from 'react';
 import { View, StyleSheet } from 'react-native';
 import UserTextInput from '../../components/UserTextInput';
+import BirthTextInput from '../../components/BirthTextInput';
 import Button from '../../components/Button';
 import GreetingDesign from '../../components/GreetingGraphics';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { phoneRegExp } from '../../util/constants';
+import SelectDropdown from 'react-native-select-dropdown';
+import { mainPurple } from '../../styles/colors';
 
 const SignUpSchema = Yup.object().shape({
   name: Yup.string()
@@ -22,6 +25,7 @@ const SignUpSchema = Yup.object().shape({
     .min(2, 'Too Short!')
     .max(10, 'Too Long!')
     .required('Required'),
+  birthdate: Yup.string().min(10).required('Required'),
 });
 
 interface Props {
@@ -45,10 +49,21 @@ const SignUpScreen = (props: Props) => {
       email: '',
       phone: null,
       password: '',
+      gender: '',
+      birthday: '',
+      birthmonth: '',
+      birthyear: '',
     },
     onSubmit: () => navigation.navigate('SignIn'),
   });
-
+  const checker = () => console.log(values);
+  const genders = [
+    'Male',
+    'Female',
+    'Non-Binary',
+    'Other',
+    'Prefer not to Answer',
+  ];
   return (
     <View style={styles.container}>
       <View style={styles.greetingDesign}>
@@ -122,6 +137,39 @@ const SignUpScreen = (props: Props) => {
           error={errors.password}
           touched={touched.password}
         />
+
+        <BirthTextInput
+          handleChange={handleChange}
+          icon='birthday-cake'
+          autoCapitalize='none'
+          keyboardType='numeric'
+          keyboardAppearance='dark'
+          returnKeyType='next'
+          returnKeyLabel='next'
+          //onChangeText={handleChange('birthdate')}
+          onBlur={handleBlur('birthdate')}
+          //error={errors.birthdate}
+          //touched={touched.birthdate}
+        />
+
+        <SelectDropdown
+          rowStyle={styles.birthbuttonWrapper}
+          rowTextStyle={styles.dropdownText}
+          dropdownStyle={styles.dropdownWrapper}
+          buttonStyle={styles.dropInput}
+          buttonTextStyle={styles.dropbuttonText}
+          defaultButtonText='Enter Gender'
+          data={genders}
+          onSelect={(selectedItem, index) => {
+            console.log(selectedItem, index);
+          }}
+          buttonTextAfterSelection={(selectedItem, index) => {
+            return selectedItem;
+          }}
+          rowTextForSelection={(item, index) => {
+            return item;
+          }}
+        />
         <Button label='Sign Up' onPress={handleSubmit} />
       </View>
     </View>
@@ -150,6 +198,36 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: '8%',
     paddingBottom: '5%',
+  },
+  birthbuttonWrapper: {
+    flex: 1,
+    height: '70%',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    width: '100%',
+    paddingHorizontal: '8%',
+    paddingBottom: '5%',
+  },
+  dropInput: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 48,
+    width: '100%',
+    borderRadius: 8,
+    borderWidth: 2,
+    padding: 8,
+    borderColor: mainPurple,
+  },
+  dropbuttonText: {
+    fontSize: 14,
+    alignItems: 'center',
+  },
+  dropdownText: {
+    alignItems: 'flex-start',
+  },
+
+  dropdownWrapper: {
+    height: 210,
   },
 });
 
