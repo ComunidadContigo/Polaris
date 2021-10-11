@@ -47,10 +47,25 @@ const SignUpScreen = (props: Props) => {
       phone: null,
       password: '',
     },
-    onSubmit: () => navigation.navigate('SignIn'),
+    onSubmit: () => {
+      handleSignUp();
+    },
   });
 
-  console.log('URL Secret: ', envs);
+  const handleSignUp = async () => {
+    try {
+      const settings = {
+        method: 'POST',
+        body: JSON.stringify(values),
+      };
+      console.log(`${envs?.DEV_USER_SERVICE_URL}/user`, settings);
+      await fetch(`${envs?.DEV_USER_SERVICE_URL}/user`, settings);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      navigation.navigate('SignIn');
+    }
+  };
 
   return (
     <View style={styles.container}>
