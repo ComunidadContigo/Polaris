@@ -9,6 +9,8 @@ import * as Yup from 'yup';
 import { phoneRegExp } from '../../util/constants';
 import SelectDropdown from 'react-native-select-dropdown';
 import { mainPurple } from '../../styles/colors';
+import envs from '../../config/environment';
+
 
 const SignUpSchema = Yup.object().shape({
   name: Yup.string()
@@ -54,8 +56,11 @@ const SignUpScreen = (props: Props) => {
       birthmonth: '',
       birthyear: '',
     },
-    onSubmit: () => navigation.navigate('SignIn'),
+    onSubmit: () => {
+      handleSignUp();
+    },
   });
+
   const checker = () => console.log(values);
   const genders = [
     'Male',
@@ -64,6 +69,20 @@ const SignUpScreen = (props: Props) => {
     'Other',
     'Prefer not to Answer',
   ];
+  const handleSignUp = async () => {
+    try {
+      const settings = {
+        method: 'POST',
+        body: JSON.stringify(values),
+      };
+      await fetch(`${envs?.DEV_USER_SERVICE_URL}/user`, settings);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      navigation.navigate('SignIn');
+    }
+  };
+  
   return (
     <View style={styles.container}>
       <View style={styles.greetingDesign}>
