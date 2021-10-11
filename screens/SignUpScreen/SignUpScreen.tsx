@@ -10,6 +10,8 @@ import { phoneRegExp } from '../../util/constants';
 import SelectDropdown from 'react-native-select-dropdown';
 import { mainPurple } from '../../styles/colors';
 import envs from '../../config/environment';
+import handleSignUp from '../../services/httpService';
+import User from '../../models/user.model';
 
 const SignUpSchema = Yup.object().shape({
   name: Yup.string()
@@ -47,7 +49,7 @@ const SignUpScreen = (props: Props) => {
       name: '',
       lastName: '',
       email: '',
-      phone: null,
+      phone: '',
       password: '',
       gender: '',
       birthday: '',
@@ -55,7 +57,7 @@ const SignUpScreen = (props: Props) => {
       birthyear: '',
     },
     onSubmit: () => {
-      handleSignUp();
+      signupHandler();
     },
   });
 
@@ -67,18 +69,20 @@ const SignUpScreen = (props: Props) => {
     'Other',
     'Prefer not to Answer',
   ];
-  const handleSignUp = async () => {
-    try {
-      const settings = {
-        method: 'POST',
-        body: JSON.stringify(values),
-      };
-      await fetch(`${envs?.DEV_USER_SERVICE_URL}/user`, settings);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      navigation.navigate('SignIn');
-    }
+  const signupHandler = () => {
+    const user: User = {
+      first_name: values.name,
+      email: values.email,
+      password: values.password,
+      phone_number: values.phone,
+      gender: values.gender,
+      last_name: values.lastName,
+      birth_date: new Date(
+        values.birthday + '/' + values.birthmonth + '/' + values.birthyear
+      ),
+    };
+    handleSignUp(user);
+    navigation.navigate('SignIn');
   };
 
   return (
