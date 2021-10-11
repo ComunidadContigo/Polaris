@@ -6,6 +6,7 @@ import GreetingDesign from '../../components/GreetingGraphics';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { phoneRegExp } from '../../util/constants';
+import envs from '../../config/environment';
 
 const SignUpSchema = Yup.object().shape({
   name: Yup.string()
@@ -46,8 +47,24 @@ const SignUpScreen = (props: Props) => {
       phone: null,
       password: '',
     },
-    onSubmit: () => navigation.navigate('SignIn'),
+    onSubmit: () => {
+      handleSignUp();
+    },
   });
+
+  const handleSignUp = async () => {
+    try {
+      const settings = {
+        method: 'POST',
+        body: JSON.stringify(values),
+      };
+      await fetch(`${envs?.DEV_USER_SERVICE_URL}/user`, settings);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      navigation.navigate('SignIn');
+    }
+  };
 
   return (
     <View style={styles.container}>
