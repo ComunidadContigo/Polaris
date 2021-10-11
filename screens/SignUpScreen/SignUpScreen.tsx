@@ -6,6 +6,7 @@ import GreetingDesign from '../../components/GreetingGraphics';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { phoneRegExp } from '../../util/constants';
+import envs from '../../config/environment';
 
 const SignUpSchema = Yup.object().shape({
   name: Yup.string()
@@ -48,6 +49,8 @@ const SignUpScreen = (props: Props) => {
     },
     onSubmit: () => navigation.navigate('SignIn'),
   });
+
+  console.log('URL Secret: ', envs);
 
   return (
     <View style={styles.container}>
