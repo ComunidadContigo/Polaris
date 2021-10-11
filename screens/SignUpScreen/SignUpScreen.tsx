@@ -11,7 +11,6 @@ import SelectDropdown from 'react-native-select-dropdown';
 import { mainPurple } from '../../styles/colors';
 import envs from '../../config/environment';
 
-
 const SignUpSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, 'Too Short!')
@@ -27,7 +26,6 @@ const SignUpSchema = Yup.object().shape({
     .min(2, 'Too Short!')
     .max(10, 'Too Long!')
     .required('Required'),
-  birthdate: Yup.string().min(10).required('Required'),
 });
 
 interface Props {
@@ -82,7 +80,7 @@ const SignUpScreen = (props: Props) => {
       navigation.navigate('SignIn');
     }
   };
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.greetingDesign}>
