@@ -5,13 +5,20 @@ import colors from '../../styles/colors';
 import text from '../../styles/text';
 import Button from '../../components/Button';
 import GreetingGraphics from '../../components/GreetingGraphics';
+import { StackNavigationProp } from '../../routing/types';
+import { MainRoutes } from '../../routing/StackRoutes';
 
-const GreetingScreen = ({ navigation }) => {
+interface Props {
+  navigation: StackNavigationProp<MainRoutes.Greeting>;
+}
+
+const GreetingScreen = (props: Props) => {
+  const { navigation } = props;
   const navigateToLogIn = () => {
-    navigation.navigate('SignIn');
+    navigation.navigate(MainRoutes.LogIn);
   };
   const navigateToSignUp = () => {
-    navigation.navigate('SignUp');
+    navigation.navigate(MainRoutes.SignUp);
   };
 
   return (
@@ -30,10 +37,10 @@ const GreetingScreen = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.buttonWrapper}>
-        <Button label='LogIn' onPress={navigateToLogIn} />
-        <Button label='SignUp' onPress={navigateToSignUp} />
+        <Button label="LogIn" onPress={navigateToLogIn} />
+        <Button label="SignUp" onPress={navigateToSignUp} />
       </View>
-      <StatusBar style='auto' />
+      <StatusBar />
     </View>
   );
 };

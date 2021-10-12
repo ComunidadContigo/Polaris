@@ -1,14 +1,18 @@
+/* eslint-disable indent */
+/* eslint-disable no-nested-ternary */
 import * as React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
-import { mainPurple, errorRed } from '../styles/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { mainPurple, errorRed } from '../styles/colors';
 
-interface props {
+interface Props {
   icon: string;
+  error: string | undefined;
+  touched: boolean | undefined;
   [x: string]: any; // For the ...otherProps
 }
 
-const UserTextInput = (props: props) => {
+const UserTextInput = (props: Props) => {
   const { icon, error, touched, ...otherProps } = props;
   const validationColor = !touched
     ? mainPurple
