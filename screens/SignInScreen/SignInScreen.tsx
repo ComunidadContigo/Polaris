@@ -1,33 +1,47 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
 import { AuthContext } from '../../components/context';
 import GreetingGraphics from '../../components/GreetingGraphics';
 import Button from '../../components/Button';
+import envs from '../../config/environment';
+
+const SignInSchema = Yup.object().shape({
+  email: Yup.string().email('Invalid email').required('Required'),
+  password: Yup.string()
+    .min(2, 'Too Short!')
+    .max(10, 'Too Long!')
+    .required('Required'),
+});
 
 const SignInScreen = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const { signIn } = useContext(AuthContext);
-  const submit = () => {
-    signIn(username, password);
+  const { handleChange, handleSubmit, handleBlur, values } = useFormik({
+    validationSchema: SignInSchema,
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    onSubmit: () => {
+      handleSignIn();
+    },
+  });
 
-    // const data = { name: username, pass: password };
-
-    // fetch('https://example.com/profile', {
-    //   method: 'POST', // or 'PUT'
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(data),
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //   console.log('Success:', data);
-    // })
-    // .catch((error) => {
-    //   console.error('Error:', error);
-    // });
+  const handleSignIn = async () => {
+    try {
+      const settings = {
+        method: 'POST',
+        body: JSON.stringify(values),
+      };
+      await fetch(`${envs?.DEV_USER_SERVICE_URL}/user`, settings);
+      // find Route for Sign In
+    } catch (e) {
+      console.log(e);
+    } finally {
+      useContext(AuthContext);
+    }
   };
+
   return (
     <View
       style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
@@ -38,16 +52,18 @@ const SignInScreen = () => {
 
       <TextInput
         style={styles.input}
-        placeholder="Username"
-        onChangeText={(val) => setUsername(val)}
+        placeholder="Email"
+        onChangeText={handleChange('email')}
+        onBlur={handleBlur('email')}
       />
       <TextInput
         style={styles.input}
         placeholder="Password"
-        onChangeText={(val) => setPassword(val)}
+        onChangeText={handleChange('password')}
+        onBlur={handleBlur('password')}
       />
       <View style={styles.buttonWrapper}>
-        <Button onPress={submit} label="LogIn" />
+        <Button onPress={handleSubmit} label="LogIn" />
       </View>
     </View>
   );

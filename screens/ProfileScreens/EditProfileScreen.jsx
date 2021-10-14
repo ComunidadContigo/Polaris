@@ -46,10 +46,11 @@ const EditProfileScreen = () => (
     <View style={[styles.container2]}>
       <Avatar.Image size={85} />
       <Text>Change Profile Picture?</Text>
-      <Text>Name</Text>
-      <Text>Username</Text>
+      <Text>Edit First Name</Text>
+      <Text>Edit Last Name</Text>
+      <Text>Email</Text>
       <Text>Password</Text>
-      <Text>OTher Stuff</Text>
+      <Text>Gender </Text>
     </View>
     <StatusBar />
   </SafeAreaView>
