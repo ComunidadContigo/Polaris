@@ -4,12 +4,12 @@ import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 import colors from '../styles/colors';
 import text from '../styles/text';
 
-interface props {
+interface Props {
   label: string;
   onPress: () => void;
 }
 
-const Button = (props: props) => {
+const Button = (props: Props) => {
   const { label, onPress } = props;
   return (
     <TouchableOpacity

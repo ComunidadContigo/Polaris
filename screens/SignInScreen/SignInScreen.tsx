@@ -1,27 +1,14 @@
 import React, { useState, useContext } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  Button,
-  ImageBackground,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
 import { AuthContext } from '../../components/context';
-import colors from '../../styles/colors';
-import text from '../../styles/text';
-import buttons from '../../styles/buttons';
 import GreetingGraphics from '../../components/GreetingGraphics';
+import Button from '../../components/Button';
 
 const SignInScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { signIn } = useContext(AuthContext);
-  const submit = (username, password) => {
-    console.log('Signin in');
-
+  const submit = () => {
     signIn(username, password);
 
     // const data = { name: username, pass: password };
@@ -51,24 +38,16 @@ const SignInScreen = () => {
 
       <TextInput
         style={styles.input}
-        placeholder='Username'
+        placeholder="Username"
         onChangeText={(val) => setUsername(val)}
       />
       <TextInput
         style={styles.input}
-        placeholder='Password'
+        placeholder="Password"
         onChangeText={(val) => setPassword(val)}
       />
       <View style={styles.buttonWrapper}>
-        <TouchableOpacity
-          onPress={() => submit(username, password)}
-          style={[buttons.button, colors.mainColors.background]}
-          accessibilityLabel='LogIn button'
-        >
-          <Text style={[text.normalTextSize, colors.mainColors.text]}>
-            Log in
-          </Text>
-        </TouchableOpacity>
+        <Button onPress={submit} label="LogIn" />
       </View>
     </View>
   );
