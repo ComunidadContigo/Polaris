@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import {
   DEV_AUTH_SERVICE_URL,
   DEV_BUDDY_SERVICE_URL,

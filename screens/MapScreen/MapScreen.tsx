@@ -3,15 +3,27 @@ import { View, Dimensions, StyleSheet, Text } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import PlacesSearchBar from '../../components/PlacesSearchBar';
 
+interface Location {
+  latitude: number;
+  longitude: number;
+}
+
+const normalZoomLevel = {
+  latitudeDelta: 0.0922,
+  longitudeDelta: 0.0421,
+};
+
 const MapScreen = () => {
-  const [currentLocation, setCurrentLocation] = useState({
+  const [currentLocation, setCurrentLocation] = useState<Location>({
     latitude: 18.21194,
     longitude: -67.14225,
   });
-  const [meetingLocation, setMeetingLocation] = useState({
-    latitude: 0,
-    longitude: 0,
+
+  const [meetingLocation, setMeetingLocation] = useState<Location>({
+    ...currentLocation,
   });
+
+  console.log('ML', meetingLocation);
   return (
     <View style={styles.container}>
       <View style={styles.mapView}>
@@ -19,13 +31,12 @@ const MapScreen = () => {
           provider="google"
           style={styles.map}
           initialRegion={{
-            ...currentLocation,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            ...meetingLocation,
+            ...normalZoomLevel,
           }}
         >
           <Marker
-            coordinate={currentLocation}
+            coordinate={meetingLocation}
             pinColor="green"
             draggable
             onDragStart={(e) => {
@@ -44,7 +55,10 @@ const MapScreen = () => {
           </Marker>
         </MapView>
       </View>
-      <PlacesSearchBar />
+      <PlacesSearchBar
+        currentLocation={currentLocation}
+        setMeetingLocation={setMeetingLocation}
+      />
     </View>
   );
 };
@@ -55,11 +69,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-end',
-  },
-  searchBar: {
-    width: '100%',
-    // height: '10%',
-    zIndex: 100,
   },
   mapView: {
     width: '100%',
