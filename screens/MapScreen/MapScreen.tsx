@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Dimensions, StyleSheet, Text } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
-import PlacesSearchBar from '../../components/PlacesSearchBar';
+import SearchBar from '../../components/SearchBar';
 
 interface Location {
   latitude: number;
@@ -23,7 +23,15 @@ const MapScreen = () => {
     ...currentLocation,
   });
 
+  const [destinationLocation, setDestinationLocation] = useState<Location>(
+    {
+      ...currentLocation,
+    },
+  );
+
   console.log('ML', meetingLocation);
+  console.log('DL', destinationLocation);
+
   return (
     <View style={styles.container}>
       <View style={styles.mapView}>
@@ -55,9 +63,11 @@ const MapScreen = () => {
           </Marker>
         </MapView>
       </View>
-      <PlacesSearchBar
-        currentLocation={currentLocation}
+      <SearchBar
+        meetingLocation={meetingLocation}
         setMeetingLocation={setMeetingLocation}
+        destinationLocation={destinationLocation}
+        setDestinationLocation={setDestinationLocation}
       />
     </View>
   );
