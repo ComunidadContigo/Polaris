@@ -18,6 +18,13 @@ const handleSignUp = async (user: User) => {
   const data: HttpResponse = await response.json();
   return data;
 };
-export default handleSignUp;
-const handleSignIn = async () => {};
-const handlesomeshit = async () => {};
+
+const handleSignIn = async (email: any) => {
+  const response = await fetch(
+    `${envs?.DEV_USER_SERVICE_URL}/user/${email}`
+  );
+  const data = await response.json();
+  return data;
+};
+export default { handleSignIn, handleSignUp };
+const handleUpdateUser = async () => {};

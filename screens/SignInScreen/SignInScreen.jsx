@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { AuthContext } from '../../components/context';
+import http from '../../services/httpService';
 import colors from '../../styles/colors';
 import text from '../../styles/text';
 import buttons from '../../styles/buttons';
@@ -21,25 +22,8 @@ const SignInScreen = () => {
   const { signIn } = useContext(AuthContext);
   const submit = (username, password) => {
     console.log('Signin in');
-
+    http.handleSignIn(username);
     signIn(username, password);
-
-    // const data = { name: username, pass: password };
-
-    // fetch('https://example.com/profile', {
-    //   method: 'POST', // or 'PUT'
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(data),
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //   console.log('Success:', data);
-    // })
-    // .catch((error) => {
-    //   console.error('Error:', error);
-    // });
   };
   return (
     <View
