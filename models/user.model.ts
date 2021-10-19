@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 export default interface User {
   u_id?: number;
   email: string;
@@ -10,4 +11,5 @@ export default interface User {
   isVetted?: boolean;
   b_id?: number;
   r_id?: number;
+  // eslint-disable-next-line semi
 }
