@@ -1,17 +1,23 @@
-import React, { useContext, FC } from 'react';
+import React, { FC } from 'react';
 import { View, StyleSheet } from 'react-native';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import SelectDropdown from 'react-native-select-dropdown';
 import UserTextInput from '../../components/UserTextInput';
 import BirthTextInput from '../../components/BirthTextInput';
 import Button from '../../components/Button';
 import GreetingDesign from '../../components/GreetingGraphics';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { phoneRegExp } from '../../util/constants';
-import SelectDropdown from 'react-native-select-dropdown';
+import {
+  phoneRegExp,
+  birthDayExp,
+  birthMonthExp,
+  birthYearExp,
+} from '../../util/constants';
 import { mainPurple } from '../../styles/colors';
-import envs from '../../config/environment';
-import handleSignUp from '../../services/httpService';
+import http from '../../services/httpService';
 import User from '../../models/user.model';
+import { StackNavigationProp } from '../../routing/types';
+import { MainRoutes } from '../../routing/StackRoutes';
 
 const SignUpSchema = Yup.object().shape({
   name: Yup.string()
@@ -23,18 +29,24 @@ const SignUpSchema = Yup.object().shape({
     .max(10, 'Too Long!')
     .required('Required'),
   email: Yup.string().email('Invalid email').required('Required'),
-  phone: Yup.string().matches(phoneRegExp, 'Phone number is not valid'),
+  phone: Yup.string()
+    .matches(phoneRegExp, 'Phone number is not valid')
+    .max(10)
+    .required('Required'),
   password: Yup.string()
     .min(2, 'Too Short!')
     .max(10, 'Too Long!')
     .required('Required'),
+  birthday: Yup.string().matches(birthDayExp).required('Required'),
+  birthmonth: Yup.string().matches(birthMonthExp).required('Required'),
+  birthyear: Yup.string().matches(birthYearExp).required('Required'),
 });
 
 interface Props {
-  navigation: any;
+  navigation: StackNavigationProp<MainRoutes.Greeting>;
 }
 
-const SignUpScreen = (props: Props) => {
+const SignUpScreen: FC<Props> = (props: Props) => {
   const { navigation } = props;
   const {
     handleChange,
@@ -61,7 +73,6 @@ const SignUpScreen = (props: Props) => {
     },
   });
 
-  const checker = () => console.log(values);
   const genders = [
     'Male',
     'Female',
@@ -78,11 +89,12 @@ const SignUpScreen = (props: Props) => {
       gender: values.gender,
       last_name: values.lastName,
       birth_date: new Date(
-        values.birthday + '/' + values.birthmonth + '/' + values.birthyear
+        // eslint-disable-next-line prefer-template
+        values.birthday + '/' + values.birthmonth + '/' + values.birthyear,
       ),
     };
-    handleSignUp(user);
-    navigation.navigate('SignIn');
+    http.handleSignUp(user);
+    navigation.navigate(MainRoutes.LogIn);
   };
 
   return (
@@ -92,67 +104,67 @@ const SignUpScreen = (props: Props) => {
       </View>
       <View style={styles.buttonWrapper}>
         <UserTextInput
-          icon='user'
-          placeholder='Enter your first name'
-          autoCompleteType='name'
-          autoCapitalize='none'
-          keyboardAppearance='dark'
-          returnKeyType='go'
-          returnKeyLabel='go'
+          icon="user"
+          placeholder="Enter your first name"
+          autoCompleteType="name"
+          autoCapitalize="none"
+          keyboardAppearance="dark"
+          returnKeyType="go"
+          returnKeyLabel="go"
           onChangeText={handleChange('name')}
           onBlur={handleBlur('name')}
           error={errors.name}
           touched={touched.name}
         />
         <UserTextInput
-          icon='user'
-          placeholder='Enter your last name'
-          autoCompleteType='name'
-          autoCapitalize='none'
-          keyboardAppearance='dark'
-          returnKeyType='go'
-          returnKeyLabel='go'
+          icon="user"
+          placeholder="Enter your last name"
+          autoCompleteType="name"
+          autoCapitalize="none"
+          keyboardAppearance="dark"
+          returnKeyType="go"
+          returnKeyLabel="go"
           onChangeText={handleChange('lastName')}
           onBlur={handleBlur('lastName')}
           error={errors.lastName}
           touched={touched.lastName}
         />
         <UserTextInput
-          icon='mail'
-          placeholder='Enter your email'
-          autoCapitalize='none'
-          autoCompleteType='email'
-          keyboardType='email-address'
-          keyboardAppearance='dark'
-          returnKeyType='next'
-          returnKeyLabel='next'
+          icon="mail"
+          placeholder="Enter your email"
+          autoCapitalize="none"
+          autoCompleteType="email"
+          keyboardType="email-address"
+          keyboardAppearance="dark"
+          returnKeyType="next"
+          returnKeyLabel="next"
           onChangeText={handleChange('email')}
           onBlur={handleBlur('email')}
           error={errors.email}
           touched={touched.email}
         />
         <UserTextInput
-          icon='phone'
-          placeholder='Enter your phone number'
-          autoCapitalize='none'
-          keyboardType='numeric'
-          keyboardAppearance='dark'
-          returnKeyType='next'
-          returnKeyLabel='next'
+          icon="phone"
+          placeholder="Enter your phone number"
+          autoCapitalize="none"
+          keyboardType="numeric"
+          keyboardAppearance="dark"
+          returnKeyType="next"
+          returnKeyLabel="next"
           onChangeText={handleChange('phone')}
           onBlur={handleBlur('phone')}
           error={errors.phone}
           touched={touched.phone}
         />
         <UserTextInput
-          icon='key'
-          placeholder='Enter your password'
+          icon="key"
+          placeholder="Enter your password"
           secureTextEntry
-          autoCompleteType='password'
-          autoCapitalize='none'
-          keyboardAppearance='dark'
-          returnKeyType='go'
-          returnKeyLabel='go'
+          autoCompleteType="password"
+          autoCapitalize="none"
+          keyboardAppearance="dark"
+          returnKeyType="go"
+          returnKeyLabel="go"
           onChangeText={handleChange('password')}
           onBlur={handleBlur('password')}
           error={errors.password}
@@ -161,16 +173,17 @@ const SignUpScreen = (props: Props) => {
 
         <BirthTextInput
           handleChange={handleChange}
-          icon='birthday-cake'
-          autoCapitalize='none'
-          keyboardType='numeric'
-          keyboardAppearance='dark'
-          returnKeyType='next'
-          returnKeyLabel='next'
-          //onChangeText={handleChange('birthdate')}
+          icon="birthday-cake"
+          autoCapitalize="none"
+          keyboardType="numeric"
+          keyboardAppearance="dark"
+          returnKeyType="next"
+          returnKeyLabel="next"
           onBlur={handleBlur('birthdate')}
-          //error={errors.birthdate}
-          //touched={touched.birthdate}
+          errors={[errors.birthday, errors.birthmonth, errors.birthyear]}
+          touched={
+            touched.birthday || touched.birthmonth || touched.birthyear
+          }
         />
 
         <SelectDropdown
@@ -179,19 +192,15 @@ const SignUpScreen = (props: Props) => {
           dropdownStyle={styles.dropdownWrapper}
           buttonStyle={styles.dropInput}
           buttonTextStyle={styles.dropbuttonText}
-          defaultButtonText='Enter Gender'
+          defaultButtonText="Enter Gender"
           data={genders}
           onSelect={(selectedItem, index) => {
             console.log(selectedItem, index);
           }}
-          buttonTextAfterSelection={(selectedItem, index) => {
-            return selectedItem;
-          }}
-          rowTextForSelection={(item, index) => {
-            return item;
-          }}
+          buttonTextAfterSelection={(selectedItem) => selectedItem}
+          rowTextForSelection={(item) => item}
         />
-        <Button label='Sign Up' onPress={handleSubmit} />
+        <Button label="Sign Up" onPress={handleSubmit} />
       </View>
     </View>
   );

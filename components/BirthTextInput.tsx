@@ -1,19 +1,25 @@
+/* eslint-disable indent */
 import * as React from 'react';
-import { StyleSheet, TextInput, View, Text } from 'react-native';
-import { mainPurple, errorRed } from '../styles/colors';
+import { StyleSheet, TextInput, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Dash from 'react-native-vector-icons/Octicons';
+import { mainPurple, errorRed } from '../styles/colors';
 
-interface props {
+interface Props {
   icon: string;
+  errors: (string | undefined)[];
+  touched: boolean | undefined;
+  handleChange: any;
   [x: string]: any; // For the ...otherProps
 }
 
-const UserTextInput = (props: props) => {
-  const { icon, error, touched, handleChange, ...otherProps } = props;
+const BirthTextInput = (props: Props) => {
+  const { icon, errors, touched, handleChange, ...otherProps } = props;
+
+  const hasErrors = errors.filter((err) => err !== undefined);
   const validationColor = !touched
     ? mainPurple
-    : error
+    : hasErrors.length > 0
     ? errorRed
     : mainPurple;
 
@@ -24,23 +30,23 @@ const UserTextInput = (props: props) => {
       </View>
       <View style={{ flex: 1, flexDirection: 'row' }}>
         <TextInput
-          placeholder='  mm  '
+          placeholder="  mm  "
           {...otherProps}
           onChangeText={handleChange('birthmonth')}
         />
         <View style={{ padding: 8 }}>
-          <Dash name={'dash'} color='black' size={16} />
+          <Dash name="dash" color="black" size={16} />
         </View>
         <TextInput
-          placeholder='  dd  '
+          placeholder="  dd  "
           {...otherProps}
           onChangeText={handleChange('birthday')}
         />
         <View style={{ padding: 8 }}>
-          <Dash name={'dash'} color='black' size={16} />
+          <Dash name="dash" color="black" size={16} />
         </View>
         <TextInput
-          placeholder='  yyyy  '
+          placeholder="  yyyy  "
           {...otherProps}
           onChangeText={handleChange('birthyear')}
         />
@@ -61,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UserTextInput;
+export default BirthTextInput;
