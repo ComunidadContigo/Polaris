@@ -5,4 +5,5 @@ export default interface HttpResponse<E = never> {
   errors: string[];
   rowCount?: number;
   data?: E;
+  // eslint-disable-next-line semi
 }

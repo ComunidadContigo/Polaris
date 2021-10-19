@@ -4,15 +4,20 @@ import { AuthContext } from '../../components/context';
 import http from '../../services/httpService';
 import GreetingGraphics from '../../components/GreetingGraphics';
 import Button from '../../components/Button';
+import Login from '../../models/login.model';
 
 const SignInScreen = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [Username, setUsername] = useState('');
+  const [Password, setPassword] = useState('');
   const { signIn } = useContext(AuthContext);
   const submit = () => {
+    const login: Login = {
+      email: Username,
+      password: Password,
+    };
     console.log('Signin in');
-    http.handleSignIn(username);
-    signIn(username, password);
+    http.handleSignIn(login);
+    signIn(Username, Password);
   };
   return (
     <View
