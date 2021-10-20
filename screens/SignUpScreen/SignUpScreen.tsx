@@ -14,7 +14,8 @@ import {
   birthYearExp,
 } from '../../util/constants';
 import { mainPurple } from '../../styles/colors';
-import envs from '../../config/environment';
+import http from '../../services/httpService';
+import User from '../../models/user.model';
 import { StackNavigationProp } from '../../routing/types';
 import { MainRoutes } from '../../routing/StackRoutes';
 
@@ -60,7 +61,7 @@ const SignUpScreen: FC<Props> = (props: Props) => {
       name: '',
       lastName: '',
       email: '',
-      phone: null,
+      phone: '',
       password: '',
       gender: '',
       birthday: '',
@@ -68,7 +69,7 @@ const SignUpScreen: FC<Props> = (props: Props) => {
       birthyear: '',
     },
     onSubmit: () => {
-      handleSignUp();
+      signupHandler();
     },
   });
 
@@ -79,19 +80,21 @@ const SignUpScreen: FC<Props> = (props: Props) => {
     'Other',
     'Prefer not to Answer',
   ];
-
-  const handleSignUp = async () => {
-    try {
-      const settings = {
-        method: 'POST',
-        body: JSON.stringify(values),
-      };
-      await fetch(`${envs?.DEV_USER_SERVICE_URL}/user`, settings);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      navigation.navigate(MainRoutes.LogIn);
-    }
+  const signupHandler = () => {
+    const user: User = {
+      first_name: values.name,
+      email: values.email,
+      password: values.password,
+      phone_number: values.phone,
+      gender: values.gender,
+      last_name: values.lastName,
+      birth_date: new Date(
+        // eslint-disable-next-line prefer-template
+        values.birthday + '/' + values.birthmonth + '/' + values.birthyear,
+      ),
+    };
+    http.handleSignUp(user);
+    navigation.navigate(MainRoutes.LogIn);
   };
 
   return (

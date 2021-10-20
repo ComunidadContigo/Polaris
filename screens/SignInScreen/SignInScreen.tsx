@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { AuthContext } from '../../components/context';
+import http from '../../services/httpService';
 import GreetingGraphics from '../../components/GreetingGraphics';
 import Button from '../../components/Button';
 
@@ -9,24 +10,9 @@ const SignInScreen = () => {
   const [password, setPassword] = useState('');
   const { signIn } = useContext(AuthContext);
   const submit = () => {
+    console.log('Signin in');
+    http.handleSignIn(username);
     signIn(username, password);
-
-    // const data = { name: username, pass: password };
-
-    // fetch('https://example.com/profile', {
-    //   method: 'POST', // or 'PUT'
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(data),
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //   console.log('Success:', data);
-    // })
-    // .catch((error) => {
-    //   console.error('Error:', error);
-    // });
   };
   return (
     <View
