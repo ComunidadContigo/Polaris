@@ -15,7 +15,7 @@ const handleSignUp = async (user: User) => {
   };
   console.log(settings.body);
   const response = await fetch('http://10.0.2.2:3003/user', settings);
-
+  console.log(response);
   const data: HttpResponse = await response.json();
   console.log(data);
   return data;
@@ -24,7 +24,7 @@ const handleSignUp = async (user: User) => {
 const handleSignIn = async (login: Login) => {
   const settings = {
     headers: {
-      Accept: 'application/json',
+      // Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     method: 'POST',
@@ -32,13 +32,18 @@ const handleSignIn = async (login: Login) => {
   };
   console.log('body...');
   console.log(settings.body);
-  const response = await fetch('http://10.0.2.2:3001/login', settings);
+  try {
+    const response = await fetch('http://10.0.2.2:3001/login', settings);
+    console.log('response...', response);
+    const data: HttpResponse = await response.json();
+    console.log(data);
+  } catch (e) {
+    console.log(e);
+  }
+  // const data: HttpResponse = await response.json();
 
-  const data: HttpResponse = await response.json();
-  console.log('Data');
-  console.log(response);
-  // console.log(data.errors);
-  return data;
+  // console.log(response);
+  // console.log(data);
 };
 export default { handleSignIn, handleSignUp };
 // eslint-disable-next-line no-unused-vars
