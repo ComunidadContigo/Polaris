@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     width: '100%',
     paddingHorizontal: '8%',
-    paddingBottom: '5%',
+    paddingBottom: '70%',
   },
   greetingDesign: {
     height: '70%',
