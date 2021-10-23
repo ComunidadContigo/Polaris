@@ -1,9 +1,9 @@
-export default interface HttpResponse<E = never> {
+export default interface HttpResponse {
   success: boolean;
   returnCode: number;
   messages: string[];
   errors: string[];
   rowCount?: number;
-  data?: E;
+  data?: any;
   // eslint-disable-next-line semi
 }

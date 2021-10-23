@@ -2,9 +2,9 @@ import envs from '../config/environment';
 import HttpResponse from '../models/response.model';
 import User from '../models/user.model';
 import Login from '../models/login.model';
+import { storeToken } from './tokenService';
 
 const handleSignUp = async (user: User) => {
-  console.log(user);
   const settings = {
     headers: {
       // Accept: 'application/json',
@@ -13,30 +13,36 @@ const handleSignUp = async (user: User) => {
     method: 'POST',
     body: JSON.stringify(user),
   };
-  console.log(settings.body);
-  const response = await fetch('http://10.0.2.2:3003/user', settings);
-  console.log(response);
+  const response = await fetch(
+    `${envs?.DEV_USER_SERVICE_URL}/user`,
+    settings,
+  );
   const data: HttpResponse = await response.json();
-  console.log(data);
   return data;
 };
 
 const handleSignIn = async (login: Login) => {
   const settings = {
     headers: {
-      // Accept: 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     method: 'POST',
     body: JSON.stringify(login),
   };
-  console.log('body...');
-  console.log(settings.body);
   try {
-    const response = await fetch('http://10.0.2.2:3001/login', settings);
-    console.log('response...', response);
-    const data: HttpResponse = await response.json();
-    console.log(data);
+    const response = await fetch(
+      `${envs?.DEV_AUTH_SERVICE_URL}/login`,
+      settings,
+    );
+    const res: HttpResponse = await response.json();
+    console.log('RESPONSE', res);
+    console.log('TOKEN:', res?.data?.token);
+    if (res.success) {
+      // TODO: Store token in local storage
+      storeToken(res?.data?.token);
+      // TODO: Change authContext
+    }
   } catch (e) {
     console.log(e);
   }
