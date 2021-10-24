@@ -16,34 +16,15 @@ import { MainRoutes } from './routing/StackRoutes';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [userToken, setUserToken] = useState('');
+  const [accessToken, setAccessToken] = useState('');
 
   // const [isLoading, setIsLoading] = useState(true);
 
-  const authContext = useMemo(
-    () => ({
-      signIn: (username: any, password: any) => {
-        console.log(username);
-        console.log(password);
-        // if username y password matchea db pues setea token pa poder entrar
-        setUserToken('tok');
-        // setIsLoading(false);
-      },
-      signOut: () => {
-        setUserToken('');
-      },
-      signUp: () => {
-        setUserToken('tok');
-      },
-    }),
-    [],
-  );
-
   return (
-    <AuthContext.Provider value={authContext}>
+    <AuthContext.Provider value={{ accessToken, setAccessToken }}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {userToken === '' ? (
+          {!accessToken ? (
             <>
               <Stack.Screen
                 name={MainRoutes.Greeting}

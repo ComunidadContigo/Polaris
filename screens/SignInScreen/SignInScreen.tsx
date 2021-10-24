@@ -9,15 +9,15 @@ import Login from '../../models/login.model';
 const SignInScreen = () => {
   const [Username, setUsername] = useState('');
   const [Password, setPassword] = useState('');
-  const { signIn } = useContext(AuthContext);
-  const submit = () => {
+  const { setAccessToken } = useContext(AuthContext);
+
+  const submit = async () => {
     const login: Login = {
       email: Username,
       password: Password,
     };
-    console.log('Signin in');
-    http.handleSignIn(login);
-    signIn(Username, Password);
+    const accessToken = await http.handleSignIn(login);
+    setAccessToken(accessToken);
   };
   return (
     <View
@@ -38,7 +38,7 @@ const SignInScreen = () => {
         onChangeText={(val) => setPassword(val)}
       />
       <View style={styles.buttonWrapper}>
-        <Button onPress={submit} label="LogIn" />
+        <Button onPress={() => submit()} label="LogIn" />
       </View>
     </View>
   );

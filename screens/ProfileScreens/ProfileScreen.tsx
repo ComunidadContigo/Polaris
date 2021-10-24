@@ -10,7 +10,7 @@ const ProfileScreen = () => {
   //   navigation.navigate('EditProfile');
   // };
 
-  const { signOut } = useContext(AuthContext);
+  const { setAccessToken } = useContext(AuthContext);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfo}>
@@ -32,7 +32,7 @@ const ProfileScreen = () => {
             onPress={() => console.log('Navigate to Edit Profile')}
             label="Edit Profile"
           />
-          <Button onPress={signOut} label="Sign Out" />
+          <Button onPress={() => setAccessToken('')} label="Sign Out" />
         </View>
       </View>
     </SafeAreaView>
