@@ -4,13 +4,22 @@ import { View, SafeAreaView, StyleSheet } from 'react-native';
 import { Avatar, Title, Caption } from 'react-native-paper';
 import { AuthContext } from '../../components/context';
 import Button from '../../components/Button';
+// import { getUserById } from '../../services/httpService';
+import { siriusFetch } from '../../services/httpService';
+import envs from '../../config/environment';
 
 const ProfileScreen = () => {
   // const navigateToEditProfile = () => {
   //   navigation.navigate('EditProfile');
   // };
 
-  const { setAccessToken } = useContext(AuthContext);
+  const { accessToken, setAccessToken, uid } = useContext(AuthContext);
+  const getUserById = async (id: number): Promise<{} | undefined> => {
+    console.log(accessToken);
+    const res = siriusFetch(accessToken, setAccessToken, uid, `${envs?.DEV_USER_SERVICE_URL}/${id}`);
+    return res;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfo}>
@@ -34,6 +43,7 @@ const ProfileScreen = () => {
           />
           <Button onPress={() => setAccessToken('')} label="Sign Out" />
         </View>
+        <Button onPress={() => getUserById(1)} label="Get Profile Info" />
       </View>
     </SafeAreaView>
   );

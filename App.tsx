@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthContext } from './components/context';
@@ -17,11 +17,14 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [accessToken, setAccessToken] = useState('');
+  const [uid, setUid] = useState('');
 
   // const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <AuthContext.Provider value={{ accessToken, setAccessToken }}>
+    <AuthContext.Provider
+      value={{ accessToken, setAccessToken, uid, setUid }}
+    >
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {!accessToken ? (

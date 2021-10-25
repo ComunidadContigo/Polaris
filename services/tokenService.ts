@@ -7,6 +7,7 @@ import envs from '../config/environment';
 export const getAccessToken = async (loginResponse: {}): Promise<
   string | undefined
 > => {
+  console.log('GET ACCESS TOKEN PARAMETERS: ', loginResponse);
   const settings = {
     headers: {
       Accept: 'application/json',
