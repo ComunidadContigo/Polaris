@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { AuthContext } from '../../components/context';
+import http from '../../services/httpService';
 import GreetingGraphics from '../../components/GreetingGraphics';
 import Button from '../../components/Button';
 import Login from '../../models/login.model';
@@ -57,6 +58,7 @@ const SignInScreen = () => {
       password: Password,
     };
     await handleSignIn(login);
+
   };
   return (
     <View

@@ -1,3 +1,4 @@
+
 /* eslint-disable prefer-template */
 import envs from '../config/environment';
 import HttpResponse from '../models/response.model';
@@ -65,6 +66,7 @@ export const siriusFetch = async (
 };
 
 const handleSignUp = async (user: User) => {
+
   const settings = {
     headers: {
       // Accept: 'application/json',
@@ -73,6 +75,7 @@ const handleSignUp = async (user: User) => {
     method: 'POST',
     body: JSON.stringify(user),
   };
+
   const response = await fetch(
     `${envs?.DEV_USER_SERVICE_URL}/user`,
     settings,
@@ -85,4 +88,4 @@ const handleSignUp = async (user: User) => {
 //   // eslint-disable-next-line implicit-arrow-linebreak
 //   siriusFetch(`${envs?.DEV_USER_SERVICE_URL}/${id}`);
 
-export default { handleSignUp };
+
