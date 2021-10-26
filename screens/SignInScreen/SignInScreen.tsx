@@ -4,15 +4,61 @@ import { AuthContext } from '../../components/context';
 import http from '../../services/httpService';
 import GreetingGraphics from '../../components/GreetingGraphics';
 import Button from '../../components/Button';
+import Login from '../../models/login.model';
+import envs from '../../config/environment';
+import HttpResponse from '../../models/response.model';
+import { storeToken, getAccessToken } from '../../services/tokenService';
 
 const SignInScreen = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const { signIn } = useContext(AuthContext);
-  const submit = () => {
-    console.log('Signin in');
-    http.handleSignIn(username);
-    signIn(username, password);
+  const [Username, setUsername] = useState('');
+  const [Password, setPassword] = useState('');
+  const { accessToken, setAccessToken, setUid } = useContext(AuthContext);
+
+  const handleSignIn = async (
+    login: Login,
+  ): Promise<string | undefined> => {
+    const settings = {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify(login),
+    };
+    try {
+      const response = await fetch(
+        `${envs?.DEV_AUTH_SERVICE_URL}/login`,
+        settings,
+      );
+      const res: HttpResponse = await response.json();
+      console.log('DATA:', res?.data);
+      if (res.success) {
+        // Store refresh token in local storage
+        storeToken(res?.data?.token);
+        // Set uid in context for use during access token refresh
+        setUid(res?.data?.u_id);
+        // Get access token from the refresh token
+        setAccessToken(await getAccessToken(res?.data));
+      } else {
+        setAccessToken('');
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    return accessToken;
+    // const data: HttpResponse = await response.json();
+
+    // console.log(response);
+    // console.log(data);
+  };
+
+  const submit = async () => {
+    const login: Login = {
+      email: Username,
+      password: Password,
+    };
+    await handleSignIn(login);
+
   };
   return (
     <View
@@ -33,7 +79,7 @@ const SignInScreen = () => {
         onChangeText={(val) => setPassword(val)}
       />
       <View style={styles.buttonWrapper}>
-        <Button onPress={submit} label="LogIn" />
+        <Button onPress={() => submit()} label="LogIn" />
       </View>
     </View>
   );

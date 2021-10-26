@@ -1,3 +1,6 @@
+
+/* eslint-disable camelcase */
+
 export interface RefreshTokenPayload {
   u_id: number;
   email: string;
