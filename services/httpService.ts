@@ -19,10 +19,6 @@ export const siriusFetch = async (
   endpoint: string | Request,
   settings?: requestSettings | undefined,
 ): Promise<HttpResponse> => {
-  // const { accessToken, setAccessToken } = useContext(AuthContext);
-  // let accessToken = 'bahbah';
-  console.log('-------- GOT TO SIRIUS FETCH -------');
-  console.log('ACCESS TOKEN FROM SIRIUS FETCH: ', accessToken);
   let headers;
   let method;
   let body;
@@ -40,11 +36,6 @@ export const siriusFetch = async (
     };
     method = settings.method;
     body = settings.body;
-    console.log('POST REQUEST PARAMETERS: ', endpoint, {
-      method,
-      headers,
-      body,
-    });
   }
   let data: HttpResponse;
   try {
@@ -59,7 +50,6 @@ export const siriusFetch = async (
 
       if (data?.errors[0] === 'jwt expired') {
         // Handle expired token.
-        console.log('WOOPS, ERROR RECEIVED', data?.errors);
         setAccessToken(
           await getAccessToken({
             u_id: uid,
