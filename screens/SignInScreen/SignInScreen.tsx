@@ -1,19 +1,42 @@
-import React, { useState, useContext } from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import React, { useContext } from 'react';
+import { View, StyleSheet } from 'react-native';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
 import { AuthContext } from '../../components/context';
 import http from '../../services/httpService';
 import GreetingGraphics from '../../components/GreetingGraphics';
 import Button from '../../components/Button';
+import UserTextSigninInput from '../../components/UserTextSignInInput';
 
+const SignInSchema = Yup.object().shape({
+  email: Yup.string().email('Invalid email').required('Required'),
+  password: Yup.string()
+    .min(2, 'Too Short!')
+    .max(10, 'Too Long!')
+    .required('Required'),
+});
 const SignInScreen = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const { signIn } = useContext(AuthContext);
-  const submit = () => {
-    console.log('Signin in');
-    http.handleSignIn(username);
-    signIn(username, password);
-  };
+  const {
+    handleChange,
+    handleSubmit,
+    handleBlur,
+    values,
+    errors,
+    touched,
+  } = useFormik({
+    validationSchema: SignInSchema,
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    onSubmit: () => {
+      console.log('Signin in');
+      http.handleSignIn(values.email);
+      signIn(values.email, values.password);
+    },
+  });
+
   return (
     <View
       style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
@@ -22,18 +45,22 @@ const SignInScreen = () => {
         <GreetingGraphics />
       </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        onChangeText={(val) => setUsername(val)}
+      <UserTextSigninInput
+        placeholder="Email"
+        onChangeText={handleChange('email')}
+        onBlur={handleBlur('email')}
+        error={errors.email}
+        touched={touched.email}
       />
-      <TextInput
-        style={styles.input}
+      <UserTextSigninInput
         placeholder="Password"
-        onChangeText={(val) => setPassword(val)}
+        onChangeText={handleChange('password')}
+        onBlur={handleBlur('password')}
+        error={errors.password}
+        touched={touched.password}
       />
       <View style={styles.buttonWrapper}>
-        <Button onPress={submit} label="LogIn" />
+        <Button onPress={handleSubmit} label="LogIn" />
       </View>
     </View>
   );
@@ -47,7 +74,6 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 3,
     borderColor: 'transparent',
-    borderBottomColor: 'purple',
     padding: 4,
     margin: 10,
     width: 300,
