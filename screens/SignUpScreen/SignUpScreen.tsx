@@ -14,7 +14,7 @@ import {
   birthYearExp,
 } from '../../util/constants';
 import { mainPurple } from '../../styles/colors';
-import http from '../../services/httpService';
+import { handleSignUp } from '../../services/httpService';
 import User from '../../models/user.model';
 import { StackNavigationProp } from '../../routing/types';
 import { MainRoutes } from '../../routing/StackRoutes';
@@ -93,7 +93,8 @@ const SignUpScreen: FC<Props> = (props: Props) => {
         values.birthday + '/' + values.birthmonth + '/' + values.birthyear,
       ),
     };
-    http.handleSignUp(user);
+    console.log(user);
+    handleSignUp(user);
     navigation.navigate(MainRoutes.LogIn);
   };
 

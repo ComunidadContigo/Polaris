@@ -58,7 +58,6 @@ const SignInScreen = () => {
       password: Password,
     };
     await handleSignIn(login);
-
   };
   return (
     <View
