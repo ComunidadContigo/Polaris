@@ -73,13 +73,17 @@ export const handleSignUp = async (user: User) => {
     method: 'POST',
     body: JSON.stringify(user),
   };
-
-  const response = await fetch(
-    `http://${envs?.DEV_USER_SERVICE_URL}/user`,
-    settings,
-  );
-  const data: HttpResponse = await response.json();
-  return data;
+  try {
+    const response = await fetch(
+      `${envs?.DEV_USER_SERVICE_URL}`,
+      settings,
+    );
+    const data: HttpResponse = await response.json();
+    return data;
+  } catch (e) {
+    console.log([e, 'Error creating the user.']);
+  }
+  return null;
 };
 
 // export const getUserById = async (id: number): Promise<{} | undefined> =>
