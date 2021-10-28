@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { AuthContext } from '../../components/context';
-import http from '../../services/httpService';
 import GreetingGraphics from '../../components/GreetingGraphics';
 import Button from '../../components/Button';
 import Login from '../../models/login.model';
@@ -31,25 +30,25 @@ const SignInScreen = () => {
         settings,
       );
       const res: HttpResponse = await response.json();
-      console.log('DATA:', res?.data);
       if (res.success) {
         // Store refresh token in local storage
         storeToken(res?.data?.token);
         // Set uid in context for use during access token refresh
         setUid(res?.data?.u_id);
         // Get access token from the refresh token
-        setAccessToken(await getAccessToken(res?.data));
+        try {
+          setAccessToken(await getAccessToken(res?.data));
+        } catch (e) {
+          console.log([e, 'Error setting access token.']);
+        }
       } else {
         setAccessToken('');
+        console.log(res.errors);
       }
     } catch (e) {
       console.log(e);
     }
     return accessToken;
-    // const data: HttpResponse = await response.json();
-
-    // console.log(response);
-    // console.log(data);
   };
 
   const submit = async () => {
