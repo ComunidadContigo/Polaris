@@ -1,11 +1,12 @@
 import React from 'react';
 import { StyleSheet, ImageBackground, Image } from 'react-native';
 
+// eslint-disable-next-line arrow-body-style
 const GreetingDesign = () => {
   return (
     <ImageBackground
       source={require('../assets/Path21.png')}
-      resizeMode='cover'
+      resizeMode="cover"
       style={styles.imageBackground}
     >
       <Image
