@@ -4,8 +4,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { AuthContext } from './components/context';
 
 // Screens
-import GreetingScreen from './screens/GreetingScreen/GreetingScreen';
+
 import SignInScreen from './screens/SignInScreen/SignInScreen';
+import GreetingScreen from './screens/GreetingScreen/GreetingScreen';
+
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import EditProfileScreen from './screens/ProfileScreens/EditProfileScreen';
 import HomeScreen from './screens/HomeScreen/HomeScreen';
@@ -16,10 +18,8 @@ import { MainRoutes } from './routing/StackRoutes';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [accessToken, setAccessToken] = useState('');
+  const [accessToken, setAccessToken] = useState('babababa');
   const [uid, setUid] = useState('');
-
-  // const [isLoading, setIsLoading] = useState(true);
 
   return (
     <AuthContext.Provider
