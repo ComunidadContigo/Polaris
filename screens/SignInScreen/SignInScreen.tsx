@@ -78,6 +78,10 @@ const SignInScreen = () => {
       console.log(e);
     }
     return accessToken;
+    // const data: HttpResponse = await response.json();
+
+    // console.log(response);
+    // console.log(data);
   };
   return (
     <View
