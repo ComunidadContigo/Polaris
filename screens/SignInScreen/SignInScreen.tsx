@@ -19,7 +19,7 @@ const SignInSchema = Yup.object().shape({
     .required('Required'),
 });
 const SignInScreen = () => {
-  const { signIn } = useContext(AuthContext);
+  const { accessToken, setAccessToken, setUid } = useContext(AuthContext);
   const {
     handleChange,
     handleSubmit,
@@ -40,10 +40,8 @@ const SignInScreen = () => {
         password: values.password,
       };
       await handleSignIn(login);
-      signIn(values.email, values.password);
     },
   });
-  const { accessToken, setAccessToken, setUid } = useContext(AuthContext);
   const handleSignIn = async (
     login: Login,
   ): Promise<string | undefined> => {
