@@ -27,10 +27,12 @@ export default function App() {
     if (status !== 'granted') {
       console.log('Permission not granted');
     }
+    console.log(status);
+    const isLocationServicesEnabled =
+      await Location.hasServicesEnabledAsync();
+    console.log(isLocationServicesEnabled);
     console.log('Getting Location');
-    const userlocation = await Location.getCurrentPositionAsync({
-      accuracy: 1,
-    });
+    const userlocation = await Location.getLastKnownPositionAsync({});
 
     console.log('Showing Location');
     console.log(userlocation);
