@@ -1,19 +1,49 @@
-import React, { useState, useContext } from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import React, { useContext } from 'react';
+import { View, StyleSheet } from 'react-native';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
 import { AuthContext } from '../../components/context';
-import http from '../../services/httpService';
 import GreetingGraphics from '../../components/GreetingGraphics';
 import Button from '../../components/Button';
+import UserTextInput from '../../components/UserTextInput';
 import Login from '../../models/login.model';
 import envs from '../../config/environment';
 import HttpResponse from '../../models/response.model';
 import { storeToken, getAccessToken } from '../../services/tokenService';
 
+const SignInSchema = Yup.object().shape({
+  email: Yup.string().email('Invalid email').required('Required'),
+  password: Yup.string()
+    .min(2, 'Too Short!')
+    .max(10, 'Too Long!')
+    .required('Required'),
+});
 const SignInScreen = () => {
-  const [Username, setUsername] = useState('');
-  const [Password, setPassword] = useState('');
+  const { signIn } = useContext(AuthContext);
+  const {
+    handleChange,
+    handleSubmit,
+    handleBlur,
+    values,
+    errors,
+    touched,
+  } = useFormik({
+    validationSchema: SignInSchema,
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    onSubmit: async () => {
+      console.log('Signin in');
+      const login: Login = {
+        email: values.email,
+        password: values.password,
+      };
+      await handleSignIn(login);
+      signIn(values.email, values.password);
+    },
+  });
   const { accessToken, setAccessToken, setUid } = useContext(AuthContext);
-
   const handleSignIn = async (
     login: Login,
   ): Promise<string | undefined> => {
@@ -51,14 +81,6 @@ const SignInScreen = () => {
     // console.log(response);
     // console.log(data);
   };
-
-  const submit = async () => {
-    const login: Login = {
-      email: Username,
-      password: Password,
-    };
-    await handleSignIn(login);
-  };
   return (
     <View
       style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
@@ -66,19 +88,24 @@ const SignInScreen = () => {
       <View style={styles.greetingDesign}>
         <GreetingGraphics />
       </View>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        onChangeText={(val) => setUsername(val)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        onChangeText={(val) => setPassword(val)}
-      />
       <View style={styles.buttonWrapper}>
-        <Button onPress={() => submit()} label="LogIn" />
+        <UserTextInput
+          icon="user"
+          placeholder="Email"
+          onChangeText={handleChange('email')}
+          onBlur={handleBlur('email')}
+          error={errors.email}
+          touched={touched.email}
+        />
+        <UserTextInput
+          icon="mail"
+          placeholder="Password"
+          onChangeText={handleChange('password')}
+          onBlur={handleBlur('password')}
+          error={errors.password}
+          touched={touched.password}
+        />
+        <Button onPress={handleSubmit} label="LogIn" />
       </View>
     </View>
   );
@@ -92,7 +119,6 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 3,
     borderColor: 'transparent',
-    borderBottomColor: 'purple',
     padding: 4,
     margin: 10,
     width: 300,
