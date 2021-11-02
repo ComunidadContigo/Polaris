@@ -6,7 +6,7 @@ import { AuthContext } from '../../components/context';
 import http from '../../services/httpService';
 import GreetingGraphics from '../../components/GreetingGraphics';
 import Button from '../../components/Button';
-import UserTextSigninInput from '../../components/UserTextSignInInput';
+import UserTextInput from '../../components/UserTextInput';
 
 const SignInSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
@@ -44,22 +44,23 @@ const SignInScreen = () => {
       <View style={styles.greetingDesign}>
         <GreetingGraphics />
       </View>
-
-      <UserTextSigninInput
-        placeholder="Email"
-        onChangeText={handleChange('email')}
-        onBlur={handleBlur('email')}
-        error={errors.email}
-        touched={touched.email}
-      />
-      <UserTextSigninInput
-        placeholder="Password"
-        onChangeText={handleChange('password')}
-        onBlur={handleBlur('password')}
-        error={errors.password}
-        touched={touched.password}
-      />
       <View style={styles.buttonWrapper}>
+        <UserTextInput
+          icon="user"
+          placeholder="Email"
+          onChangeText={handleChange('email')}
+          onBlur={handleBlur('email')}
+          error={errors.email}
+          touched={touched.email}
+        />
+        <UserTextInput
+          icon="mail"
+          placeholder="Password"
+          onChangeText={handleChange('password')}
+          onBlur={handleBlur('password')}
+          error={errors.password}
+          touched={touched.password}
+        />
         <Button onPress={handleSubmit} label="LogIn" />
       </View>
     </View>
