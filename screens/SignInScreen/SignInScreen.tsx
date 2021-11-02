@@ -3,10 +3,13 @@ import { View, StyleSheet } from 'react-native';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { AuthContext } from '../../components/context';
-import http from '../../services/httpService';
 import GreetingGraphics from '../../components/GreetingGraphics';
 import Button from '../../components/Button';
 import UserTextInput from '../../components/UserTextInput';
+import Login from '../../models/login.model';
+import envs from '../../config/environment';
+import HttpResponse from '../../models/response.model';
+import { storeToken, getAccessToken } from '../../services/tokenService';
 
 const SignInSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
@@ -30,13 +33,54 @@ const SignInScreen = () => {
       email: '',
       password: '',
     },
-    onSubmit: () => {
+    onSubmit: async () => {
       console.log('Signin in');
-      http.handleSignIn(values.email);
+      const login: Login = {
+        email: values.email,
+        password: values.password,
+      };
+      await handleSignIn(login);
       signIn(values.email, values.password);
     },
   });
+  const { accessToken, setAccessToken, setUid } = useContext(AuthContext);
+  const handleSignIn = async (
+    login: Login,
+  ): Promise<string | undefined> => {
+    const settings = {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify(login),
+    };
+    try {
+      const response = await fetch(
+        `${envs?.DEV_AUTH_SERVICE_URL}/login`,
+        settings,
+      );
+      const res: HttpResponse = await response.json();
+      console.log('DATA:', res?.data);
+      if (res.success) {
+        // Store refresh token in local storage
+        storeToken(res?.data?.token);
+        // Set uid in context for use during access token refresh
+        setUid(res?.data?.u_id);
+        // Get access token from the refresh token
+        setAccessToken(await getAccessToken(res?.data));
+      } else {
+        setAccessToken('');
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    return accessToken;
+    // const data: HttpResponse = await response.json();
 
+    // console.log(response);
+    // console.log(data);
+  };
   return (
     <View
       style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
