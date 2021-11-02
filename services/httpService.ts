@@ -18,7 +18,7 @@ export const siriusFetch = async (
   uid: number,
   endpoint: string | Request,
   settings?: requestSettings | undefined,
-): Promise<HttpResponse> => {
+): Promise<HttpResponse | void> => {
   let headers;
   let method;
   let body;
@@ -58,10 +58,11 @@ export const siriusFetch = async (
         );
       }
     }
+    return data;
   } catch (e) {
     console.log(e);
   }
-  return data;
+  return Promise.resolve();
 };
 
 export const handleSignUp = async (user: User) => {
@@ -79,6 +80,9 @@ export const handleSignUp = async (user: User) => {
       settings,
     );
     const data: HttpResponse = await response.json();
+    if (!data.success) {
+      throw data.errors;
+    }
     return data;
   } catch (e) {
     console.log([e, 'Error creating the user.']);

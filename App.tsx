@@ -16,10 +16,8 @@ import { MainRoutes } from './routing/StackRoutes';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [accessToken, setAccessToken] = useState('');
+  const [accessToken, setAccessToken] = useState('babababa');
   const [uid, setUid] = useState('');
-
-  // const [isLoading, setIsLoading] = useState(true);
 
   return (
     <AuthContext.Provider

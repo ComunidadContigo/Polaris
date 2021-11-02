@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved */
 
 // Note: must update this file to have the changes to the .env seen by the app.
+
 import {
   DEV_AUTH_SERVICE_URL,
   DEV_BUDDY_SERVICE_URL,

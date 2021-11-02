@@ -38,7 +38,11 @@ const GreetingScreen = (props: Props) => {
       </View>
       <View style={styles.buttonWrapper}>
         <Button label="LogIn" onPress={navigateToLogIn} />
-        <Button label="SignUp" onPress={navigateToSignUp} />
+        <Button
+          label="SignUp"
+          onPress={navigateToSignUp}
+          customStyle="borderedButton"
+        />
       </View>
       <StatusBar />
     </View>
