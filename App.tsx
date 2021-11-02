@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import * as Location from 'expo-location';
 import { AuthContext } from './components/context';
 
 // Screens
@@ -13,6 +12,7 @@ import HomeScreen from './screens/HomeScreen/HomeScreen';
 
 // Routes
 import { MainRoutes } from './routing/StackRoutes';
+import { getlocation } from './services/locationService';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,24 +21,7 @@ export default function App() {
   const [uid, setUid] = useState('');
 
   // const [isLoading, setIsLoading] = useState(true);
-  const getlocation = async () => {
-    const { status } = await Location.requestBackgroundPermissionsAsync();
-
-    if (status !== 'granted') {
-      console.log('Permission not granted');
-    }
-    console.log(status);
-    const isLocationServicesEnabled =
-      await Location.hasServicesEnabledAsync();
-    console.log(isLocationServicesEnabled);
-    console.log('Getting Location');
-    const userlocation = await Location.getLastKnownPositionAsync({});
-
-    console.log('Showing Location');
-    console.log(userlocation);
-  };
   getlocation();
-
   return (
     <AuthContext.Provider
       value={{ accessToken, setAccessToken, uid, setUid }}
