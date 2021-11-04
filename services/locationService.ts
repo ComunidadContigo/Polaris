@@ -1,19 +1,25 @@
-import * as Location from 'expo-location';
+import * as expoLocation from 'expo-location';
+import { Location } from '../models/location';
 
 export const getlocation = async () => {
-  const { status } = await Location.requestBackgroundPermissionsAsync();
-
+  const { status } =
+    await expoLocation.requestForegroundPermissionsAsync();
+  // const prov = expoLocation.getProviderStatusAsync();
+  // console.log(prov);
   if (status !== 'granted') {
     console.log('Permission not granted');
   }
-  console.log(status);
+  // console.log(status);
   const isLocationServicesEnabled =
-    await Location.hasServicesEnabledAsync();
+    await expoLocation.hasServicesEnabledAsync();
+  // console.log(isLocationServicesEnabled);
 
-  console.log(isLocationServicesEnabled);
-  while (true) {
-    console.log('Getting Location');
-    const userlocation = await Location.getCurrentPositionAsync({});
-    console.log(userlocation);
-  }
+  console.log('Getting Location');
+  const userlocation = await expoLocation.getCurrentPositionAsync({});
+  console.log(userlocation.coords.latitude);
+  console.log(userlocation.coords.longitude);
+  const lat = userlocation.coords.latitude;
+  const lon = userlocation.coords.longitude;
+  const location: Location = { latitude: lat, longitude: lon };
+  return location;
 };

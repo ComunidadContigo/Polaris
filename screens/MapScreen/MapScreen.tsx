@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Dimensions, StyleSheet, Text } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import SearchBar from '../../components/SearchBar';
-
-interface Location {
-  latitude: number;
-  longitude: number;
-}
+import { getlocation } from '../../services/locationService';
+import { Location } from '../../models/location';
 
 const normalZoomLevel = {
   latitudeDelta: 0.0922,
@@ -28,9 +25,16 @@ const MapScreen = () => {
       ...currentLocation,
     },
   );
+  // console.log('ML', meetingLocation);
+  // console.log('DL', destinationLocation);
 
-  console.log('ML', meetingLocation);
-  console.log('DL', destinationLocation);
+  useEffect(() => {
+    LocationHandler();
+  });
+  const LocationHandler = async () => {
+    const location = await getlocation();
+    setCurrentLocation(location);
+  };
 
   return (
     <View style={styles.container}>

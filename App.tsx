@@ -12,7 +12,6 @@ import HomeScreen from './screens/HomeScreen/HomeScreen';
 
 // Routes
 import { MainRoutes } from './routing/StackRoutes';
-import { getlocation } from './services/locationService';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +20,6 @@ export default function App() {
   const [uid, setUid] = useState('');
 
   // const [isLoading, setIsLoading] = useState(true);
-  getlocation();
   return (
     <AuthContext.Provider
       value={{ accessToken, setAccessToken, uid, setUid }}
