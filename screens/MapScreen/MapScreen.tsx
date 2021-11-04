@@ -35,7 +35,6 @@ const MapScreen = () => {
     const location = await getlocation();
     setCurrentLocation(location);
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.mapView}>
@@ -73,6 +72,8 @@ const MapScreen = () => {
         destinationLocation={destinationLocation}
         setDestinationLocation={setDestinationLocation}
       />
+      <Text>Latitude : {currentLocation.latitude}</Text>
+      <Text>Longitude : {currentLocation.longitude}</Text>
     </View>
   );
 };
