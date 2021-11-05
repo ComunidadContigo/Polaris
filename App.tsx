@@ -9,8 +9,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { AuthContext } from './components/context';
 
 // Screens
-import GreetingScreen from './screens/GreetingScreen/GreetingScreen';
+
 import SignInScreen from './screens/SignInScreen/SignInScreen';
+import GreetingScreen from './screens/GreetingScreen/GreetingScreen';
+
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import EditProfileScreen from './screens/ProfileScreens/EditProfileScreen';
 import HomeScreen from './screens/HomeScreen/HomeScreen';
