@@ -3,12 +3,7 @@ import envs from '../config/environment';
 import HttpResponse from '../models/response.model';
 import User from '../models/user.model';
 import { getAccessToken, getToken } from './tokenService';
-
-interface requestSettings {
-  headers: {};
-  method: string;
-  body: string;
-}
+import { RequestSettings } from '../models/request.model';
 
 // let accessToken: string | undefined;
 
@@ -17,7 +12,7 @@ export const siriusFetch = async (
   setAccessToken: any,
   uid: number,
   endpoint: string | Request,
-  settings?: requestSettings | undefined,
+  settings?: RequestSettings | undefined,
 ): Promise<HttpResponse | void> => {
   let headers;
   let method;
@@ -39,6 +34,15 @@ export const siriusFetch = async (
   }
   let data: HttpResponse;
   try {
+    console.log(
+      'SENDING: ',
+      endpoint,
+      {
+        method,
+        headers,
+        body,
+      },
+    );
     const res = await fetch(endpoint, {
       method,
       headers,
@@ -63,7 +67,7 @@ export const siriusFetch = async (
     console.log(e);
   }
   return Promise.resolve();
-};
+}; ;
 
 export const handleSignUp = async (user: User) => {
   const settings = {

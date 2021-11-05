@@ -28,9 +28,6 @@ const MapScreen = () => {
     },
   );
 
-  console.log('ML', meetingLocation);
-  console.log('DL', destinationLocation);
-
   return (
     <View style={styles.container}>
       <View style={styles.mapView}>

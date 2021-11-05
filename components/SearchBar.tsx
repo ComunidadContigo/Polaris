@@ -1,10 +1,17 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, {
+  Dispatch,
+  SetStateAction,
+  useState,
+  useContext,
+} from 'react';
 import { View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PlacesSearchBar from './PlacesSearchBar';
 import SelectedLocation from './SelectedLocation';
 import Button from './Button';
 import { Location } from '../models/Location';
+import { createRequest } from '../services/Buddy/index';
+import { AuthContext } from './context';
 
 interface Props {
   meetingLocation: Location;
@@ -21,6 +28,7 @@ const SearchBar = (props: Props) => {
     setDestinationLocation,
   } = props;
 
+  const { accessToken, setAccessToken, uid } = useContext(AuthContext);
   const [expandedSearchBar, setExpandedSearchBar] = useState(false);
 
   return (
@@ -51,7 +59,15 @@ const SearchBar = (props: Props) => {
           <Button
             label="Find me a buddy"
             onPress={
-              () => console.log(meetingLocation, destinationLocation)
+              () =>
+                // eslint-disable-next-line implicit-arrow-linebreak
+                createRequest(
+                  accessToken,
+                  setAccessToken,
+                  uid,
+                  meetingLocation,
+                  destinationLocation,
+                )
               // eslint-disable-next-line react/jsx-curly-newline
             }
           />
