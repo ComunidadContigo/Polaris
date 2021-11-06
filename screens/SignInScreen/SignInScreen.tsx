@@ -59,16 +59,20 @@ const SignInScreen = () => {
         settings,
       );
       const res: HttpResponse = await response.json();
-      console.log('DATA:', res?.data);
       if (res.success) {
         // Store refresh token in local storage
         storeToken(res?.data?.token);
         // Set uid in context for use during access token refresh
         setUid(res?.data?.u_id);
         // Get access token from the refresh token
-        setAccessToken(await getAccessToken(res?.data));
+        try {
+          setAccessToken(await getAccessToken(res?.data));
+        } catch (e) {
+          console.log([e, 'Error setting access token.']);
+        }
       } else {
         setAccessToken('');
+        console.log(res.errors);
       }
     } catch (e) {
       console.log(e);

@@ -7,22 +7,23 @@ import text from '../styles/text';
 interface Props {
   label: string;
   onPress: () => void;
+  customStyle?: keyof typeof styles;
 }
 
 const Button = (props: Props) => {
-  const { label, onPress } = props;
+  const { label, onPress, customStyle } = props;
   return (
     <TouchableOpacity
       style={
-        label === 'SignUp'
-          ? [styles.borderedButton]
+        customStyle
+          ? styles[customStyle]
           : [styles.button, colors.mainColors.background]
       }
       onPress={onPress}
     >
       <Text
         style={
-          label === 'SignUp'
+          customStyle === 'borderedButton'
             ? [text.normalTextSize, colors.lightBackground.text]
             : [text.normalTextSize, colors.mainColors.text]
         }
@@ -47,6 +48,12 @@ const styles = StyleSheet.create({
     width: '100%',
     borderWidth: 1,
     borderColor: '#000',
+  },
+  lightButton: {
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '100%',
   },
 });
 

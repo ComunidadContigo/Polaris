@@ -5,6 +5,7 @@ import { Avatar, Title, Caption } from 'react-native-paper';
 import { AuthContext } from '../../components/context';
 import Button from '../../components/Button';
 // import { getUserById } from '../../services/httpService';
+import HttpResponse from '../../models/response.model';
 import { siriusFetch } from '../../services/httpService';
 import envs from '../../config/environment';
 
@@ -14,9 +15,14 @@ const ProfileScreen = () => {
   // };
 
   const { accessToken, setAccessToken, uid } = useContext(AuthContext);
-  const getUserById = async (id: number): Promise<{} | undefined> => {
+  const getUserById = async (id: number): Promise<void | HttpResponse> => {
     console.log(accessToken);
-    const res = siriusFetch(accessToken, setAccessToken, uid, `${envs?.DEV_USER_SERVICE_URL}/${id}`);
+    const res = siriusFetch(
+      accessToken,
+      setAccessToken,
+      uid,
+      `${envs?.DEV_USER_SERVICE_URL}/${id}`,
+    );
     return res;
   };
 

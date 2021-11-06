@@ -21,8 +21,6 @@ export default function App() {
   const [accessToken, setAccessToken] = useState('');
   const [uid, setUid] = useState('');
 
-  // const [isLoading, setIsLoading] = useState(true);
-
   return (
     <AuthContext.Provider
       value={{ accessToken, setAccessToken, uid, setUid }}
