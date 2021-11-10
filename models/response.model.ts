@@ -1,6 +1,4 @@
-
 export default interface HttpResponse {
-
   success: boolean;
   returnCode: number;
   messages: string[];
@@ -9,5 +7,4 @@ export default interface HttpResponse {
 
   data?: any;
   // eslint-disable-next-line semi
-
 }

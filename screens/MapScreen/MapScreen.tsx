@@ -2,11 +2,7 @@ import React, { useState } from 'react';
 import { View, Dimensions, StyleSheet, Text } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import SearchBar from '../../components/SearchBar';
-
-interface Location {
-  latitude: number;
-  longitude: number;
-}
+import { Location } from '../../models/Location';
 
 const normalZoomLevel = {
   latitudeDelta: 0.0922,
@@ -14,9 +10,12 @@ const normalZoomLevel = {
 };
 
 const MapScreen = () => {
-  const [currentLocation, setCurrentLocation] = useState<Location>({
-    latitude: 18.21194,
-    longitude: -67.14225,
+  const [currentLocation] = useState<Location>({
+    coordinates: {
+      latitude: 18.21194,
+      longitude: -67.14225,
+    },
+    description: 'Current location',
   });
 
   const [meetingLocation, setMeetingLocation] = useState<Location>({
@@ -29,9 +28,6 @@ const MapScreen = () => {
     },
   );
 
-  console.log('ML', meetingLocation);
-  console.log('DL', destinationLocation);
-
   return (
     <View style={styles.container}>
       <View style={styles.mapView}>
@@ -39,12 +35,12 @@ const MapScreen = () => {
           provider="google"
           style={styles.map}
           initialRegion={{
-            ...meetingLocation,
+            ...meetingLocation.coordinates,
             ...normalZoomLevel,
           }}
         >
           <Marker
-            coordinate={meetingLocation}
+            coordinate={meetingLocation.coordinates}
             pinColor="green"
             draggable
             onDragStart={(e) => {
@@ -52,8 +48,11 @@ const MapScreen = () => {
             }}
             onDragEnd={(e) => {
               setMeetingLocation({
-                latitude: e.nativeEvent.coordinate.latitude,
-                longitude: e.nativeEvent.coordinate.longitude,
+                coordinates: {
+                  latitude: e.nativeEvent.coordinate.latitude,
+                  longitude: e.nativeEvent.coordinate.longitude,
+                },
+                description: 'Dragged Pin',
               });
             }}
           >

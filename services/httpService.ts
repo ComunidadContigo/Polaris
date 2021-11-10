@@ -3,12 +3,7 @@ import envs from '../config/environment';
 import HttpResponse from '../models/response.model';
 import User from '../models/user.model';
 import { getAccessToken, getToken } from './tokenService';
-
-interface requestSettings {
-  headers: {};
-  method: string;
-  body: string;
-}
+import { RequestSettings } from '../models/request.model';
 
 // let accessToken: string | undefined;
 
@@ -17,8 +12,8 @@ export const siriusFetch = async (
   setAccessToken: any,
   uid: number,
   endpoint: string | Request,
-  settings?: requestSettings | undefined,
-): Promise<HttpResponse> => {
+  settings?: RequestSettings | undefined,
+): Promise<HttpResponse | void> => {
   let headers;
   let method;
   let body;
@@ -39,6 +34,15 @@ export const siriusFetch = async (
   }
   let data: HttpResponse;
   try {
+    console.log(
+      'SENDING: ',
+      endpoint,
+      {
+        method,
+        headers,
+        body,
+      },
+    );
     const res = await fetch(endpoint, {
       method,
       headers,
@@ -58,11 +62,12 @@ export const siriusFetch = async (
         );
       }
     }
+    return data;
   } catch (e) {
     console.log(e);
   }
-  return data;
-};
+  return Promise.resolve();
+}; ;
 
 export const handleSignUp = async (user: User) => {
   const settings = {
@@ -73,13 +78,20 @@ export const handleSignUp = async (user: User) => {
     method: 'POST',
     body: JSON.stringify(user),
   };
-
-  const response = await fetch(
-    `http://${envs?.DEV_USER_SERVICE_URL}/user`,
-    settings,
-  );
-  const data: HttpResponse = await response.json();
-  return data;
+  try {
+    const response = await fetch(
+      `${envs?.DEV_USER_SERVICE_URL}`,
+      settings,
+    );
+    const data: HttpResponse = await response.json();
+    if (!data.success) {
+      throw data.errors;
+    }
+    return data;
+  } catch (e) {
+    console.log([e, 'Error creating the user.']);
+  }
+  return null;
 };
 
 // export const getUserById = async (id: number): Promise<{} | undefined> =>
