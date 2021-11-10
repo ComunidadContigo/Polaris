@@ -4,6 +4,9 @@ import MapView, { Callout, Marker } from 'react-native-maps';
 import SearchBar from '../../components/SearchBar';
 import { getlocation } from '../../services/locationService';
 import { Location } from '../../models/location';
+import { siriusFetch } from '../../services/httpService';
+import envs from '../../config/environment';
+import { AuthContext } from '../../components/context';
 
 const normalZoomLevel = {
   latitudeDelta: 0.0922,
@@ -32,8 +35,32 @@ const MapScreen = () => {
     LocationHandler();
   });
   const LocationHandler = async () => {
+    // eslint-disable-next-line camelcase
     const location = await getlocation();
-    setCurrentLocation(location);
+    console.log('Location');
+    console.log(location);
+    console.log('Curr');
+    console.log(currentLocation);
+    const x = React.useContext(AuthContext);
+    console.log(x);
+    if (
+      currentLocation.latitude !== location.latitude &&
+      currentLocation.longitude !== location.longitude
+    ) {
+      const endpoint = `${envs?.DEV_USER_SERVICE_URL}/${4}`;
+      // eslint-disable-next-line camelcase
+      const settings = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'PUT',
+        body: JSON.stringify({ user_last_location: location }),
+        // `{"user_last_location" ${JSON.stringify(location)} }`,
+      };
+      AuthContext.Consumer.siriusFetch(settings);
+      console.log(settings);
+      setCurrentLocation(location);
+    }
   };
   return (
     <View style={styles.container}>
@@ -47,7 +74,7 @@ const MapScreen = () => {
           }}
         >
           <Marker
-            coordinate={meetingLocation}
+            coordinate={currentLocation}
             pinColor="green"
             draggable
             onDragStart={(e) => {
