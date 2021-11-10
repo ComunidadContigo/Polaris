@@ -1,5 +1,3 @@
-import { Platform } from 'react-native';
-import Constants from 'expo-constants';
 import React, { useEffect, useRef, useState } from 'react';
 
 import * as Notifications from 'expo-notifications';
@@ -7,18 +5,18 @@ import { Subscription } from 'expo-modules-core';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthContext } from './components/context';
+import { registerForPushNotificationsAsync } from './services/localNotificationService';
 
 // Screens
-
-import SignInScreen from './screens/SignInScreen/SignInScreen';
 import GreetingScreen from './screens/GreetingScreen/GreetingScreen';
-
+import SignInScreen from './screens/SignInScreen/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import EditProfileScreen from './screens/ProfileScreens/EditProfileScreen';
 import HomeScreen from './screens/HomeScreen/HomeScreen';
 
 // Routes
 import { MainRoutes } from './routing/StackRoutes';
+import RequestModal from './components/RequestModal';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,27 +32,33 @@ export default function App() {
   const [accessToken, setAccessToken] = useState('');
   const [uid, setUid] = useState('');
 
+  const [showRequestModal, setShowRequestModal] = useState(false);
+
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] =
     useState<Notifications.Notification>();
   const notificationListener = useRef<Subscription>();
   const responseListener = useRef<Subscription>();
 
+  const handleShowModal = () => {
+    setShowRequestModal(!showRequestModal);
+  };
+
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
-
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((n) => setNotification(n));
 
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current =
       Notifications.addNotificationReceivedListener((n) => {
+        console.log('got notif');
         setNotification(n);
       });
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log('received response to notif');
         console.log(response);
+        setShowRequestModal(true);
       });
 
     return () => {
@@ -73,6 +77,13 @@ export default function App() {
     <AuthContext.Provider
       value={{ accessToken, setAccessToken, uid, setUid }}
     >
+      <RequestModal
+        visible={showRequestModal}
+        handleShowModal={handleShowModal}
+        animationType="slide"
+        transparent
+        notification={notification}
+      />
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {!accessToken ? (
@@ -107,33 +118,3 @@ export default function App() {
     </AuthContext.Provider>
   );
 }
-
-const registerForPushNotificationsAsync = async (): Promise<string> => {
-  let token: string;
-  if (Constants.isDevice) {
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
-      return '';
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-  } else {
-    alert('Must use physical device for Push Notifications');
-  }
-
-  if (Platform.OS === 'android') {
-    Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
-  }
-  return token!;
-};

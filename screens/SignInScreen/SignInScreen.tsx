@@ -34,7 +34,6 @@ const SignInScreen = () => {
       password: '',
     },
     onSubmit: async () => {
-      console.log('Signin in');
       const login: Login = {
         email: values.email,
         password: values.password,
@@ -59,7 +58,6 @@ const SignInScreen = () => {
         settings,
       );
       const res: HttpResponse = await response.json();
-      console.log('DATA:', res?.data);
       if (res.success) {
         // Store refresh token in local storage
         storeToken(res?.data?.token);
