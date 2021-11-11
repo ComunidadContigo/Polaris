@@ -1,5 +1,5 @@
 import * as expoLocation from 'expo-location';
-import { Location } from '../models/location';
+import { Location } from '../models/Location';
 
 export const getlocation = async () => {
   const { status } =
@@ -20,6 +20,9 @@ export const getlocation = async () => {
   console.log(userlocation.coords.longitude);
   const lat = userlocation.coords.latitude;
   const lon = userlocation.coords.longitude;
-  const location: Location = { latitude: lat, longitude: lon };
+  const location: Location = {
+    coordinates: { latitude: lat, longitude: lon },
+    description: 'Latest Location',
+  };
   return location;
 };
