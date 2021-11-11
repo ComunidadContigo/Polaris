@@ -1,15 +1,6 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useRef,
-  Ref,
-  useEffect,
-} from 'react';
+import React, { Dispatch, SetStateAction, useRef, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import {
-  GooglePlacesAutocomplete,
-  GooglePlacesAutocompleteRef,
-} from 'react-native-google-places-autocomplete';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import envs from '../config/environment';
 import { Location } from '../models/Location';
 
@@ -23,7 +14,7 @@ interface Props {
 
 const PlacesSearchBar = (props: Props) => {
   const { setCurrentPin, currentPin, type, setExpandedSearchBar } = props;
-  const ref: Ref<GooglePlacesAutocompleteRef> = useRef();
+  const ref: any = useRef();
 
   useEffect(() => {
     ref.current?.clear();
