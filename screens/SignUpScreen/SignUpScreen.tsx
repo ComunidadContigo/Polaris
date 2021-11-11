@@ -93,7 +93,6 @@ const SignUpScreen: FC<Props> = (props: Props) => {
         values.birthday + '/' + values.birthmonth + '/' + values.birthyear,
       ),
     };
-    console.log(user);
     handleSignUp(user);
     navigation.navigate(MainRoutes.LogIn);
   };

@@ -3,10 +3,11 @@ import { View, Dimensions, StyleSheet, Text } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import SearchBar from '../../components/SearchBar';
 import { getlocation } from '../../services/locationService';
-import { Location } from '../../models/location';
+// import { Location } from '../../models/location';
 import { siriusFetch } from '../../services/httpService';
 import envs from '../../config/environment';
 import { AuthContext } from '../../components/context';
+import { Location } from '../../models/Location';
 
 const normalZoomLevel = {
   latitudeDelta: 0.0922,
@@ -16,8 +17,11 @@ const normalZoomLevel = {
 const MapScreen = () => {
   const { accessToken, setAccessToken, uid } = useContext(AuthContext);
   const [currentLocation, setCurrentLocation] = useState<Location>({
-    latitude: 18.21194,
-    longitude: -67.14225,
+    coordinates: {
+      latitude: 18.21194,
+      longitude: -67.14225,
+    },
+    description: 'Current location',
   });
 
   const [meetingLocation, setMeetingLocation] = useState<Location>({
@@ -43,8 +47,10 @@ const MapScreen = () => {
     console.log('Curr');
     console.log(currentLocation);
     if (
-      currentLocation.latitude !== location.latitude &&
-      currentLocation.longitude !== location.longitude
+      currentLocation.coordinates.latitude !==
+        location.coordinates.latitude &&
+      currentLocation.coordinates.longitude !==
+        location.coordinates.longitude
     ) {
       const endpoint = `${envs?.DEV_USER_SERVICE_URL}/${uid}`;
       // eslint-disable-next-line camelcase
@@ -54,6 +60,8 @@ const MapScreen = () => {
         },
         method: 'PUT',
         // body: JSON.stringify({ user_last_location: location }),
+        // eslint-disable-next-line max-len
+        // Currently Sending Coordinates And description but Varchar 100 only fits small description use location.coordinates if we decided not to store description.
         body: JSON.stringify({
           user_last_location: JSON.stringify(location),
         }),
@@ -84,12 +92,13 @@ const MapScreen = () => {
           provider="google"
           style={styles.map}
           initialRegion={{
-            ...meetingLocation,
+            ...meetingLocation.coordinates,
             ...normalZoomLevel,
           }}
         >
           <Marker
-            coordinate={currentLocation}
+            coordinate={currentLocation.coordinates}
+            // coordinate={meetingLocation.coordinates}
             pinColor="green"
             draggable
             onDragStart={(e) => {
@@ -97,8 +106,11 @@ const MapScreen = () => {
             }}
             onDragEnd={(e) => {
               setMeetingLocation({
-                latitude: e.nativeEvent.coordinate.latitude,
-                longitude: e.nativeEvent.coordinate.longitude,
+                coordinates: {
+                  latitude: e.nativeEvent.coordinate.latitude,
+                  longitude: e.nativeEvent.coordinate.longitude,
+                },
+                description: 'Dragged Pin',
               });
             }}
           >
@@ -114,8 +126,8 @@ const MapScreen = () => {
         destinationLocation={destinationLocation}
         setDestinationLocation={setDestinationLocation}
       />
-      <Text>Latitude : {currentLocation.latitude}</Text>
-      <Text>Longitude : {currentLocation.longitude}</Text>
+      <Text>Latitude :{currentLocation.coordinates.latitude}</Text>
+      <Text>Longitude :{currentLocation.coordinates.longitude}</Text>
     </View>
   );
 };

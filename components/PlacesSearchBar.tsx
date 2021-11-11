@@ -1,23 +1,29 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useRef, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import envs from '../config/environment';
+import { Location } from '../models/Location';
 
 interface Props {
   currentPin: { latitude: number; longitude: number };
-  setCurrentPin: Dispatch<
-    SetStateAction<{
-      latitude: number;
-      longitude: number;
-    }>
-  >;
+  setCurrentPin: Dispatch<SetStateAction<Location>>;
   type: string;
+  // eslint-disable-next-line no-unused-vars
+  setExpandedSearchBar: (value: boolean) => void;
 }
 
 const PlacesSearchBar = (props: Props) => {
-  const { setCurrentPin, currentPin, type } = props;
+  const { setCurrentPin, currentPin, type, setExpandedSearchBar } = props;
+  const ref: any = useRef();
+
+  useEffect(() => {
+    ref.current?.clear();
+  });
+
   return (
     <GooglePlacesAutocomplete
+      // onClick={setExpandedSearchBar(false)}
+      ref={ref}
       placeholder="Search"
       fetchDetails
       GooglePlacesSearchQuery={{
@@ -26,10 +32,15 @@ const PlacesSearchBar = (props: Props) => {
       onPress={(data, details = null) => {
         // 'details' is provided when fetchDetails = true
         console.log(data, details);
+        console.log('DESCRIPTION: ', data?.description);
         setCurrentPin({
-          latitude: details!.geometry.location.lat,
-          longitude: details!.geometry.location.lng,
+          coordinates: {
+            latitude: details!.geometry.location.lat,
+            longitude: details!.geometry.location.lng,
+          },
+          description: data?.description,
         });
+        setExpandedSearchBar(true);
       }}
       query={{
         key: envs?.DEV_GOOGLE_PLACES_API_KEY,
@@ -38,6 +49,8 @@ const PlacesSearchBar = (props: Props) => {
         radius: 30000,
         location: `${currentPin.latitude}, ${currentPin.longitude}`,
       }}
+      debounce={500}
+      enablePoweredByContainer={false}
       styles={type === 'meeting' ? meetingStyles : destinationStyles}
     />
   );
@@ -48,8 +61,9 @@ const meetingStyles = StyleSheet.create({
     zIndex: 100,
     width: '90%',
     flex: 0,
-    top: 50,
-    position: 'absolute',
+    // top: '15%',
+    paddingLeft: '2.5%',
+    position: 'relative',
   },
   listView: { backgroundColor: 'white' },
 });
@@ -59,8 +73,8 @@ const destinationStyles = StyleSheet.create({
     zIndex: 100,
     width: '90%',
     flex: 0,
-    top: 120,
-    position: 'absolute',
+    top: 20,
+    // position: 'relative',
   },
   listView: { backgroundColor: 'white' },
 });
