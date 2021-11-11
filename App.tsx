@@ -18,7 +18,7 @@ import { MainRoutes } from './routing/StackRoutes';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [accessToken, setAccessToken] = useState('babababa');
+  const [accessToken, setAccessToken] = useState('');
   const [uid, setUid] = useState('');
 
   return (
