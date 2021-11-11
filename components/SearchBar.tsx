@@ -12,6 +12,7 @@ import Button from './Button';
 import { Location } from '../models/Location';
 import { createRequest } from '../services/Buddy/index';
 import { AuthContext } from './context';
+import { RequestDetails } from './RequestDetails';
 
 interface Props {
   meetingLocation: Location;
@@ -30,22 +31,31 @@ const SearchBar = (props: Props) => {
 
   const { accessToken, setAccessToken, uid } = useContext(AuthContext);
   const [expandedSearchBar, setExpandedSearchBar] = useState(false);
+  const [requestStatus, setRequestStatus] = useState('');
 
   return (
     <View style={styles.container}>
-      <View style={styles.search}>
-        <View style={styles.icon}>
-          <Icon name="search" color="grey" size={16} />
+      {requestStatus ? (
+        <RequestDetails />
+      ) : (
+        <View style={styles.search}>
+          <View style={styles.icon}>
+            <Icon name="search" color="grey" size={16} />
+          </View>
+          <PlacesSearchBar
+            currentPin={meetingLocation.coordinates}
+            setCurrentPin={
+              expandedSearchBar
+                ? setMeetingLocation
+                : setDestinationLocation
+            }
+            type="meeting"
+            setExpandedSearchBar={setExpandedSearchBar}
+          />
         </View>
-        <PlacesSearchBar
-          currentPin={meetingLocation.coordinates}
-          setCurrentPin={
-            expandedSearchBar ? setMeetingLocation : setDestinationLocation
-          }
-          type="meeting"
-          setExpandedSearchBar={setExpandedSearchBar}
-        />
-      </View>
+      )}
+
+      {/* Show Expanded Search Bar (choose destination and meeting points) */}
       {expandedSearchBar ? (
         <>
           <SelectedLocation
@@ -58,18 +68,17 @@ const SearchBar = (props: Props) => {
           />
           <Button
             label="Find me a buddy"
-            onPress={
-              () =>
-                // eslint-disable-next-line implicit-arrow-linebreak
-                createRequest(
-                  accessToken,
-                  setAccessToken,
-                  uid,
-                  meetingLocation,
-                  destinationLocation,
-                )
-              // eslint-disable-next-line react/jsx-curly-newline
-            }
+            onPress={() => {
+              createRequest(
+                accessToken,
+                setAccessToken,
+                uid,
+                meetingLocation,
+                destinationLocation,
+              );
+              setRequestStatus('ONGOING');
+              setExpandedSearchBar(false);
+            }}
           />
         </>
       ) : (
@@ -85,15 +94,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '90%',
-    // height: 200,
-    // zIndex: 10,
+    minHeight: 44,
     position: 'absolute',
     top: 30,
     backgroundColor: '#fff',
     borderRadius: 8,
   },
   icon: {
-    // width: '10%',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
