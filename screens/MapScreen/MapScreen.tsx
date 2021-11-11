@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Dimensions, StyleSheet, Text } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import SearchBar from '../../components/SearchBar';
@@ -14,6 +14,7 @@ const normalZoomLevel = {
 };
 
 const MapScreen = () => {
+  const { accessToken, setAccessToken, uid } = useContext(AuthContext);
   const [currentLocation, setCurrentLocation] = useState<Location>({
     latitude: 18.21194,
     longitude: -67.14225,
@@ -41,25 +42,39 @@ const MapScreen = () => {
     console.log(location);
     console.log('Curr');
     console.log(currentLocation);
-    const x = React.useContext(AuthContext);
-    console.log(x);
     if (
       currentLocation.latitude !== location.latitude &&
       currentLocation.longitude !== location.longitude
     ) {
-      const endpoint = `${envs?.DEV_USER_SERVICE_URL}/${4}`;
+      const endpoint = `${envs?.DEV_USER_SERVICE_URL}/${uid}`;
       // eslint-disable-next-line camelcase
       const settings = {
         headers: {
           'Content-Type': 'application/json',
         },
         method: 'PUT',
-        body: JSON.stringify({ user_last_location: location }),
+        // body: JSON.stringify({ user_last_location: location }),
+        body: JSON.stringify({
+          user_last_location: JSON.stringify(location),
+        }),
         // `{"user_last_location" ${JSON.stringify(location)} }`,
       };
-      AuthContext.Consumer.siriusFetch(settings);
+      console.log('logging Setting:');
       console.log(settings);
-      setCurrentLocation(location);
+      console.log(settings.body);
+      try {
+        const res = await siriusFetch(
+          accessToken,
+          setAccessToken,
+          uid,
+          endpoint,
+          settings,
+        );
+        console.log(res);
+        setCurrentLocation(location);
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
   return (
