@@ -18,7 +18,7 @@ interface Props {
 
 const BirthTextInput = (props: Props) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const { icon, errors, touched, setFieldValue, ...otherProps } = props;
+  const { icon, errors, touched, setFieldValue } = props;
   const hasErrors = errors.filter((err) => err !== undefined);
   const validationColor = !touched
     ? mainPurple
