@@ -8,6 +8,7 @@ import { siriusFetch } from '../../services/httpService';
 import envs from '../../config/environment';
 import { AuthContext } from '../../components/context';
 import { Location } from '../../models/Location';
+import { combineCoordinates } from '../../services/Buddy/common/functions';
 
 const normalZoomLevel = {
   latitudeDelta: 0.0922,
@@ -63,7 +64,7 @@ const MapScreen = () => {
         // eslint-disable-next-line max-len
         // Currently Sending Coordinates And description but Varchar 100 only fits small description use location.coordinates if we decided not to store description.
         body: JSON.stringify({
-          user_last_location: JSON.stringify(location),
+          user_last_location: combineCoordinates(location),
         }),
         // `{"user_last_location" ${JSON.stringify(location)} }`,
       };
