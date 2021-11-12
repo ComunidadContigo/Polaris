@@ -4,7 +4,7 @@ export default interface User {
   email: string;
   password: string;
   phone_number: string;
-  birth_date: Date;
+  birth_date: string;
   first_name: string;
   gender: string;
   last_name: string;

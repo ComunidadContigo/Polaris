@@ -1,17 +1,19 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useFormik } from 'formik';
+import { Picker } from '@react-native-picker/picker';
+import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import * as Yup from 'yup';
-import SelectDropdown from 'react-native-select-dropdown';
+// import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import UserTextInput from '../../components/UserTextInput';
 import BirthTextInput from '../../components/BirthTextInput';
 import Button from '../../components/Button';
 import GreetingDesign from '../../components/GreetingGraphics';
 import {
   phoneRegExp,
-  birthDayExp,
-  birthMonthExp,
-  birthYearExp,
+  // birthDayExp,
+  // birthMonthExp,
+  // birthYearExp,
 } from '../../util/constants';
 import { mainPurple } from '../../styles/colors';
 import { handleSignUp } from '../../services/httpService';
@@ -37,9 +39,7 @@ const SignUpSchema = Yup.object().shape({
     .min(2, 'Too Short!')
     .max(10, 'Too Long!')
     .required('Required'),
-  birthday: Yup.string().matches(birthDayExp).required('Required'),
-  birthmonth: Yup.string().matches(birthMonthExp).required('Required'),
-  birthyear: Yup.string().matches(birthYearExp).required('Required'),
+  birthdate: Yup.string().required('Required'),
 });
 
 interface Props {
@@ -47,11 +47,13 @@ interface Props {
 }
 
 const SignUpScreen: FC<Props> = (props: Props) => {
+  const [selectedGender, setSelectedGender] = useState('Male');
   const { navigation } = props;
   const {
     handleChange,
     handleSubmit,
     handleBlur,
+    setFieldValue,
     values,
     errors,
     touched,
@@ -64,22 +66,13 @@ const SignUpScreen: FC<Props> = (props: Props) => {
       phone: '',
       password: '',
       gender: '',
-      birthday: '',
-      birthmonth: '',
-      birthyear: '',
+      birthdate: '',
     },
     onSubmit: () => {
       signupHandler();
     },
   });
 
-  const genders = [
-    'Male',
-    'Female',
-    'Non-Binary',
-    'Other',
-    'Prefer not to Answer',
-  ];
   const signupHandler = () => {
     const user: User = {
       first_name: values.name,
@@ -88,12 +81,10 @@ const SignUpScreen: FC<Props> = (props: Props) => {
       phone_number: values.phone,
       gender: values.gender,
       last_name: values.lastName,
-      birth_date: new Date(
-        // eslint-disable-next-line prefer-template
-        values.birthday + '/' + values.birthmonth + '/' + values.birthyear,
-      ),
+      birth_date: values.birthdate,
     };
     handleSignUp(user);
+    console.log(user);
     navigation.navigate(MainRoutes.LogIn);
   };
 
@@ -171,22 +162,45 @@ const SignUpScreen: FC<Props> = (props: Props) => {
           touched={touched.password}
         />
 
+        {/* <View>
+          <Button
+            onPress={showDatePicker}
+            label="Please input your birthdate"
+          />
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="date"
+            onConfirm={handleConfirm}
+            onCancel={hideDatePicker}
+          />
+        </View> */}
         <BirthTextInput
           handleChange={handleChange}
           icon="birthday-cake"
-          autoCapitalize="none"
-          keyboardType="numeric"
-          keyboardAppearance="dark"
-          returnKeyType="next"
-          returnKeyLabel="next"
           onBlur={handleBlur('birthdate')}
-          errors={[errors.birthday, errors.birthmonth, errors.birthyear]}
-          touched={
-            touched.birthday || touched.birthmonth || touched.birthyear
-          }
+          formValues={values}
+          setFieldValue={setFieldValue}
+          errors={[]}
+          touched={touched.birthdate}
         />
+        <View style={styles.genderWrapper}>
+          <Picker
+            style={styles.picker}
+            selectedValue={selectedGender}
+            onValueChange={(itemValue) => {
+              setSelectedGender(itemValue);
+              setFieldValue('gender', itemValue);
+            }}
+          >
+            <Picker.Item label="Male" value="male" />
+            <Picker.Item label="Female" value="female" />
+            <Picker.Item label="Non-Binary" value="non" />
+            <Picker.Item label="Other" value="other" />
+            <Picker.Item label="Prefer not to answer" value="noanswer" />
+          </Picker>
+        </View>
 
-        <SelectDropdown
+        {/* <SelectDropdown
           rowStyle={styles.birthbuttonWrapper}
           rowTextStyle={styles.dropdownText}
           dropdownStyle={styles.dropdownWrapper}
@@ -199,7 +213,7 @@ const SignUpScreen: FC<Props> = (props: Props) => {
           }}
           buttonTextAfterSelection={(selectedItem) => selectedItem}
           rowTextForSelection={(item) => item}
-        />
+        /> */}
         <Button label="Sign Up" onPress={handleSubmit} />
       </View>
     </View>
@@ -258,6 +272,19 @@ const styles = StyleSheet.create({
 
   dropdownWrapper: {
     height: 210,
+  },
+
+  genderWrapper: {
+    borderRadius: 8,
+    borderWidth: 2,
+    height: 48,
+    width: '100%',
+    borderColor: mainPurple,
+  },
+
+  picker: {
+    height: '100%',
+    width: '100%',
   },
 });
 
