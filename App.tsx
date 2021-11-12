@@ -52,6 +52,7 @@ export default function App() {
       Notifications.addNotificationReceivedListener((n) => {
         console.log('got notif');
         setNotification(n);
+        setShowRequestModal(true);
       });
 
     responseListener.current =

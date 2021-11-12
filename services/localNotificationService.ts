@@ -1,6 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import { Platform, Alert } from 'react-native';
 import Constants from 'expo-constants';
+import { ReqModel } from '../models/request.model';
 
 export const sendNotification = async (
   title: string,
@@ -15,7 +16,33 @@ export const sendNotification = async (
   const notificationRequestInput: Notifications.NotificationRequestInput =
     {
       content,
-      trigger: null,
+      trigger: {
+        date: new Date().getTime() + 5000,
+      },
+    };
+  await Notifications.scheduleNotificationAsync(notificationRequestInput);
+};
+
+export const sendRequestToFulfillNotification = async () => {
+  const request: ReqModel = {
+    request_date: '01/01/1970',
+    r_id: 1,
+    rq_id: 1,
+    stat: 'UNFULFILLED',
+    request_meeting_point: '(0,0)',
+    request_destination: '(30,30)',
+  };
+  const content: Notifications.NotificationContentInput = {
+    title: 'Found a request to fulfill',
+    body: '',
+    data: { request },
+  };
+  const notificationRequestInput: Notifications.NotificationRequestInput =
+    {
+      content,
+      trigger: {
+        date: new Date().getTime() + 5000,
+      },
     };
   await Notifications.scheduleNotificationAsync(notificationRequestInput);
 };

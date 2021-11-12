@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, StyleSheet, Text, Pressable, View } from 'react-native';
 import * as Notifications from 'expo-notifications';
+import { ReqModel } from '../models/request.model';
 
 type RequestModalProps = {
   visible: boolean;
@@ -17,32 +18,39 @@ function RequestModal({
   transparent,
   notification,
 }: RequestModalProps) {
-  return (
-    <Modal
-      visible={visible}
-      animationType={animationType}
-      transparent={transparent}
-    >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>
-            {notification?.request.content.title}
-          </Text>
-          <Text style={styles.modalText}>
-            {notification?.request.content.data}
-          </Text>
-          <Pressable
-            style={[styles.button, styles.buttonClose]}
-            onPress={() => {
-              handleShowModal();
-            }}
-          >
-            <Text style={styles.textStyle}>Hide Modal</Text>
-          </Pressable>
+  if (notification) {
+    const { title } = notification.request.content;
+    const { request } = notification.request.content.data;
+    return (
+      <Modal
+        visible={visible}
+        animationType={animationType}
+        transparent={transparent}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>{title}</Text>
+            <Text style={styles.modalText}>
+              {`${(request as ReqModel).stat}, ${
+                (request as ReqModel).r_id
+              }, ${(request as ReqModel).rq_id}, ${
+                (request as ReqModel).request_meeting_point
+              }, ${(request as ReqModel).request_destination}`}
+            </Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => {
+                handleShowModal();
+              }}
+            >
+              <Text style={styles.textStyle}>Hide Modal</Text>
+            </Pressable>
+          </View>
         </View>
-      </View>
-    </Modal>
-  );
+      </Modal>
+    );
+  }
+  return null;
 }
 
 const styles = StyleSheet.create({
