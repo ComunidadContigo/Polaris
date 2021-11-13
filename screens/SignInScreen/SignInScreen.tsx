@@ -1,5 +1,10 @@
-import React, { useContext } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useContext, useRef, useEffect } from 'react';
+import {
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { AuthContext } from '../../components/context';
@@ -7,9 +12,7 @@ import GreetingGraphics from '../../components/GreetingGraphics';
 import Button from '../../components/Button';
 import UserTextInput from '../../components/UserTextInput';
 import Login from '../../models/login.model';
-import envs from '../../config/environment';
-import HttpResponse from '../../models/response.model';
-import { storeToken, getAccessToken } from '../../services/tokenService';
+import { handleSignIn } from '../../services/httpService';
 
 const SignInSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
@@ -20,6 +23,7 @@ const SignInSchema = Yup.object().shape({
 });
 const SignInScreen = () => {
   const { accessToken, setAccessToken, setUid } = useContext(AuthContext);
+  const usernameRef = useRef<HTMLInputElement>();
   const {
     handleChange,
     handleSubmit,
@@ -39,77 +43,50 @@ const SignInScreen = () => {
         email: values.email,
         password: values.password,
       };
-      await handleSignIn(login);
+      await handleSignIn(accessToken, setAccessToken, setUid, login);
     },
   });
-  const handleSignIn = async (
-    login: Login,
-  ): Promise<string | undefined> => {
-    const settings = {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-      body: JSON.stringify(login),
-    };
-    try {
-      const response = await fetch(
-        `${envs?.DEV_AUTH_SERVICE_URL}/login`,
-        settings,
-      );
-      const res: HttpResponse = await response.json();
-      if (res.success) {
-        // Store refresh token in local storage
-        storeToken(res?.data?.token);
-        // Set uid in context for use during access token refresh
-        setUid(res?.data?.u_id);
-        // Get access token from the refresh token
-        try {
-          setAccessToken(await getAccessToken(res?.data));
-        } catch (e) {
-          console.log([e, 'Error setting access token.']);
-        }
-      } else {
-        setAccessToken('');
-        console.log(res.errors);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-    return accessToken;
-    // const data: HttpResponse = await response.json();
 
-    // console.log(response);
-    // console.log(data);
-  };
+  useEffect(() => {
+    setTimeout(() => usernameRef?.current?.focus(), 100);
+  }, []);
+
   return (
-    <View
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
     >
       <View style={styles.greetingDesign}>
         <GreetingGraphics />
       </View>
-      <View style={styles.buttonWrapper}>
-        <UserTextInput
-          icon="user"
-          placeholder="Email"
-          onChangeText={handleChange('email')}
-          onBlur={handleBlur('email')}
-          error={errors.email}
-          touched={touched.email}
-        />
-        <UserTextInput
-          icon="mail"
-          placeholder="Password"
-          onChangeText={handleChange('password')}
-          onBlur={handleBlur('password')}
-          error={errors.password}
-          touched={touched.password}
-        />
-        <Button onPress={handleSubmit} label="LogIn" />
+      <View style={styles.formWrapper}>
+        <View style={styles.inputWrapper}>
+          <UserTextInput
+            icon="user"
+            placeholder="Email"
+            onChangeText={handleChange('email')}
+            onBlur={handleBlur('email')}
+            error={errors.email}
+            touched={touched.email}
+            returnKeyType="next"
+            ref={usernameRef}
+          />
+          <UserTextInput
+            secureTextEntry
+            icon="key"
+            placeholder="Password"
+            onChangeText={handleChange('password')}
+            onBlur={handleBlur('password')}
+            error={errors.password}
+            touched={touched.password}
+            returnKeyType="next"
+          />
+        </View>
+        <View style={styles.buttonWrapper}>
+          <Button onPress={handleSubmit} label="LogIn" />
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 const styles = StyleSheet.create({
@@ -125,17 +102,28 @@ const styles = StyleSheet.create({
     margin: 10,
     width: 300,
   },
-  buttonWrapper: {
+  formWrapper: {
     flex: 1,
-    height: '30%',
+    height: '55%',
     flexDirection: 'column',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: '8%',
     paddingBottom: '5%',
   },
+  inputWrapper: {
+    flex: 1,
+    height: '50%',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+  },
+  buttonWrapper: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    height: '50%',
+  },
   greetingDesign: {
-    height: '70%',
+    height: '45%',
     width: '100%',
     justifyContent: 'flex-end',
   },
