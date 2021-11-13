@@ -1,5 +1,10 @@
 import React, { useContext, useRef, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { AuthContext } from '../../components/context';
@@ -47,7 +52,8 @@ const SignInScreen = () => {
   }, []);
 
   return (
-    <View
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
     >
       <View style={styles.greetingDesign}>
@@ -80,7 +86,7 @@ const SignInScreen = () => {
           <Button onPress={handleSubmit} label="LogIn" />
         </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 const styles = StyleSheet.create({
