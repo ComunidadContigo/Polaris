@@ -12,7 +12,7 @@ interface Props {
   [x: string]: any; // For the ...otherProps
 }
 
-const UserTextInput = (props: Props) => {
+const UserTextInput = React.forwardRef((props: Props, ref: any) => {
   const { icon, error, touched, ...otherProps } = props;
   const validationColor = !touched
     ? mainPurple
@@ -26,11 +26,11 @@ const UserTextInput = (props: Props) => {
         <Icon name={icon} color={validationColor} size={16} />
       </View>
       <View style={{ flex: 1 }}>
-        <TextInput {...otherProps} />
+        <TextInput ref={ref} {...otherProps} />
       </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   textInput: {
