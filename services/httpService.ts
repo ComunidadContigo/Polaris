@@ -51,12 +51,19 @@ export const siriusFetch = async (
 
       if (data?.errors[0] === 'jwt expired') {
         // Handle expired token.
-        setAccessToken(
-          await getAccessToken({
-            u_id: uid,
-            token: await getToken(),
-          }),
+        const newAccessToken = await getAccessToken({
+          u_id: uid,
+          token: await getToken(),
+        });
+        setAccessToken(newAccessToken);
+        siriusFetch(
+          newAccessToken,
+          setAccessToken,
+          uid,
+          endpoint,
+          settings,
         );
+        console.log('Refreshed access token and resent request.');
       }
     }
     return data;
