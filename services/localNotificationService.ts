@@ -33,7 +33,7 @@ export const sendRequestToFulfillNotification = async () => {
     request_destination: '(30,30)',
   };
   const content: Notifications.NotificationContentInput = {
-    title: 'Found a request to fulfill',
+    title: 'Someone could use a Buddy',
     body: '',
     data: { request },
   };

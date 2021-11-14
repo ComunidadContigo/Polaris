@@ -25,4 +25,29 @@ export default {
       color: subtitle,
     },
   },
+  plainButton: {
+    text: {
+      color: black,
+    },
+  },
+  button: {
+    text: {
+      color: '#fff',
+    },
+  },
+  borderedButton: {
+    text: {
+      color: 'black',
+    },
+  },
+  lightButton: {
+    text: {
+      color: '#fff',
+    },
+  },
+  sideButtons: {
+    text: {
+      color: '#fff',
+    },
+  },
 };

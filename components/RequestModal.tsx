@@ -2,6 +2,8 @@ import React from 'react';
 import { Modal, StyleSheet, Text, Pressable, View } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { ReqModel } from '../models/request.model';
+import Button from './Button';
+import textSize from '../styles/text';
 
 type RequestModalProps = {
   visible: boolean;
@@ -29,7 +31,9 @@ function RequestModal({
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>{title}</Text>
+            <Text style={[styles.modalTitle, textSize.mediumTextSize]}>
+              {title}
+            </Text>
             <Text style={styles.modalText}>
               {`${(request as ReqModel).stat}, ${
                 (request as ReqModel).r_id
@@ -37,14 +41,31 @@ function RequestModal({
                 (request as ReqModel).request_meeting_point
               }, ${(request as ReqModel).request_destination}`}
             </Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => {
-                handleShowModal();
-              }}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
+            <View style={styles.buttonWrapper}>
+              <Button
+                label="Accept"
+                onPress={() => {
+                  handleShowModal();
+                  console.log('Accepted!');
+                }}
+                customStyle="sideButtons"
+              />
+              <Button
+                label="Decline"
+                onPress={() => {
+                  handleShowModal();
+                  console.log('Declined.');
+                }}
+                customStyle="sideButtons"
+              />
+            </View>
+            <View>
+              <Button
+                label="View details"
+                onPress={() => console.log('More details.')}
+                customStyle="plainButton"
+              />
+            </View>
           </View>
         </View>
       </Modal>
@@ -63,7 +84,7 @@ const styles = StyleSheet.create({
   modalView: {
     margin: 20,
     backgroundColor: 'white',
-    borderRadius: 20,
+    borderRadius: 8,
     padding: 35,
     alignItems: 'center',
     shadowColor: '#000',
@@ -74,11 +95,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
   },
   buttonOpen: {
     backgroundColor: '#F194FF',
@@ -91,9 +107,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  modalTitle: {
+    marginBottom: 20,
+  },
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
+  },
+  buttonWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
   },
 });
 
