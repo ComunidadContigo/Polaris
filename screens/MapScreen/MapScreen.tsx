@@ -68,9 +68,6 @@ const MapScreen = () => {
         }),
         // `{"user_last_location" ${JSON.stringify(location)} }`,
       };
-      console.log('logging Setting:');
-      console.log(settings);
-      console.log(settings.body);
       try {
         const res = await siriusFetch(
           accessToken,
