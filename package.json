@@ -17,6 +17,8 @@
     "babel-eslint": "^10.1.0",
     "eslint-plugin-react-native": "^3.11.0",
     "expo": "~42.0.1",
+    "expo-location": "~12.1.2",
+    "expo-permissions": "~12.1.1",
     "expo-status-bar": "~1.0.4",
     "formik": "^2.2.9",
     "react": "17.0.2",
