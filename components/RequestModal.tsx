@@ -1,9 +1,11 @@
-import React from 'react';
-import { Modal, StyleSheet, Text, Pressable, View } from 'react-native';
+import React, { useContext } from 'react';
+import { Modal, StyleSheet, Text, View } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { ReqModel } from '../models/request.model';
 import Button from './Button';
 import textSize from '../styles/text';
+import { acceptRequest } from '../services/Buddy';
+import { AuthContext } from './context';
 
 type RequestModalProps = {
   visible: boolean;
@@ -20,6 +22,24 @@ function RequestModal({
   transparent,
   notification,
 }: RequestModalProps) {
+  const { accessToken, setAccessToken, uid } = useContext(AuthContext);
+
+  const handleAccept = async (requestId: number | undefined) => {
+    console.log('Accepted!');
+    handleShowModal();
+    if (requestId) {
+      try {
+        await acceptRequest(accessToken, setAccessToken, uid, requestId);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  const handleDecline = () => {
+    console.log('Declined!');
+  };
+
   if (notification) {
     const { title } = notification.request.content;
     const { request } = notification.request.content.data;
@@ -45,8 +65,7 @@ function RequestModal({
               <Button
                 label="Accept"
                 onPress={() => {
-                  handleShowModal();
-                  console.log('Accepted!');
+                  handleAccept((request as ReqModel).rq_id);
                 }}
                 customStyle="sideButtons"
               />
@@ -54,7 +73,7 @@ function RequestModal({
                 label="Decline"
                 onPress={() => {
                   handleShowModal();
-                  console.log('Declined.');
+                  handleDecline();
                 }}
                 customStyle="sideButtons"
               />

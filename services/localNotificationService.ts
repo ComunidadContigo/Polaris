@@ -27,7 +27,7 @@ export const sendRequestToFulfillNotification = async () => {
   const request: ReqModel = {
     request_date: '01/01/1970',
     r_id: 1,
-    rq_id: 1,
+    rq_id: 45,
     stat: 'UNFULFILLED',
     request_meeting_point: '(0,0)',
     request_destination: '(30,30)',
