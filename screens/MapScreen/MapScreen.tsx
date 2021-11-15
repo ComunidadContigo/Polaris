@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Dimensions, StyleSheet, Text } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import SearchBar from '../../components/SearchBar';
+import { getlocation } from '../../services/locationService';
+// import { Location } from '../../models/location';
+import { siriusFetch } from '../../services/httpService';
+import envs from '../../config/environment';
+import { AuthContext } from '../../components/context';
 import { Location } from '../../models/Location';
+import { combineCoordinates } from '../../services/Buddy/common/functions';
 
 const normalZoomLevel = {
   latitudeDelta: 0.0922,
@@ -10,7 +16,8 @@ const normalZoomLevel = {
 };
 
 const MapScreen = () => {
-  const [currentLocation] = useState<Location>({
+  const { accessToken, setAccessToken, uid } = useContext(AuthContext);
+  const [currentLocation, setCurrentLocation] = useState<Location>({
     coordinates: {
       latitude: 18.21194,
       longitude: -67.14225,
@@ -27,7 +34,51 @@ const MapScreen = () => {
       ...currentLocation,
     },
   );
+  // console.log('ML', meetingLocation);
+  // console.log('DL', destinationLocation);
 
+  useEffect(() => {
+    LocationHandler();
+  });
+  const LocationHandler = async () => {
+    // eslint-disable-next-line camelcase
+    const location = await getlocation();
+    if (
+      currentLocation.coordinates.latitude !==
+        location.coordinates.latitude &&
+      currentLocation.coordinates.longitude !==
+        location.coordinates.longitude
+    ) {
+      const endpoint = `${envs?.DEV_USER_SERVICE_URL}/${uid}`;
+      // eslint-disable-next-line camelcase
+      const settings = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'PUT',
+        // body: JSON.stringify({ user_last_location: location }),
+        // eslint-disable-next-line max-len
+        // Currently Sending Coordinates And description but Varchar 100 only fits small description use location.coordinates if we decided not to store description.
+        body: JSON.stringify({
+          user_last_location: combineCoordinates(location),
+        }),
+        // `{"user_last_location" ${JSON.stringify(location)} }`,
+      };
+      try {
+        const res = await siriusFetch(
+          accessToken,
+          setAccessToken,
+          uid,
+          endpoint,
+          settings,
+        );
+        console.log(res);
+        setCurrentLocation(location);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
   return (
     <View style={styles.container}>
       <View style={styles.mapView}>
@@ -40,7 +91,8 @@ const MapScreen = () => {
           }}
         >
           <Marker
-            coordinate={meetingLocation.coordinates}
+            coordinate={currentLocation.coordinates}
+            // coordinate={meetingLocation.coordinates}
             pinColor="green"
             draggable
             onDragStart={(e) => {
