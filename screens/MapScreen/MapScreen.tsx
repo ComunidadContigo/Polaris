@@ -43,10 +43,6 @@ const MapScreen = () => {
   const LocationHandler = async () => {
     // eslint-disable-next-line camelcase
     const location = await getlocation();
-    console.log('Location');
-    console.log(location);
-    console.log('Curr');
-    console.log(currentLocation);
     if (
       currentLocation.coordinates.latitude !==
         location.coordinates.latitude &&
