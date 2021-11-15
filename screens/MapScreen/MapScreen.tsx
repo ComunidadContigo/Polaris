@@ -120,8 +120,6 @@ const MapScreen = () => {
         destinationLocation={destinationLocation}
         setDestinationLocation={setDestinationLocation}
       />
-      <Text>Latitude :{currentLocation.coordinates.latitude}</Text>
-      <Text>Longitude :{currentLocation.coordinates.longitude}</Text>
     </View>
   );
 };
