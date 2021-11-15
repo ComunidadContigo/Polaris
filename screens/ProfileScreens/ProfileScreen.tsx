@@ -9,6 +9,7 @@ import HttpResponse from '../../models/response.model';
 import { siriusFetch } from '../../services/httpService';
 import envs from '../../config/environment';
 import { mainPurple } from '../../styles/colors';
+import { TouchableOpacity } from 'react-native';
 
 const ProfileScreen = () => {
   // const navigateToEditProfile = () => {
@@ -20,6 +21,7 @@ const ProfileScreen = () => {
   const [phone, setphone] = useState('000000000');
   const [birth, setbirth] = useState('00/00/0000');
   const [status, setstatus] = useState('In Review');
+  const [vetting, setvetting] = useState('');
   const { accessToken, setAccessToken, uid } = useContext(AuthContext);
   // eslint-disable-next-line max-len
   function isHttpResponse(dt: void | HttpResponse): dt is HttpResponse {
@@ -40,10 +42,12 @@ const ProfileScreen = () => {
       setemail(res.data.email);
       setphone(res.data.phone_number);
       setbirth(res.data.birth_date);
+      if (res.data.is_vetted) {
+        setvetting('Buddy | Requester ');
+      }
     }
     return res;
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfo}>
@@ -55,21 +59,22 @@ const ProfileScreen = () => {
               }}
               size={85}
             />
-            <View>
-              <Button
-                onPress={() => setAccessToken('')}
-                label="Sign Out"
-              />
-              <Button
+            <View style={{ paddingLeft: '50%' }}>
+              <TouchableOpacity onPress={() => setAccessToken('')}>
+                <Text style={styles.topbutton}>Signout</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
                 onPress={() => console.log('Navigate to Edit Profile')}
-                label="Edit Profile"
-              />
+              >
+                <Text>Edit Profile</Text>
+              </TouchableOpacity>
             </View>
           </View>
           <View>
             <Text style={styles.name}>
               {name} {lastname}
             </Text>
+            <Text>{vetting}</Text>
           </View>
         </View>
         <View style={styles.profileInfo}>
@@ -82,8 +87,14 @@ const ProfileScreen = () => {
           <View style={styles.profileInfoPadding}>
             <Text>{status}</Text>
             <Text>{email}</Text>
-            <Text>{phone}</Text>
-            <Text>{birth}</Text>
+            <Text>
+              {phone.substring(0, 3)}-{phone.substring(3, 6)}-
+              {phone.substring(6)}
+            </Text>
+            <Text>
+              {birth.substring(0, 4)}/{birth.substring(5, 7)}/
+              {birth.substring(8, 10)}
+            </Text>
           </View>
         </View>
         <Button
@@ -112,6 +123,14 @@ const styles = StyleSheet.create({
   },
   profileHeader: {
     paddingHorizontal: '8%',
+  },
+  topbutton: {
+    paddingLeft: '5%',
+    paddingRight: '5%',
+    borderRadius: 8,
+    fontSize: 15,
+    borderWidth: 2,
+    borderColor: 'grey',
   },
   headerTop: {
     flexDirection: 'row',
