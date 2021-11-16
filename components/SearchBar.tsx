@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     width: '90%',
     minHeight: 44,
     position: 'absolute',
-    top: 30,
+    top: 50,
     backgroundColor: '#fff',
     borderRadius: 8,
   },
