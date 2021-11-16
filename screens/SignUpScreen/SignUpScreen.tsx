@@ -5,16 +5,12 @@ import { Picker } from '@react-native-picker/picker';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import * as Yup from 'yup';
 // import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { Text } from 'react-native-paper';
 import UserTextInput from '../../components/UserTextInput';
 import BirthTextInput from '../../components/BirthTextInput';
 import Button from '../../components/Button';
 import GreetingDesign from '../../components/GreetingGraphics';
-import {
-  phoneRegExp,
-  // birthDayExp,
-  // birthMonthExp,
-  // birthYearExp,
-} from '../../util/constants';
+import { phoneRegExp } from '../../util/constants';
 import { mainPurple } from '../../styles/colors';
 import { handleSignUp } from '../../services/httpService';
 import User from '../../models/user.model';
@@ -47,8 +43,9 @@ interface Props {
 }
 
 const SignUpScreen: FC<Props> = (props: Props) => {
-  const [selectedGender, setSelectedGender] = useState();
+  const [selectedGender, setSelectedGender] = useState('male');
   const [tabIndex, setTabIndex] = useState(0);
+  const [buddyAnswer, setBuddyAnswer] = useState('no');
   const { navigation } = props;
   const {
     handleChange,
@@ -201,7 +198,28 @@ const SignUpScreen: FC<Props> = (props: Props) => {
                 />
               </Picker>
             </View>
-            <Button label="Sign Up" onPress={handleSubmit} />
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <Text>Would you like opt-in to become a buddy?</Text>
+            <View style={styles.genderWrapper}>
+              <Picker
+                style={styles.picker}
+                selectedValue={buddyAnswer}
+                onValueChange={(itemValue) => {
+                  setBuddyAnswer(itemValue);
+                  setFieldValue('buddy', itemValue);
+                }}
+              >
+                <Picker.Item label="Yes" value="yes" />
+                <Picker.Item label="No" value="no" />
+              </Picker>
+            </View>
+            <View>
+              <Button label="Sign Up" onPress={handleSubmit} />
+            </View>
           </>
         );
       default:
@@ -217,7 +235,7 @@ const SignUpScreen: FC<Props> = (props: Props) => {
       </View>
       <View style={styles.buttonWrapper}>
         <SegmentedControl
-          values={['Name', 'Login', 'Additional']}
+          values={['Name', 'Login', 'Additional', 'Optional']}
           selectedIndex={tabIndex}
           onChange={(event) => {
             setTabIndex(event.nativeEvent.selectedSegmentIndex);
