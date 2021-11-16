@@ -45,32 +45,41 @@ export default function App() {
   };
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
+    if (accessToken) {
+      registerForPushNotificationsAsync(
+        accessToken,
+        setAccessToken,
+        uid,
+      ).then((token) => setExpoPushToken(token));
 
-    // This listener is fired whenever a notification is received while the app is foregrounded
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((n) => {
-        console.log('got notif');
-        setNotification(n);
-        setShowRequestModal(true);
-      });
+      // This listener is fired whenever a notification is received while the app is foregrounded
+      notificationListener.current =
+        Notifications.addNotificationReceivedListener((n) => {
+          console.log('got notif');
+          setNotification(n);
+          setShowRequestModal(true);
+        });
 
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log('received response to notif');
-        console.log(response);
-        setShowRequestModal(true);
-      });
+      responseListener.current =
+        Notifications.addNotificationResponseReceivedListener(
+          (response) => {
+            console.log('received response to notif');
+            console.log(response);
+            setShowRequestModal(true);
+          },
+        );
 
-    return () => {
-      Notifications.removeNotificationSubscription(
-        notificationListener.current!,
-      );
-      Notifications.removeNotificationSubscription(
-        responseListener.current!,
-      );
-    };
-  }, []);
+      return () => {
+        Notifications.removeNotificationSubscription(
+          notificationListener.current!,
+        );
+        Notifications.removeNotificationSubscription(
+          responseListener.current!,
+        );
+      };
+    }
+    return undefined;
+  }, [accessToken]);
 
   // const [isLoading, setIsLoading] = useState(true);
 
