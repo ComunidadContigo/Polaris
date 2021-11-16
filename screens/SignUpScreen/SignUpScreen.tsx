@@ -47,7 +47,7 @@ interface Props {
 }
 
 const SignUpScreen: FC<Props> = (props: Props) => {
-  const [selectedGender, setSelectedGender] = useState('Male');
+  const [selectedGender, setSelectedGender] = useState();
   const [tabIndex, setTabIndex] = useState(0);
   const { navigation } = props;
   const {
@@ -201,10 +201,11 @@ const SignUpScreen: FC<Props> = (props: Props) => {
                 />
               </Picker>
             </View>
+            <Button label="Sign Up" onPress={handleSubmit} />
           </>
         );
       default:
-        <View>{console.log('No such page exists!')}</View>;
+        console.log('No such page exists!');
         break;
     }
   };
@@ -216,7 +217,7 @@ const SignUpScreen: FC<Props> = (props: Props) => {
       </View>
       <View style={styles.buttonWrapper}>
         <SegmentedControl
-          values={['One', 'Two', 'Three']}
+          values={['Name', 'Login', 'Additional']}
           selectedIndex={tabIndex}
           onChange={(event) => {
             setTabIndex(event.nativeEvent.selectedSegmentIndex);
@@ -343,7 +344,7 @@ const SignUpScreen: FC<Props> = (props: Props) => {
           buttonTextAfterSelection={(selectedItem) => selectedItem}
           rowTextForSelection={(item) => item}
         /> */}
-        <Button label="Sign Up" onPress={handleSubmit} />
+        {/* <Button label="Sign Up" onPress={handleSubmit} /> */}
       </View>
     </View>
   );
