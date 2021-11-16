@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 // import { button } from '../styles/buttons';
-import colors from '../styles/colors';
+import colors, { mainPurple } from '../styles/colors';
 import text from '../styles/text';
 
 interface Props {
@@ -23,8 +23,8 @@ const Button = (props: Props) => {
     >
       <Text
         style={
-          customStyle === 'borderedButton'
-            ? [text.normalTextSize, colors.lightBackground.text]
+          customStyle
+            ? [text.normalTextSize, colors[customStyle].text]
             : [text.normalTextSize, colors.mainColors.text]
         }
       >
@@ -54,6 +54,19 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     width: '100%',
+  },
+  sideButtons: {
+    paddingVertical: 12,
+    borderRadius: 4,
+    width: '50%',
+    alignItems: 'center',
+    backgroundColor: mainPurple,
+    margin: 10,
+  },
+  plainButton: {
+    borderRadius: 8,
+    alignItems: 'center',
+    height: 20,
   },
 });
 
