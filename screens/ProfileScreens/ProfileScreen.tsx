@@ -1,8 +1,14 @@
 // eslint-disable-next-line no-use-before-define
 import React, { useContext, useState } from 'react';
-import { View, SafeAreaView, StyleSheet, Text } from 'react-native';
+import {
+  View,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Switch,
+} from 'react-native';
 import { Avatar, Title, Caption } from 'react-native-paper';
-import { TouchableOpacity } from 'react-native';
 import { AuthContext } from '../../components/context';
 import Button from '../../components/Button';
 // import { getUserById } from '../../services/httpService';
@@ -86,6 +92,7 @@ const ProfileScreen = () => {
           </View>
           <View style={styles.profileInfoPadding}>
             <Text>{status}</Text>
+            <Switch trackColor={{ false: '#767577', true: '#81b0ff' }} />
             <Text>{email}</Text>
             <Text>
               {phone.substring(0, 3)}-{phone.substring(3, 6)}-
