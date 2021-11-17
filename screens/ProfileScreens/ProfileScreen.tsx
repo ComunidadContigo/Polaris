@@ -21,6 +21,9 @@ const ProfileScreen = () => {
   // const navigateToEditProfile = () => {
   //   navigation.navigate('EditProfile');
   // };
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () =>
+    setIsEnabled((previousState) => !previousState);
   const [name, setname] = useState('jon');
   const [lastname, setlastname] = useState('doe');
   const [email, setemail] = useState('place@holder.com');
@@ -91,8 +94,16 @@ const ProfileScreen = () => {
             <Text>Birthdate:</Text>
           </View>
           <View style={styles.profileInfoPadding}>
-            <Text>{status}</Text>
-            <Switch trackColor={{ false: '#767577', true: '#81b0ff' }} />
+            {status !== 'In Review' ? (
+              <Switch
+                trackColor={{ false: '#767577', true: mainPurple }}
+                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                onValueChange={toggleSwitch}
+                value={isEnabled}
+              />
+            ) : (
+              <Text> {status}</Text>
+            )}
             <Text>{email}</Text>
             <Text>
               {phone.substring(0, 3)}-{phone.substring(3, 6)}-
