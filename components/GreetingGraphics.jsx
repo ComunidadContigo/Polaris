@@ -6,7 +6,6 @@ import {
   Dimensions,
 } from 'react-native';
 
-
 const designPath = require('../assets/Path21.png');
 const ladyGraphic = require('../assets/undraw_dreamer.png');
 
