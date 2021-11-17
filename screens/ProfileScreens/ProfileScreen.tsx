@@ -2,6 +2,7 @@
 import React, { useContext, useState } from 'react';
 import { View, SafeAreaView, StyleSheet, Text } from 'react-native';
 import { Avatar, Title, Caption } from 'react-native-paper';
+import { TouchableOpacity } from 'react-native';
 import { AuthContext } from '../../components/context';
 import Button from '../../components/Button';
 // import { getUserById } from '../../services/httpService';
@@ -9,7 +10,6 @@ import HttpResponse from '../../models/response.model';
 import { siriusFetch } from '../../services/httpService';
 import envs from '../../config/environment';
 import { mainPurple } from '../../styles/colors';
-import { TouchableOpacity } from 'react-native';
 
 const ProfileScreen = () => {
   // const navigateToEditProfile = () => {
