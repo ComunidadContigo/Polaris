@@ -7,6 +7,7 @@ export enum MainRoutes {
   SignUp = 'SignUp',
   LogIn = 'LogIn',
   Home = 'Home',
+  RequestDetails = 'RequestDetails',
 }
 
 export type MainStackParamList = {
@@ -14,6 +15,7 @@ export type MainStackParamList = {
   [MainRoutes.SignUp]: undefined;
   [MainRoutes.LogIn]: undefined;
   [MainRoutes.Home]: undefined;
+  [MainRoutes.RequestDetails]: undefined;
 };
 
 export const MainStack = createNativeStackNavigator<MainStackParamList>();

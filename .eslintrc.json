@@ -36,6 +36,8 @@
     "no-confusing-arrow": "off",
     "react/require-default-props": "off",
     "linebreak-style": "off",
-    "no-extra-semi": "off"
+    "no-extra-semi": "off",
+    "implicit-arrow-linebreak": "off",
+    "react/jsx-curly-newline": "off"
   }
 }

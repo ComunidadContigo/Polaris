@@ -3,7 +3,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as Notifications from 'expo-notifications';
 import { Subscription } from 'expo-modules-core';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 import { AuthContext } from './components/context';
 import { registerForPushNotificationsAsync } from './services/localNotificationService';
 
@@ -13,6 +16,7 @@ import SignInScreen from './screens/SignInScreen/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import EditProfileScreen from './screens/ProfileScreens/EditProfileScreen';
 import HomeScreen from './screens/HomeScreen/HomeScreen';
+import RequestDetailsScreen from './screens/RequestDetailsScreen/RequestDetailsScreen';
 
 // Routes
 import { MainRoutes } from './routing/StackRoutes';
@@ -29,6 +33,7 @@ Notifications.setNotificationHandler({
 });
 
 export default function App() {
+  const navigationRef = useNavigationContainerRef();
   const [accessToken, setAccessToken] = useState('');
   const [uid, setUid] = useState('');
 
@@ -93,8 +98,14 @@ export default function App() {
         animationType="slide"
         transparent
         notification={notification}
+        onAccept={() =>
+          navigationRef.navigate(
+            MainRoutes.RequestDetails as never,
+            { notification } as never,
+          )
+        }
       />
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {!accessToken ? (
             <>
@@ -116,6 +127,10 @@ export default function App() {
               <Stack.Screen
                 name={MainRoutes.Home}
                 component={HomeScreen}
+              />
+              <Stack.Screen
+                name={MainRoutes.RequestDetails}
+                component={RequestDetailsScreen}
               />
               <Stack.Screen
                 name="EditProfile"

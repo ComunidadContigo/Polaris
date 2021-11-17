@@ -1,18 +1,25 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { View, Text, Button } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { AuthContext } from '../../components/context';
+import * as Notifications from 'expo-notifications';
 import { sendRequestToFulfillNotification } from '../../services/localNotificationService';
 import { getGoogleMapsURL } from '../../services/directionService';
 import { Location } from '../../models/location';
 
 interface Props {
-  meetingLocation: Location;
+  route: any;
+  navigation: any;
 }
 
 const RequestDetailsScreen = (props: Props) => {
-  const { meetingLocation } = props;
-  const directionURL = getGoogleMapsURL(meetingLocation);
+  const { route, navigation } = props;
+  const { notification } = route.params;
+  if (notification) {
+    console.log(
+      'GOTITTTT',
+      notification.request.content.data.request.request_meeting_point,
+    );
+  }
+  //   const directionURL = getGoogleMapsURL(meetingLocation);
   return (
     <View
       style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}

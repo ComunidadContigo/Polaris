@@ -13,6 +13,7 @@ type RequestModalProps = {
   animationType: 'none' | 'slide' | 'fade';
   transparent: boolean;
   notification?: Notifications.Notification;
+  onAccept: any;
 };
 
 function RequestModal({
@@ -21,6 +22,7 @@ function RequestModal({
   animationType,
   transparent,
   notification,
+  onAccept,
 }: RequestModalProps) {
   const { accessToken, setAccessToken, uid } = useContext(AuthContext);
 
@@ -30,6 +32,7 @@ function RequestModal({
     if (requestId) {
       try {
         await acceptRequest(accessToken, setAccessToken, uid, requestId);
+        onAccept();
       } catch (e) {
         console.log(e);
       }
