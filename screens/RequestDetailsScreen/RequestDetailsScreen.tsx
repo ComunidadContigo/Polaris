@@ -87,11 +87,11 @@ const RequestDetailsScreen = (props: Props) => {
               <Text>4.9/5.0</Text>
             </View>
           </View>
-          <Button label="Get Directions" onPress={() => handlePress()} />
+          <Button label="Get directions" onPress={() => handlePress()} />
         </View>
         <View>
           <Button
-            label="Cancel Trip"
+            label="Cancel trip"
             onPress={() => console.log('cancelled')}
             customStyle="cancelButton"
           />

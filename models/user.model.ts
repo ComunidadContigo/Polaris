@@ -13,3 +13,13 @@ export default interface User {
   r_id?: number;
   // eslint-disable-next-line semi
 }
+
+export interface UserInfo {
+  email: string;
+  phone_number: string;
+  birth_date: string;
+  first_name: string;
+  last_name: string;
+  gender: string;
+  u_id: number;
+}
