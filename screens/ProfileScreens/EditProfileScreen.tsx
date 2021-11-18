@@ -11,6 +11,8 @@ import { Avatar } from 'react-native-paper';
 import colors from '../../styles/colors';
 import text from '../../styles/text';
 import buttons from '../../styles/buttons';
+import { StackNavigationProp } from '../../routing/types';
+import { MainRoutes } from '../../routing/StackRoutes';
 
 const EditProfileScreen = () => (
   <SafeAreaView>

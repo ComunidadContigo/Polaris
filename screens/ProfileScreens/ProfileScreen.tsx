@@ -21,6 +21,7 @@ const ProfileScreen = () => {
   // const navigateToEditProfile = () => {
   //   navigation.navigate('EditProfile');
   // };
+
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () =>
     setIsEnabled((previousState) => !previousState);
@@ -31,6 +32,7 @@ const ProfileScreen = () => {
   const [birth, setbirth] = useState('00/00/0000');
   const [status, setstatus] = useState('In Review');
   const [vetting, setvetting] = useState('');
+  const [editstatus, seteditstatus] = useState(false);
   const { accessToken, setAccessToken, uid } = useContext(AuthContext);
   // eslint-disable-next-line max-len
   function isHttpResponse(dt: void | HttpResponse): dt is HttpResponse {
@@ -52,6 +54,7 @@ const ProfileScreen = () => {
       setphone(res.data.phone_number);
       setbirth(res.data.birth_date);
       if (res.data.is_vetted) {
+        setstatus('Vetted');
         setvetting('Buddy | Requester ');
       }
     }
@@ -72,9 +75,7 @@ const ProfileScreen = () => {
               <TouchableOpacity onPress={() => setAccessToken('')}>
                 <Text style={styles.topbutton}>Signout</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => console.log('Navigate to Edit Profile')}
-              >
+              <TouchableOpacity onPress={() => seteditstatus(!editstatus)}>
                 <Text>Edit Profile</Text>
               </TouchableOpacity>
             </View>
@@ -86,39 +87,51 @@ const ProfileScreen = () => {
             <Text>{vetting}</Text>
           </View>
         </View>
-        <View style={styles.profileInfo}>
+        {!editstatus ? (
+          <View style={styles.profileInfo}>
+            <View>
+              <Text>Status:</Text>
+              <Text>Email:</Text>
+              <Text>Phone number:</Text>
+              <Text>Birthdate:</Text>
+            </View>
+            <View style={styles.profileInfoPadding}>
+              {status !== 'In Review' ? (
+                <Switch
+                  trackColor={{ false: '#767577', true: mainPurple }}
+                  thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                  onValueChange={toggleSwitch}
+                  value={isEnabled}
+                />
+              ) : (
+                <Text> {status}</Text>
+              )}
+              <Text>{email}</Text>
+              <Text>
+                {phone.substring(0, 3)}-{phone.substring(3, 6)}-
+                {phone.substring(6)}
+              </Text>
+              <Text>
+                {birth.substring(0, 4)}/{birth.substring(5, 7)}/
+                {birth.substring(8, 10)}
+              </Text>
+            </View>
+          </View>
+        ) : (
           <View>
-            <Text>Status:</Text>
-            <Text>Email:</Text>
-            <Text>Phone number:</Text>
-            <Text>Birthdate:</Text>
+            <Text>Email</Text>
+            <Text>Phone number</Text>
+            <Text>Old Password</Text>
+            <Text>New Password</Text>
           </View>
-          <View style={styles.profileInfoPadding}>
-            {status !== 'In Review' ? (
-              <Switch
-                trackColor={{ false: '#767577', true: mainPurple }}
-                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-                onValueChange={toggleSwitch}
-                value={isEnabled}
-              />
-            ) : (
-              <Text> {status}</Text>
-            )}
-            <Text>{email}</Text>
-            <Text>
-              {phone.substring(0, 3)}-{phone.substring(3, 6)}-
-              {phone.substring(6)}
-            </Text>
-            <Text>
-              {birth.substring(0, 4)}/{birth.substring(5, 7)}/
-              {birth.substring(8, 10)}
-            </Text>
-          </View>
-        </View>
+        )}
         <Button
           onPress={() => getUserById(uid)}
           label="Get Profile Info"
         />
+        <View>
+          <Text>hola</Text>
+        </View>
       </View>
     </SafeAreaView>
   );
