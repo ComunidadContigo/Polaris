@@ -1,5 +1,16 @@
-import { Location } from '../models/location';
+export const getLatitude = (coordinates: string): string => {
+  const coordinateString = coordinates.replace(/[(),]/g, '');
+  const coordinateArray = coordinateString.split(' ');
+  return coordinateArray[0];
+};
 
-export const getGoogleMapsURL = (location: Location): string =>
-  // eslint-disable-next-line implicit-arrow-linebreak
-  `https://www.google.com/maps/search/?api=1&query=${location.coordinates.latitude}%2C${location.coordinates.longitude}`;
+export const getLongitude = (coordinates: string): string => {
+  const coordinateString = coordinates.replace(/[(),]/g, '');
+  const coordinateArray = coordinateString.split(' ');
+  return coordinateArray[1];
+};
+
+export const getGoogleMapsURL = (coordinates: string): string =>
+  `https://www.google.com/maps/search/?api=1&query=${getLatitude(
+    coordinates,
+  )}%2C${getLongitude(coordinates)}`;
