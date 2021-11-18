@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Switch,
 } from 'react-native';
-import { Avatar, Title, Caption } from 'react-native-paper';
+import { Avatar } from 'react-native-paper';
 import { AuthContext } from '../../components/context';
 import Button from '../../components/Button';
 // import { getUserById } from '../../services/httpService';
@@ -16,11 +16,38 @@ import HttpResponse from '../../models/response.model';
 import { siriusFetch } from '../../services/httpService';
 import envs from '../../config/environment';
 import { mainPurple } from '../../styles/colors';
+import UserTextInput from '../../components/UserTextInput';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
+import { phoneRegExp } from '../../util/constants';
 
+const EditProfileSchema = Yup.object().shape({
+  email: Yup.string().email('Invalid email'),
+  phone: Yup.string()
+    .matches(phoneRegExp, 'Phone number is not valid')
+    .max(10),
+  password: Yup.string().min(2, 'Too Short!').max(10, 'Too Long!'),
+});
 const ProfileScreen = () => {
-  // const navigateToEditProfile = () => {
-  //   navigation.navigate('EditProfile');
-  // };
+  const {
+    handleChange,
+    handleSubmit,
+    handleBlur,
+    values,
+    errors,
+    touched,
+  } = useFormik({
+    validationSchema: EditProfileSchema,
+    initialValues: {
+      email: '',
+      phone: '',
+      password: '',
+    },
+    onSubmit: () => {
+      // handle edit
+      console.log(values);
+    },
+  });
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () =>
@@ -118,20 +145,60 @@ const ProfileScreen = () => {
             </View>
           </View>
         ) : (
-          <View>
-            <Text>Email</Text>
-            <Text>Phone number</Text>
-            <Text>Old Password</Text>
-            <Text>New Password</Text>
+          <View style={styles.buttonWrapper}>
+            <View style={{ paddingBottom: '5%' }}>
+              <UserTextInput
+                icon="mail"
+                placeholder="Enter your new email"
+                autoCapitalize="none"
+                autoCompleteType="email"
+                keyboardType="email-address"
+                keyboardAppearance="dark"
+                returnKeyType="next"
+                returnKeyLabel="next"
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                error={errors.email}
+                touched={touched.email}
+              />
+            </View>
+            <View style={{ paddingBottom: '5%' }}>
+              <UserTextInput
+                icon="phone"
+                placeholder="Enter your new phone number"
+                autoCapitalize="none"
+                keyboardType="numeric"
+                keyboardAppearance="dark"
+                returnKeyType="next"
+                returnKeyLabel="next"
+                onChangeText={handleChange('phone')}
+                onBlur={handleBlur('phone')}
+                error={errors.phone}
+                touched={touched.phone}
+              />
+            </View>
+            <View style={{ paddingBottom: '5%' }}>
+              <UserTextInput
+                icon="key"
+                placeholder="Enter your new password"
+                secureTextEntry
+                autoCompleteType="password"
+                autoCapitalize="none"
+                keyboardAppearance="dark"
+                returnKeyType="go"
+                returnKeyLabel="go"
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                error={errors.password}
+                touched={touched.password}
+              />
+            </View>
           </View>
         )}
         <Button
           onPress={() => getUserById(uid)}
           label="Get Profile Info"
         />
-        <View>
-          <Text>hola</Text>
-        </View>
       </View>
     </SafeAreaView>
   );
@@ -180,13 +247,9 @@ const styles = StyleSheet.create({
     paddingTop: 25,
   },
   buttonWrapper: {
-    flex: 1,
-    height: '30%',
-    flexDirection: 'column',
+    paddingTop: '10%',
     justifyContent: 'space-evenly',
-    width: '100%',
-    paddingHorizontal: '8%',
-    paddingBottom: '5%',
+    paddingHorizontal: '5%',
   },
   greetingDesign: {
     height: '70%',
