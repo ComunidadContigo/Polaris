@@ -16,6 +16,7 @@ import { handleSignUp } from '../../services/httpService';
 import User from '../../models/user.model';
 import { StackNavigationProp } from '../../routing/types';
 import { MainRoutes } from '../../routing/StackRoutes';
+import UserPicker from '../../components/UserPicker';
 
 const SignUpSchema = Yup.object().shape({
   name: Yup.string()
@@ -35,6 +36,7 @@ const SignUpSchema = Yup.object().shape({
     .min(2, 'Too Short!')
     .max(10, 'Too Long!')
     .required('Required'),
+  gender: Yup.string().required('Required'),
   birthdate: Yup.string().required('Required'),
 });
 
@@ -43,7 +45,7 @@ interface Props {
 }
 
 const SignUpScreen: FC<Props> = (props: Props) => {
-  const [selectedGender, setSelectedGender] = useState('male');
+  const [selectedGender, setSelectedGender] = useState(null);
   const [tabIndex, setTabIndex] = useState(0);
   const [buddyAnswer, setBuddyAnswer] = useState('no');
   const { navigation } = props;
@@ -81,130 +83,146 @@ const SignUpScreen: FC<Props> = (props: Props) => {
       last_name: values.lastName,
       birth_date: values.birthdate,
     };
-    handleSignUp(user);
+    // handleSignUp(user);
     console.log(user);
-    navigation.navigate(MainRoutes.LogIn);
+    // navigation.navigate(MainRoutes.LogIn);
   };
 
   const pageHandler = () => {
     switch (tabIndex) {
       case 0:
         return (
-          <View>
-            <UserTextInput
-              icon="user"
-              placeholder="Enter your first name"
-              autoCompleteType="name"
-              autoCapitalize="none"
-              keyboardAppearance="dark"
-              returnKeyType="go"
-              returnKeyLabel="go"
-              onChangeText={handleChange('name')}
-              onBlur={handleBlur('name')}
-              error={errors.name}
-              touched={touched.name}
-            />
-            <UserTextInput
-              icon="user"
-              placeholder="Enter your last name"
-              autoCompleteType="name"
-              autoCapitalize="none"
-              keyboardAppearance="dark"
-              returnKeyType="go"
-              returnKeyLabel="go"
-              onChangeText={handleChange('lastName')}
-              onBlur={handleBlur('lastName')}
-              error={errors.lastName}
-              touched={touched.lastName}
-            />
+          <View style={styles.formSegment}>
+            <View style={styles.formInput}>
+              <UserTextInput
+                icon="mail"
+                placeholder="Enter your email"
+                autoCapitalize="none"
+                autoCompleteType="email"
+                keyboardType="email-address"
+                keyboardAppearance="dark"
+                returnKeyType="next"
+                returnKeyLabel="next"
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                error={errors.email}
+                touched={touched.email}
+                value={values.email}
+              />
+            </View>
+            <View style={styles.formInput}>
+              <UserTextInput
+                icon="key"
+                placeholder="Enter your password"
+                secureTextEntry
+                autoCompleteType="password"
+                autoCapitalize="none"
+                keyboardAppearance="dark"
+                returnKeyType="go"
+                returnKeyLabel="go"
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                error={errors.password}
+                touched={touched.password}
+                value={values.password}
+              />
+            </View>
           </View>
         );
       case 1:
         return (
-          <View>
-            <UserTextInput
-              icon="mail"
-              placeholder="Enter your email"
-              autoCapitalize="none"
-              autoCompleteType="email"
-              keyboardType="email-address"
-              keyboardAppearance="dark"
-              returnKeyType="next"
-              returnKeyLabel="next"
-              onChangeText={handleChange('email')}
-              onBlur={handleBlur('email')}
-              error={errors.email}
-              touched={touched.email}
-            />
-            <UserTextInput
-              icon="phone"
-              placeholder="Enter your phone number"
-              autoCapitalize="none"
-              keyboardType="numeric"
-              keyboardAppearance="dark"
-              returnKeyType="next"
-              returnKeyLabel="next"
-              onChangeText={handleChange('phone')}
-              onBlur={handleBlur('phone')}
-              error={errors.phone}
-              touched={touched.phone}
-            />
-            <UserTextInput
-              icon="key"
-              placeholder="Enter your password"
-              secureTextEntry
-              autoCompleteType="password"
-              autoCapitalize="none"
-              keyboardAppearance="dark"
-              returnKeyType="go"
-              returnKeyLabel="go"
-              onChangeText={handleChange('password')}
-              onBlur={handleBlur('password')}
-              error={errors.password}
-              touched={touched.password}
-            />
-          </View>
-        );
-      case 2:
-        return (
-          <>
-            <View>
+          <View style={styles.formSegment}>
+            <View style={styles.formInput}>
+              <UserTextInput
+                icon="user"
+                placeholder="Enter your first name"
+                autoCompleteType="name"
+                autoCapitalize="none"
+                keyboardAppearance="dark"
+                returnKeyType="go"
+                returnKeyLabel="go"
+                onChangeText={handleChange('name')}
+                onBlur={handleBlur('name')}
+                error={errors.name}
+                touched={touched.name}
+                value={values.name}
+              />
+            </View>
+            <View style={styles.formInput}>
+              <UserTextInput
+                icon="user"
+                placeholder="Enter your last name"
+                autoCompleteType="name"
+                autoCapitalize="none"
+                keyboardAppearance="dark"
+                returnKeyType="go"
+                returnKeyLabel="go"
+                onChangeText={handleChange('lastName')}
+                onBlur={handleBlur('lastName')}
+                error={errors.lastName}
+                touched={touched.lastName}
+                value={values.lastName}
+              />
+            </View>
+            <View style={styles.formInput}>
+              <UserTextInput
+                icon="phone"
+                placeholder="Enter your phone number"
+                autoCapitalize="none"
+                keyboardType="numeric"
+                keyboardAppearance="dark"
+                returnKeyType="next"
+                returnKeyLabel="next"
+                onChangeText={handleChange('phone')}
+                onBlur={handleBlur('phone')}
+                error={errors.phone}
+                touched={touched.phone}
+                value={values.phone}
+              />
+            </View>
+            <View style={styles.formInput}>
               <BirthTextInput
                 handleChange={handleChange}
                 icon="birthday-cake"
                 onBlur={handleBlur('birthdate')}
                 formValues={values}
                 setFieldValue={setFieldValue}
-                errors={[]}
+                error={errors.birthdate}
                 touched={touched.birthdate}
               />
             </View>
-            <View style={styles.genderWrapper}>
-              <Picker
+            <View style={styles.formInput}>
+              <UserPicker
+                error={errors.gender}
+                touched={touched.gender}
+                value={values.gender}
                 style={styles.picker}
                 selectedValue={selectedGender}
-                onValueChange={(itemValue) => {
+                onValueChange={(itemValue: any) => {
                   setSelectedGender(itemValue);
                   setFieldValue('gender', itemValue);
                 }}
-              >
-                <Picker.Item label="Male" value="male" />
-                <Picker.Item label="Female" value="female" />
-                <Picker.Item label="Non-Binary" value="non" />
-                <Picker.Item label="Other" value="other" />
-                <Picker.Item
-                  label="Prefer not to answer"
-                  value="noanswer"
-                />
-              </Picker>
+                onBlur={handleBlur('gender')}
+              />
             </View>
-          </>
+          </View>
         );
-      case 3:
+      case 2:
         return (
-          <>
-            <Text>Would you like opt-in to become a buddy?</Text>
-            <View style={styles.genderWrapper}>
+          <View style={styles.formSegment}>
+            <View style={styles.formInput}>
+              <Text>
+                Our community is built on top of incredible volunteers that
+                want to keep their communities safe for everyone.
+              </Text>
+              <Text>
+                By becomming a Buddy you are accepting to receive
+                notifications about people in need of a helping hand. You
+                will then have the option to provide help by accepting and
+                meeting with the requester or decline.
+              </Text>
+            </View>
+            <View style={[styles.genderWrapper, styles.formInput]}>
               <Picker
                 style={styles.picker}
                 selectedValue={buddyAnswer}
@@ -220,12 +238,12 @@ const SignUpScreen: FC<Props> = (props: Props) => {
             <View>
               <Button label="Sign Up" onPress={handleSubmit} />
             </View>
-          </>
+          </View>
         );
       default:
-        console.log('No such page exists!');
         break;
     }
+    return <></>;
   };
 
   return (
@@ -233,136 +251,15 @@ const SignUpScreen: FC<Props> = (props: Props) => {
       <View style={styles.greetingDesign}>
         <GreetingDesign />
       </View>
-      <View style={styles.buttonWrapper}>
+      <View style={styles.formWrapper}>
         <SegmentedControl
-          values={['Name', 'Login', 'Additional', 'Optional']}
+          values={['Account', 'Personal Info', 'Buddy']}
           selectedIndex={tabIndex}
           onChange={(event) => {
             setTabIndex(event.nativeEvent.selectedSegmentIndex);
           }}
         />
         <View>{pageHandler()}</View>
-        {/* <UserTextInput
-          icon="user"
-          placeholder="Enter your first name"
-          autoCompleteType="name"
-          autoCapitalize="none"
-          keyboardAppearance="dark"
-          returnKeyType="go"
-          returnKeyLabel="go"
-          onChangeText={handleChange('name')}
-          onBlur={handleBlur('name')}
-          error={errors.name}
-          touched={touched.name}
-        />
-        <UserTextInput
-          icon="user"
-          placeholder="Enter your last name"
-          autoCompleteType="name"
-          autoCapitalize="none"
-          keyboardAppearance="dark"
-          returnKeyType="go"
-          returnKeyLabel="go"
-          onChangeText={handleChange('lastName')}
-          onBlur={handleBlur('lastName')}
-          error={errors.lastName}
-          touched={touched.lastName}
-        />
-        <UserTextInput
-          icon="mail"
-          placeholder="Enter your email"
-          autoCapitalize="none"
-          autoCompleteType="email"
-          keyboardType="email-address"
-          keyboardAppearance="dark"
-          returnKeyType="next"
-          returnKeyLabel="next"
-          onChangeText={handleChange('email')}
-          onBlur={handleBlur('email')}
-          error={errors.email}
-          touched={touched.email}
-        /> */}
-        {/* <UserTextInput
-          icon="phone"
-          placeholder="Enter your phone number"
-          autoCapitalize="none"
-          keyboardType="numeric"
-          keyboardAppearance="dark"
-          returnKeyType="next"
-          returnKeyLabel="next"
-          onChangeText={handleChange('phone')}
-          onBlur={handleBlur('phone')}
-          error={errors.phone}
-          touched={touched.phone}
-        />
-        <UserTextInput
-          icon="key"
-          placeholder="Enter your password"
-          secureTextEntry
-          autoCompleteType="password"
-          autoCapitalize="none"
-          keyboardAppearance="dark"
-          returnKeyType="go"
-          returnKeyLabel="go"
-          onChangeText={handleChange('password')}
-          onBlur={handleBlur('password')}
-          error={errors.password}
-          touched={touched.password}
-        /> */}
-
-        {/* <View>
-          <Button
-            onPress={showDatePicker}
-            label="Please input your birthdate"
-          />
-          <DateTimePickerModal
-            isVisible={isDatePickerVisible}
-            mode="date"
-            onConfirm={handleConfirm}
-            onCancel={hideDatePicker}
-          />
-        </View> */}
-        {/* <BirthTextInput
-          handleChange={handleChange}
-          icon="birthday-cake"
-          onBlur={handleBlur('birthdate')}
-          formValues={values}
-          setFieldValue={setFieldValue}
-          errors={[]}
-          touched={touched.birthdate}
-        />
-        <View style={styles.genderWrapper}>
-          <Picker
-            style={styles.picker}
-            selectedValue={selectedGender}
-            onValueChange={(itemValue) => {
-              setSelectedGender(itemValue);
-              setFieldValue('gender', itemValue);
-            }}
-          >
-            <Picker.Item label="Male" value="male" />
-            <Picker.Item label="Female" value="female" />
-            <Picker.Item label="Non-Binary" value="non" />
-            <Picker.Item label="Other" value="other" />
-            <Picker.Item label="Prefer not to answer" value="noanswer" />
-          </Picker>
-        </View> */}
-
-        {/* <SelectDropdown
-          rowStyle={styles.birthbuttonWrapper}
-          rowTextStyle={styles.dropdownText}
-          dropdownStyle={styles.dropdownWrapper}
-          buttonStyle={styles.dropInput}
-          buttonTextStyle={styles.dropbuttonText}
-          defaultButtonText="Enter Gender"
-          data={genders}
-          onSelect={(selectedItem, index) => {
-            console.log(selectedItem, index);
-          }}
-          buttonTextAfterSelection={(selectedItem) => selectedItem}
-          rowTextForSelection={(item) => item}
-        /> */}
-        {/* <Button label="Sign Up" onPress={handleSubmit} /> */}
       </View>
     </View>
   );
@@ -382,23 +279,21 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'flex-start',
   },
-  buttonWrapper: {
-    flex: 1,
+  formWrapper: {
+    display: 'flex',
     height: '70%',
     flexDirection: 'column',
-    justifyContent: 'space-evenly',
+    justifyContent: 'flex-start',
     width: '100%',
     paddingHorizontal: '8%',
-    paddingBottom: '5%',
+    paddingVertical: '5%',
   },
-  birthbuttonWrapper: {
-    flex: 1,
-    height: '70%',
+  formSegment: {
+    paddingVertical: '5%',
+    display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-evenly',
-    width: '100%',
-    paddingHorizontal: '8%',
-    paddingBottom: '5%',
+    justifyContent: 'flex-start',
+    height: '80%',
   },
   dropInput: {
     flexDirection: 'row',
@@ -410,18 +305,6 @@ const styles = StyleSheet.create({
     padding: 8,
     borderColor: mainPurple,
   },
-  dropbuttonText: {
-    fontSize: 14,
-    alignItems: 'center',
-  },
-  dropdownText: {
-    alignItems: 'flex-start',
-  },
-
-  dropdownWrapper: {
-    height: 210,
-  },
-
   genderWrapper: {
     borderRadius: 8,
     borderWidth: 2,
@@ -429,7 +312,9 @@ const styles = StyleSheet.create({
     width: '100%',
     borderColor: mainPurple,
   },
-
+  formInput: {
+    marginVertical: 10,
+  },
   picker: {
     height: '100%',
     width: '100%',
