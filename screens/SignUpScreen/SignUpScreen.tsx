@@ -11,7 +11,7 @@ import BirthTextInput from '../../components/BirthTextInput';
 import Button from '../../components/Button';
 import GreetingDesign from '../../components/GreetingGraphics';
 import { phoneRegExp } from '../../util/constants';
-import { mainPurple } from '../../styles/colors';
+import { errorRed, mainPurple } from '../../styles/colors';
 import { handleSignUp } from '../../services/httpService';
 import User from '../../models/user.model';
 import { StackNavigationProp } from '../../routing/types';
@@ -71,6 +71,13 @@ const SignUpScreen: FC<Props> = (props: Props) => {
       signupHandler();
     },
   });
+
+  const showErrors = (): string => {
+    console.log(Object.values(errors));
+    return Object.values(errors).length > 0
+      ? 'Found at least one error in the form, please verify the information provided.'
+      : '';
+  };
 
   const signupHandler = () => {
     const user: User = {
@@ -235,6 +242,7 @@ const SignUpScreen: FC<Props> = (props: Props) => {
             </View>
             <View>
               <Button label="Sign Up" onPress={handleSubmit} />
+              <Text style={styles.errorStyle}>{showErrors()}</Text>
             </View>
           </View>
         );
@@ -316,6 +324,9 @@ const styles = StyleSheet.create({
   picker: {
     height: '100%',
     width: '100%',
+  },
+  errorStyle: {
+    color: errorRed,
   },
 });
 

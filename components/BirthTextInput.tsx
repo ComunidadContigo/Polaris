@@ -1,8 +1,7 @@
 /* eslint-disable indent */
 import * as React from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Dash from 'react-native-vector-icons/Octicons';
 import { MaskedTextInput } from 'react-native-mask-text';
 import { mainPurple, errorRed } from '../styles/colors';
 
@@ -24,8 +23,6 @@ const BirthTextInput = (props: Props) => {
     ? errorRed
     : mainPurple;
 
-  console.log('touched:', touched);
-  console.log('HAS ERRORS:', hasErrors, error);
   return (
     <View style={[styles.textInput, { borderColor: validationColor }]}>
       <View style={{ padding: 8 }}>
@@ -37,29 +34,6 @@ const BirthTextInput = (props: Props) => {
         keyboardType="numeric"
         {...otherProps}
       />
-      {/* <View style={{ flex: 1, flexDirection: 'row' }}>
-        <TextInput
-          placeholder="  mm  "
-          {...otherProps}
-          onChangeText={handleChange('birthmonth')}
-        />
-        <View style={{ padding: 8 }}>
-          <Dash name="dash" color="black" size={16} />
-        </View>
-        <TextInput
-          placeholder="  dd  "
-          {...otherProps}
-          onChangeText={handleChange('birthday')}
-        />
-        <View style={{ padding: 8 }}>
-          <Dash name="dash" color="black" size={16} />
-        </View>
-        <TextInput
-          placeholder="  yyyy  "
-          {...otherProps}
-          onChangeText={handleChange('birthyear')}
-        />
-      </View> */}
     </View>
   );
 };
