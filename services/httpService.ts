@@ -2,8 +2,9 @@
 import envs from '../config/environment';
 import HttpResponse from '../models/response.model';
 import User from '../models/user.model';
-import { getAccessToken, getToken } from './tokenService';
+import { getAccessToken, getToken, storeToken } from './tokenService';
 import { RequestSettings } from '../models/request.model';
+import Login from '../models/login.model';
 
 // let accessToken: string | undefined;
 
@@ -34,15 +35,7 @@ export const siriusFetch = async (
   }
   let data: HttpResponse;
   try {
-    console.log(
-      'SENDING: ',
-      endpoint,
-      {
-        method,
-        headers,
-        body,
-      },
-    );
+    console.log('TOKEN USED: ', accessToken);
     const res = await fetch(endpoint, {
       method,
       headers,
@@ -54,11 +47,17 @@ export const siriusFetch = async (
 
       if (data?.errors[0] === 'jwt expired') {
         // Handle expired token.
-        setAccessToken(
-          await getAccessToken({
-            u_id: uid,
-            token: await getToken(),
-          }),
+        const newAccessToken = await getAccessToken({
+          u_id: uid,
+          token: await getToken(),
+        });
+        setAccessToken(newAccessToken);
+        return siriusFetch(
+          newAccessToken,
+          setAccessToken,
+          uid,
+          endpoint,
+          settings,
         );
       }
     }
@@ -67,7 +66,7 @@ export const siriusFetch = async (
     console.log(e);
   }
   return Promise.resolve();
-}; ;
+};
 
 export const handleSignUp = async (user: User) => {
   const settings = {
@@ -92,6 +91,51 @@ export const handleSignUp = async (user: User) => {
     console.log([e, 'Error creating the user.']);
   }
   return null;
+};
+
+export const handleSignIn = async (
+  accessToken: string | undefined,
+  setAccessToken: any,
+  setUid: any,
+  login: Login,
+): Promise<string | undefined> => {
+  const settings = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    body: JSON.stringify(login),
+  };
+  try {
+    const response = await fetch(
+      `${envs?.DEV_AUTH_SERVICE_URL}/login`,
+      settings,
+    );
+    const res: HttpResponse = await response.json();
+    if (res.success) {
+      // Store refresh token in local storage
+      storeToken(res?.data?.token);
+      // Set uid in context for use during access token refresh
+      setUid(res?.data?.u_id);
+      // Get access token from the refresh token
+      try {
+        setAccessToken(await getAccessToken(res?.data));
+      } catch (e) {
+        console.log([e, 'Error setting access token.']);
+      }
+    } else {
+      setAccessToken('');
+      console.log(res.errors);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  return accessToken;
+  // const data: HttpResponse = await response.json();
+
+  // console.log(response);
+  // console.log(data);
 };
 
 // export const getUserById = async (id: number): Promise<{} | undefined> =>

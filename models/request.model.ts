@@ -7,8 +7,18 @@ export interface RequestSettings {
 
 export interface RequestBody {
   request_date: string;
-  meeting_location: string;
-  destination: string;
-  r_id: string;
-  status: string;
+  request_meeting_point: string;
+  stat: string;
+  request_destination: string;
+  r_id: number;
+}
+
+export interface ReqModel {
+  rq_id?: number;
+  request_date: string;
+  request_meeting_point: string;
+  stat: string;
+  request_destination: string;
+  r_id: number;
+  b_id?: number;
 }
