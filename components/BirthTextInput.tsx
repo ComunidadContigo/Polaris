@@ -3,18 +3,19 @@ import * as React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Dash from 'react-native-vector-icons/Octicons';
+import { MaskedTextInput } from 'react-native-mask-text';
 import { mainPurple, errorRed } from '../styles/colors';
 
 interface Props {
   icon: string;
   error: string | undefined;
   touched: boolean | undefined;
-  handleChange: any;
+  onChangeText: any;
   [x: string]: any; // For the ...otherProps
 }
 
 const BirthTextInput = (props: Props) => {
-  const { icon, error, touched, handleChange, ...otherProps } = props;
+  const { icon, error, touched, onChangeText, ...otherProps } = props;
 
   const hasErrors = !!error;
   const validationColor = !touched
@@ -23,12 +24,20 @@ const BirthTextInput = (props: Props) => {
     ? errorRed
     : mainPurple;
 
+  console.log('touched:', touched);
+  console.log('HAS ERRORS:', hasErrors, error);
   return (
     <View style={[styles.textInput, { borderColor: validationColor }]}>
       <View style={{ padding: 8 }}>
         <Icon name={icon} color={validationColor} size={16} />
       </View>
-      <View style={{ flex: 1, flexDirection: 'row' }}>
+      <MaskedTextInput
+        onChangeText={onChangeText}
+        // style={styles.input}
+        keyboardType="numeric"
+        {...otherProps}
+      />
+      {/* <View style={{ flex: 1, flexDirection: 'row' }}>
         <TextInput
           placeholder="  mm  "
           {...otherProps}
@@ -50,7 +59,7 @@ const BirthTextInput = (props: Props) => {
           {...otherProps}
           onChangeText={handleChange('birthyear')}
         />
-      </View>
+      </View> */}
     </View>
   );
 };
@@ -64,6 +73,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     padding: 8,
     borderColor: mainPurple,
+  },
+  input: {
+    height: 40,
+    margin: 12,
   },
 });
 

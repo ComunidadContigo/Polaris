@@ -37,7 +37,7 @@ const SignUpSchema = Yup.object().shape({
     .max(10, 'Too Long!')
     .required('Required'),
   gender: Yup.string().required('Required'),
-  birthdate: Yup.string().required('Required'),
+  birthdate: Yup.string().required('Required').length(8),
 });
 
 interface Props {
@@ -45,9 +45,7 @@ interface Props {
 }
 
 const SignUpScreen: FC<Props> = (props: Props) => {
-  const [selectedGender, setSelectedGender] = useState(null);
   const [tabIndex, setTabIndex] = useState(0);
-  const [buddyAnswer, setBuddyAnswer] = useState('no');
   const { navigation } = props;
   const {
     handleChange,
@@ -67,6 +65,7 @@ const SignUpScreen: FC<Props> = (props: Props) => {
       password: '',
       gender: '',
       birthdate: '',
+      buddy: 'yes',
     },
     onSubmit: () => {
       signupHandler();
@@ -185,10 +184,13 @@ const SignUpScreen: FC<Props> = (props: Props) => {
                 handleChange={handleChange}
                 icon="birthday-cake"
                 onBlur={handleBlur('birthdate')}
-                formValues={values}
-                setFieldValue={setFieldValue}
+                onChangeText={(itemValue: any) => {
+                  setFieldValue('birthdate', itemValue);
+                }}
+                mask="99/99/99"
                 error={errors.birthdate}
                 touched={touched.birthdate}
+                placeholder="mm/dd/yy"
               />
             </View>
             <View style={styles.formInput}>
@@ -197,9 +199,7 @@ const SignUpScreen: FC<Props> = (props: Props) => {
                 touched={touched.gender}
                 value={values.gender}
                 style={styles.picker}
-                selectedValue={selectedGender}
                 onValueChange={(itemValue: any) => {
-                  setSelectedGender(itemValue);
                   setFieldValue('gender', itemValue);
                 }}
                 onBlur={handleBlur('gender')}
@@ -225,9 +225,7 @@ const SignUpScreen: FC<Props> = (props: Props) => {
             <View style={[styles.genderWrapper, styles.formInput]}>
               <Picker
                 style={styles.picker}
-                selectedValue={buddyAnswer}
                 onValueChange={(itemValue) => {
-                  setBuddyAnswer(itemValue);
                   setFieldValue('buddy', itemValue);
                 }}
               >

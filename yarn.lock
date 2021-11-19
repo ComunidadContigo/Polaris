@@ -2393,6 +2393,11 @@ big-integer@^1.6.44:
   resolved "https://registry.npmjs.org/big-integer/-/big-integer-1.6.48.tgz"
   integrity sha512-j51egjPa7/i+RdiRuJbPdJ2FIUYYPhvYLjzoYbcMMm62ooO6F94fETG4MTs46zPAF9Brs04OajboA/qTGuz78w==
 
+bignumber.js@^9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.0.1.tgz#8d7ba124c882bfd8e43260c67475518d0689e4e5"
+  integrity sha512-IdZR9mh6ahOBv/hYGiXyVuyCetmGJhtYkqLBpTStdhEGjegpPlUawydyaF3pbIOFynJTpllEs+NP+CS9jKFLjA==
+
 bindings@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.5.0.tgz#10353c9e945334bc0511a6d90b38fbc7c9c504df"
@@ -3627,6 +3632,7 @@ expo-notifications@~0.12.3:
     expo-modules-core "~0.2.0"
     fs-extra "^9.0.1"
     uuid "^3.4.0"
+
 expo-permissions@~12.1.1:
   version "12.1.1"
   resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-12.1.1.tgz#93fd8569d4106ff9dd66d67619cb69a0aa895482"
@@ -6184,6 +6190,13 @@ react-native-maps@^0.29.3:
   integrity sha512-742ipC71NdGHXmrCHPY9SEGDuKoSx2l0RMC1W9WXe/jd6+Eg5OllRBcR6Y+ORnzvuYZrd0Hj6q6bK3QR5ZL8sA==
   dependencies:
     "@types/geojson" "^7946.0.7"
+
+react-native-mask-text@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-mask-text/-/react-native-mask-text-0.5.0.tgz#0482bb10b88fdfd91681dd544ae80eb041e81158"
+  integrity sha512-Lc2rFv8HoV1E/j6XXA1yd6pUNsXPe7r4b3RIk6erwdN8drt5UKCqrC0xGQJJ1ExcoZp9kQNx/ilt7CpsNe03Dg==
+  dependencies:
+    bignumber.js "^9.0.1"
 
 react-native-modal-datetime-picker@^13.0.0:
   version "13.0.0"
