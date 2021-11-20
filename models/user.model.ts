@@ -11,5 +11,6 @@ export default interface User {
   isVetted?: boolean;
   b_id?: number;
   r_id?: number;
+  buddify?: string;
   // eslint-disable-next-line semi
 }

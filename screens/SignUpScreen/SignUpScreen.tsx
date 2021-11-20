@@ -37,7 +37,7 @@ const SignUpSchema = Yup.object().shape({
     .max(10, 'Too Long!')
     .required('Required'),
   gender: Yup.string().required('Required'),
-  birthdate: Yup.string().required('Required').length(8),
+  birthdate: Yup.string().required('Required'),
 });
 
 interface Props {
@@ -88,6 +88,7 @@ const SignUpScreen: FC<Props> = (props: Props) => {
       gender: values.gender,
       last_name: values.lastName,
       birth_date: values.birthdate,
+      buddify: values.buddy,
     };
     // handleSignUp(user);
     console.log(user);
@@ -188,23 +189,26 @@ const SignUpScreen: FC<Props> = (props: Props) => {
             </View>
             <View style={styles.formInput}>
               <BirthTextInput
-                handleChange={handleChange}
+                error={errors.birthdate}
+                touched={touched.birthdate}
+                // handleChange={handleChange('birthdate')}
                 icon="birthday-cake"
                 onBlur={handleBlur('birthdate')}
-                onChangeText={(itemValue: any) => {
+                onChangeText={(itemValue: any, rawText: any) => {
+                  // console.log(itemValue, rawText);
+                  console.log(values.birthdate);
                   setFieldValue('birthdate', itemValue);
                 }}
                 mask="99/99/99"
-                error={errors.birthdate}
-                touched={touched.birthdate}
                 placeholder="mm/dd/yy"
+                value={values.birthdate}
               />
             </View>
             <View style={styles.formInput}>
               <UserPicker
                 error={errors.gender}
                 touched={touched.gender}
-                value={values.gender}
+                selectedValue={values.gender}
                 style={styles.picker}
                 onValueChange={(itemValue: any) => {
                   setFieldValue('gender', itemValue);
@@ -232,6 +236,7 @@ const SignUpScreen: FC<Props> = (props: Props) => {
             <View style={[styles.genderWrapper, styles.formInput]}>
               <Picker
                 style={styles.picker}
+                selectedValue={values.buddy}
                 onValueChange={(itemValue) => {
                   setFieldValue('buddy', itemValue);
                 }}

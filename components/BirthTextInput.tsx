@@ -14,7 +14,7 @@ interface Props {
 }
 
 const BirthTextInput = (props: Props) => {
-  const { icon, error, touched, onChangeText, ...otherProps } = props;
+  const { icon, error, touched, ...otherProps } = props;
 
   const hasErrors = !!error;
   const validationColor = !touched
@@ -29,9 +29,8 @@ const BirthTextInput = (props: Props) => {
         <Icon name={icon} color={validationColor} size={16} />
       </View>
       <MaskedTextInput
-        onChangeText={onChangeText}
         // style={styles.input}
-        keyboardType="numeric"
+        // keyboardType="numeric"
         {...otherProps}
       />
     </View>
