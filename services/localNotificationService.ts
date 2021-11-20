@@ -32,7 +32,7 @@ export const sendRequestToFulfillNotification = async () => {
     r_id: 1,
     rq_id: 45,
     stat: 'UNFULFILLED',
-    request_meeting_point: '(18.442006, -67.14067299999999)',
+    request_meeting_point: '(18.243476957782352, -67.1633418799035)',
     request_destination: '(18.443006, -67.140674)',
   };
   const content: Notifications.NotificationContentInput = {

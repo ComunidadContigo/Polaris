@@ -7,7 +7,7 @@ import {
   NavigationContainer,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-import { AuthContext } from './components/context';
+import { AuthContext, NotificationContext } from './components/context';
 import { registerForPushNotificationsAsync } from './services/localNotificationService';
 
 // Screens
@@ -34,7 +34,7 @@ Notifications.setNotificationHandler({
 
 export default function App() {
   const navigationRef = useNavigationContainerRef();
-  const [accessToken, setAccessToken] = useState('');
+  const [accessToken, setAccessToken] = useState('bababa');
   const [uid, setUid] = useState('');
 
   const [showRequestModal, setShowRequestModal] = useState(false);
@@ -92,54 +92,65 @@ export default function App() {
     <AuthContext.Provider
       value={{ accessToken, setAccessToken, uid, setUid }}
     >
-      <RequestModal
-        visible={showRequestModal}
-        handleShowModal={handleShowModal}
-        animationType="slide"
-        transparent
-        notification={notification}
-        onAccept={() =>
-          navigationRef.navigate(
-            MainRoutes.RequestDetails as never,
-            { notification } as never,
-          )
-        }
-      />
-      <NavigationContainer ref={navigationRef}>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {!accessToken ? (
-            <>
-              <Stack.Screen
-                name={MainRoutes.Greeting}
-                component={GreetingScreen}
-              />
-              <Stack.Screen
-                name={MainRoutes.LogIn}
-                component={SignInScreen}
-              />
-              <Stack.Screen
-                name={MainRoutes.SignUp}
-                component={SignUpScreen}
-              />
-            </>
-          ) : (
-            <>
-              <Stack.Screen
-                name={MainRoutes.Home}
-                component={HomeScreen}
-              />
-              <Stack.Screen
-                name={MainRoutes.RequestDetails}
-                component={RequestDetailsScreen}
-              />
-              <Stack.Screen
-                name="EditProfile"
-                component={EditProfileScreen}
-              />
-            </>
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
+      <NotificationContext.Provider
+        value={{
+          requesterInfo: {
+            firstName: 'John',
+            lastName: 'Ham',
+          },
+          buddyInfo: '',
+          notification,
+        }}
+      >
+        <RequestModal
+          visible={showRequestModal}
+          handleShowModal={handleShowModal}
+          animationType="slide"
+          transparent
+          notification={notification}
+          onAccept={() =>
+            navigationRef.navigate(
+              MainRoutes.RequestDetails as never,
+              { notification } as never,
+            )
+          }
+        />
+        <NavigationContainer ref={navigationRef}>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            {!accessToken ? (
+              <>
+                <Stack.Screen
+                  name={MainRoutes.Greeting}
+                  component={GreetingScreen}
+                />
+                <Stack.Screen
+                  name={MainRoutes.LogIn}
+                  component={SignInScreen}
+                />
+                <Stack.Screen
+                  name={MainRoutes.SignUp}
+                  component={SignUpScreen}
+                />
+              </>
+            ) : (
+              <>
+                <Stack.Screen
+                  name={MainRoutes.Home}
+                  component={HomeScreen}
+                />
+                <Stack.Screen
+                  name={MainRoutes.RequestDetails}
+                  component={RequestDetailsScreen}
+                />
+                <Stack.Screen
+                  name="EditProfile"
+                  component={EditProfileScreen}
+                />
+              </>
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </NotificationContext.Provider>
     </AuthContext.Provider>
   );
 }

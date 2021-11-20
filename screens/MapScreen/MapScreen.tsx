@@ -6,9 +6,16 @@ import { getlocation } from '../../services/locationService';
 // import { Location } from '../../models/location';
 import { siriusFetch } from '../../services/httpService';
 import envs from '../../config/environment';
-import { AuthContext } from '../../components/context';
+import {
+  AuthContext,
+  NotificationContext,
+} from '../../components/context';
 import { Location } from '../../models/Location';
 import { combineCoordinates } from '../../services/Buddy/common/functions';
+import {
+  getLatitude,
+  getLongitude,
+} from '../../services/directionService';
 
 const normalZoomLevel = {
   latitudeDelta: 0.0922,
@@ -17,6 +24,9 @@ const normalZoomLevel = {
 
 const MapScreen = () => {
   const { accessToken, setAccessToken, uid } = useContext(AuthContext);
+  const { requesterInfo, buddyInfo, notification } = useContext(
+    NotificationContext,
+  );
   const [currentLocation, setCurrentLocation] = useState<Location>({
     coordinates: {
       latitude: 18.21194,
@@ -79,6 +89,50 @@ const MapScreen = () => {
       }
     }
   };
+
+  const notificationMarker = () => {
+    if (notification) {
+      const latitude: number = Number(
+        getLatitude(
+          notification.request.content.data.request.request_meeting_point,
+        ),
+      );
+      const longitude: number = Number(
+        getLongitude(
+          notification.request.content.data.request.request_meeting_point,
+        ),
+      );
+      const coordinates = {
+        latitude,
+        longitude,
+      };
+      return (
+        <Marker
+          coordinate={coordinates}
+          // coordinate={meetingLocation.coordinates}
+          pinColor="green"
+          draggable
+          onDragStart={(e) => {
+            console.log('Drag started. ', e.nativeEvent.coordinate);
+          }}
+          onDragEnd={(e) => {
+            setMeetingLocation({
+              coordinates: {
+                latitude: e.nativeEvent.coordinate.latitude,
+                longitude: e.nativeEvent.coordinate.longitude,
+              },
+              description: 'Dragged Pin',
+            });
+          }}
+        >
+          <Callout>
+            <Text>Im Here!</Text>
+          </Callout>
+        </Marker>
+      );
+    }
+    return <></>;
+  };
   return (
     <View style={styles.container}>
       <View style={styles.mapView}>
@@ -112,6 +166,7 @@ const MapScreen = () => {
               <Text>Im Here!</Text>
             </Callout>
           </Marker>
+          {notificationMarker()}
         </MapView>
       </View>
       <SearchBar
@@ -120,6 +175,7 @@ const MapScreen = () => {
         destinationLocation={destinationLocation}
         setDestinationLocation={setDestinationLocation}
       />
+      {console.log(notification)}
     </View>
   );
 };
