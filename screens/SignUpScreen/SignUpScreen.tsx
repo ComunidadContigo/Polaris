@@ -65,7 +65,7 @@ const SignUpScreen: FC<Props> = (props: Props) => {
       password: '',
       gender: '',
       birthdate: '',
-      buddy: 'yes',
+      buddy: true,
     },
     onSubmit: () => {
       signupHandler();
@@ -90,9 +90,8 @@ const SignUpScreen: FC<Props> = (props: Props) => {
       birth_date: values.birthdate,
       buddify: values.buddy,
     };
-    // handleSignUp(user);
-    console.log(user);
-    // navigation.navigate(MainRoutes.LogIn);
+    handleSignUp(user);
+    navigation.navigate(MainRoutes.LogIn);
   };
 
   const pageHandler = () => {
@@ -194,7 +193,7 @@ const SignUpScreen: FC<Props> = (props: Props) => {
                 // handleChange={handleChange('birthdate')}
                 icon="birthday-cake"
                 onBlur={handleBlur('birthdate')}
-                onChangeText={(itemValue: any, rawText: any) => {
+                onChangeText={(itemValue: any) => {
                   // console.log(itemValue, rawText);
                   console.log(values.birthdate);
                   setFieldValue('birthdate', itemValue);
@@ -241,8 +240,8 @@ const SignUpScreen: FC<Props> = (props: Props) => {
                   setFieldValue('buddy', itemValue);
                 }}
               >
-                <Picker.Item label="Yes" value="yes" />
-                <Picker.Item label="No" value="no" />
+                <Picker.Item label="Yes" value />
+                <Picker.Item label="No" value={false} />
               </Picker>
             </View>
             <View>
