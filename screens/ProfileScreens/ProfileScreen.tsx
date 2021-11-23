@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-use-before-define
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
   View,
   SafeAreaView,
@@ -75,7 +75,6 @@ const ProfileScreen = () => {
         email: values.email !== '' ? values.email : email,
       }),
     };
-    getUserById(uid);
     console.log(settings.body);
     try {
       const res = await siriusFetch(
@@ -114,6 +113,9 @@ const ProfileScreen = () => {
     }
     return res;
   };
+  useEffect(() => {
+    getUserById(uid);
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfo}>
@@ -145,33 +147,36 @@ const ProfileScreen = () => {
           <View style={styles.profileInfo}>
             <View>
               <View style={styles.profileInfo2}>
-                <Text>Status:</Text>
+                <Text style={{ fontSize: 21, paddingTop: '5%' }}>
+                  Status:
+                </Text>
                 {status !== 'In Review' ? (
                   <Switch
                     trackColor={{ false: '#767577', true: mainPurple }}
                     thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
                     onValueChange={toggleSwitch}
                     value={isEnabled}
+                    style={{ paddingLeft: '23%' }}
                   />
                 ) : (
-                  <Text> {status}</Text>
+                  <Text style={styles.textinfo}> {status}</Text>
                 )}
               </View>
               <View style={styles.profileInfo2}>
-                <Text>Email:</Text>
+                <Text style={styles.textinfo}>Email:</Text>
 
-                <Text>{email}</Text>
+                <Text style={styles.textinfo}>{email}</Text>
               </View>
               <View style={styles.profileInfo2}>
-                <Text>Phone:</Text>
-                <Text>
+                <Text style={styles.textinfo}>Phone:</Text>
+                <Text style={styles.textinfo}>
                   {phone.substring(0, 3)}-{phone.substring(3, 6)}-
                   {phone.substring(6)}
                 </Text>
               </View>
               <View style={styles.profileInfo2}>
-                <Text>Birthdate:</Text>
-                <Text>
+                <Text style={styles.textinfo}>Birthdate:</Text>
+                <Text style={styles.textinfo}>
                   {birth.substring(0, 4)}/{birth.substring(5, 7)}/
                   {birth.substring(8, 10)}
                 </Text>
@@ -182,7 +187,15 @@ const ProfileScreen = () => {
           <View style={styles.buttonWrapper}>
             <View style={styles.editProfileButtons}>
               <TouchableOpacity onPress={() => seteditstatus(!editstatus)}>
-                <Text style={{ fontSize: 20, color: 'grey' }}>Cancel</Text>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: 'grey',
+                    paddingRight: '2%',
+                  }}
+                >
+                  Cancel
+                </Text>
               </TouchableOpacity>
               <Text
                 style={{
@@ -196,7 +209,13 @@ const ProfileScreen = () => {
                 Edit Profile
               </Text>
               <TouchableOpacity onPress={handleSubmit}>
-                <Text style={{ fontSize: 20, color: mainPurple }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: mainPurple,
+                    paddingLeft: '2%',
+                  }}
+                >
                   Done
                 </Text>
               </TouchableOpacity>
@@ -234,10 +253,6 @@ const ProfileScreen = () => {
             </View>
           </View>
         )}
-        <Button
-          onPress={() => getUserById(uid)}
-          label="Get Profile Info"
-        />
       </View>
     </SafeAreaView>
   );
@@ -255,6 +270,9 @@ const styles = StyleSheet.create({
   name: {
     color: mainPurple,
     fontSize: 50,
+  },
+  textinfo: {
+    fontSize: 20,
   },
   editButtons: {
     flexDirection: 'row',
