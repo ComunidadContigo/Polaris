@@ -9,6 +9,8 @@ import {
   Switch,
 } from 'react-native';
 import { Avatar } from 'react-native-paper';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { AuthContext } from '../../components/context';
 import Button from '../../components/Button';
 // import { getUserById } from '../../services/httpService';
@@ -17,8 +19,6 @@ import { siriusFetch } from '../../services/httpService';
 import envs from '../../config/environment';
 import { mainPurple } from '../../styles/colors';
 import UserTextInput from '../../components/UserTextInput';
-import * as Yup from 'yup';
-import { useFormik } from 'formik';
 import { phoneRegExp } from '../../util/constants';
 
 const EditProfileSchema = Yup.object().shape({
@@ -26,7 +26,6 @@ const EditProfileSchema = Yup.object().shape({
   phone: Yup.string()
     .matches(phoneRegExp, 'Phone number is not valid')
     .max(10),
-  password: Yup.string().min(2, 'Too Short!').max(10, 'Too Long!'),
 });
 const ProfileScreen = () => {
   const {
@@ -41,14 +40,13 @@ const ProfileScreen = () => {
     initialValues: {
       email: '',
       phone: '',
-      password: '',
     },
     onSubmit: () => {
       // handle edit
       console.log(values);
+      editUserbyId();
     },
   });
-
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () =>
     setIsEnabled((previousState) => !previousState);
@@ -65,6 +63,35 @@ const ProfileScreen = () => {
   function isHttpResponse(dt: void | HttpResponse): dt is HttpResponse {
     return (dt as HttpResponse).data !== undefined;
   }
+  const editUserbyId = async () => {
+    const endpoint = `${envs?.DEV_USER_SERVICE_URL}/${uid}`;
+    const settings = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'PUT',
+      body: JSON.stringify({
+        phone_number: values.phone !== '' ? values.phone : phone,
+        email: values.email !== '' ? values.email : email,
+      }),
+    };
+    getUserById(uid);
+    console.log(settings.body);
+    try {
+      const res = await siriusFetch(
+        accessToken,
+        setAccessToken,
+        uid,
+        endpoint,
+        settings,
+      );
+      seteditstatus(!editstatus);
+      getUserById(uid);
+      console.log(res);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const getUserById = async (id: number): Promise<void | HttpResponse> => {
     const res = await siriusFetch(
       accessToken,
@@ -117,35 +144,63 @@ const ProfileScreen = () => {
         {!editstatus ? (
           <View style={styles.profileInfo}>
             <View>
-              <Text>Status:</Text>
-              <Text>Email:</Text>
-              <Text>Phone number:</Text>
-              <Text>Birthdate:</Text>
-            </View>
-            <View style={styles.profileInfoPadding}>
-              {status !== 'In Review' ? (
-                <Switch
-                  trackColor={{ false: '#767577', true: mainPurple }}
-                  thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-                  onValueChange={toggleSwitch}
-                  value={isEnabled}
-                />
-              ) : (
-                <Text> {status}</Text>
-              )}
-              <Text>{email}</Text>
-              <Text>
-                {phone.substring(0, 3)}-{phone.substring(3, 6)}-
-                {phone.substring(6)}
-              </Text>
-              <Text>
-                {birth.substring(0, 4)}/{birth.substring(5, 7)}/
-                {birth.substring(8, 10)}
-              </Text>
+              <View style={styles.profileInfo2}>
+                <Text>Status:</Text>
+                {status !== 'In Review' ? (
+                  <Switch
+                    trackColor={{ false: '#767577', true: mainPurple }}
+                    thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                    onValueChange={toggleSwitch}
+                    value={isEnabled}
+                  />
+                ) : (
+                  <Text> {status}</Text>
+                )}
+              </View>
+              <View style={styles.profileInfo2}>
+                <Text>Email:</Text>
+
+                <Text>{email}</Text>
+              </View>
+              <View style={styles.profileInfo2}>
+                <Text>Phone:</Text>
+                <Text>
+                  {phone.substring(0, 3)}-{phone.substring(3, 6)}-
+                  {phone.substring(6)}
+                </Text>
+              </View>
+              <View style={styles.profileInfo2}>
+                <Text>Birthdate:</Text>
+                <Text>
+                  {birth.substring(0, 4)}/{birth.substring(5, 7)}/
+                  {birth.substring(8, 10)}
+                </Text>
+              </View>
             </View>
           </View>
         ) : (
           <View style={styles.buttonWrapper}>
+            <View style={styles.editProfileButtons}>
+              <TouchableOpacity onPress={() => seteditstatus(!editstatus)}>
+                <Text style={{ fontSize: 20, color: 'grey' }}>Cancel</Text>
+              </TouchableOpacity>
+              <Text
+                style={{
+                  fontWeight: 'bold',
+                  fontSize: 20,
+                  paddingLeft: '15%',
+                  paddingRight: '15%',
+                  paddingBottom: '5%',
+                }}
+              >
+                Edit Profile
+              </Text>
+              <TouchableOpacity onPress={handleSubmit}>
+                <Text style={{ fontSize: 20, color: mainPurple }}>
+                  Done
+                </Text>
+              </TouchableOpacity>
+            </View>
             <View style={{ paddingBottom: '5%' }}>
               <UserTextInput
                 icon="mail"
@@ -177,22 +232,6 @@ const ProfileScreen = () => {
                 touched={touched.phone}
               />
             </View>
-            <View style={{ paddingBottom: '5%' }}>
-              <UserTextInput
-                icon="key"
-                placeholder="Enter your new password"
-                secureTextEntry
-                autoCompleteType="password"
-                autoCapitalize="none"
-                keyboardAppearance="dark"
-                returnKeyType="go"
-                returnKeyLabel="go"
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-                error={errors.password}
-                touched={touched.password}
-              />
-            </View>
           </View>
         )}
         <Button
@@ -208,6 +247,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
+  },
+  profileInfo2: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
   },
   name: {
     color: mainPurple,
@@ -234,20 +277,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingTop: '10%',
   },
+  editProfileButtons: {
+    flexDirection: 'row',
+  },
   profileInfo: {
     paddingTop: '20%',
     paddingLeft: '10%',
-    flexDirection: 'row',
   },
   profileInfoPadding: {
     paddingLeft: '25%',
   },
   userInfo: {
-    paddingHorizontal: 20,
     paddingTop: 25,
   },
   buttonWrapper: {
-    paddingTop: '10%',
+    paddingTop: '20%',
     justifyContent: 'space-evenly',
     paddingHorizontal: '5%',
   },
