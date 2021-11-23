@@ -35,11 +35,7 @@ export const siriusFetch = async (
   }
   let data: HttpResponse;
   try {
-    console.log('SENDING: ', endpoint, {
-      method,
-      headers,
-      body,
-    });
+    console.log('TOKEN USED: ', accessToken);
     const res = await fetch(endpoint, {
       method,
       headers,
@@ -56,14 +52,13 @@ export const siriusFetch = async (
           token: await getToken(),
         });
         setAccessToken(newAccessToken);
-        siriusFetch(
+        return siriusFetch(
           newAccessToken,
           setAccessToken,
           uid,
           endpoint,
           settings,
         );
-        console.log('Refreshed access token and resent request.');
       }
     }
     return data;
@@ -73,7 +68,9 @@ export const siriusFetch = async (
   return Promise.resolve();
 };
 
-export const handleSignUp = async (user: User) => {
+export const handleSignUp = async (
+  user: User,
+): Promise<HttpResponse | null> => {
   const settings = {
     headers: {
       // Accept: 'application/json',

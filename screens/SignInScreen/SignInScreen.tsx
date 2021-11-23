@@ -38,7 +38,6 @@ const SignInScreen = () => {
       password: '',
     },
     onSubmit: async () => {
-      console.log('Signin in');
       const login: Login = {
         email: values.email,
         password: values.password,

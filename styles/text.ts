@@ -1,7 +1,7 @@
-const normalTextSize = 18;
-const smallTextSize = 16;
-const mediumTextSize = 19;
-const bigTextSize = 28;
+export const normalTextSize = 18;
+export const smallTextSize = 16;
+export const mediumTextSize = 19;
+export const bigTextSize = 28;
 
 export default {
   normalTextSize: {
