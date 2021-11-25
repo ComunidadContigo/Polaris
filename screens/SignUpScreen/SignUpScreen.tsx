@@ -195,7 +195,7 @@ const SignUpScreen: FC<Props> = (props: Props) => {
                 onBlur={handleBlur('birthdate')}
                 onChangeText={(itemValue: any) => {
                   // console.log(itemValue, rawText);
-                  console.log(values.birthdate);
+                  // console.log(values.birthdate);
                   setFieldValue('birthdate', itemValue);
                 }}
                 mask="99/99/99"
