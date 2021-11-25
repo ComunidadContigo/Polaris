@@ -67,7 +67,9 @@ export const siriusFetch = async (
   return Promise.resolve();
 };
 
-export const handleSignUp = async (user: User) => {
+export const handleSignUp = async (
+  user: User,
+): Promise<HttpResponse | null> => {
   const settings = {
     headers: {
       // Accept: 'application/json',
