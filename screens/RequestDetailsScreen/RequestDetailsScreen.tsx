@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { View, Text, Alert, Linking, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Avatar } from 'react-native-paper';
@@ -10,15 +10,24 @@ import {
 import Button from '../../components/Button';
 import { bigTextSize } from '../../styles/text';
 import { MainRoutes } from '../../routing/StackRoutes';
+import { NotificationContext } from '../../components/context';
+import { NotificationData } from '../../models/Notification.model';
+import { ReqModel } from '../../models/request.model';
 
 interface Props {
-  route: any;
   navigation: any;
 }
 
 const RequestDetailsScreen = (props: Props) => {
-  const { route, navigation } = props;
-  const { notification } = route.params;
+  const { navigation } = props;
+  const {
+    requestData,
+    notificationContext,
+  }: {
+    requestData: ReqModel | undefined;
+    notificationContext: NotificationData;
+  } = useContext(NotificationContext);
+  // const { notification } = route.params;
   // const requester = {
   //   firstName: 'Mike',
   //   lastName: 'Myers',
@@ -28,9 +37,8 @@ const RequestDetailsScreen = (props: Props) => {
   // };
   let directionURL = '';
   let meetingCoordinates = '';
-  if (notification) {
-    meetingCoordinates =
-      notification.request.content.data.request.request_meeting_point;
+  if (requestData) {
+    meetingCoordinates = requestData.request_meeting_point;
     directionURL = getGoogleMapsURL(meetingCoordinates);
   }
 
@@ -75,7 +83,7 @@ const RequestDetailsScreen = (props: Props) => {
               />
             </View>
             <View style={styles.profileInfo}>
-              <Text>Clearence C.</Text>
+              <Text>{notificationContext.requesterInfo?.first_name}</Text>
               <Text>
                 Lat:
                 {getLatitude(meetingCoordinates)}
@@ -84,7 +92,7 @@ const RequestDetailsScreen = (props: Props) => {
                 Lon:
                 {getLongitude(meetingCoordinates)}
               </Text>
-              <Text>4.9/5.0</Text>
+              <Text>{notificationContext.requesterInfo?.gender}</Text>
             </View>
           </View>
           <Button label="Get directions" onPress={() => handlePress()} />

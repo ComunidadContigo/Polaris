@@ -2,7 +2,7 @@
 import { Location } from '../../models/Location';
 import envs from '../../config/environment';
 import { siriusFetch } from '../httpService';
-import { RequestSettings } from '../../models/request.model';
+import { ReqModel, RequestSettings } from '../../models/request.model';
 import { combineCoordinates } from './common/functions';
 import { RequestStatus } from '../../models/constants/request';
 
@@ -37,6 +37,8 @@ export const createRequest = async (
       settings,
     );
     console.log(res);
+    // TODO: HAVE THIS RETURN THE REQUEST ID FROM THE BACKEND
+    return 1;
   } catch (e) {
     console.log(e);
   }
@@ -104,6 +106,37 @@ export const acceptRequest = async (
   return null;
 };
 
+export const cancelRequest = async (
+  accessToken: string | undefined,
+  setAccessToken: any,
+  uid: number,
+  rq_id: number,
+) => {
+  try {
+    const bid = await getBidFromUid(accessToken, setAccessToken, uid);
+    if (bid) {
+      try {
+        const data = {
+          b_id: bid,
+          stat: RequestStatus.CANCELLED,
+        };
+        return await updateRequest(
+          accessToken,
+          setAccessToken,
+          uid,
+          rq_id,
+          data,
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  return null;
+};
+
 export const updateRequest = async (
   accessToken: string | undefined,
   setAccessToken: any,
@@ -132,6 +165,37 @@ export const updateRequest = async (
     console.log(res);
   } catch (e) {
     console.log(e);
+  }
+  return undefined;
+};
+
+/**
+ * Returns request information by request id.
+ *
+ * @param {string} accessToken JWT access token.
+ * @param {any}  setAccessToken Function that sets the accessToken in case it expires.
+ * @param {number}  uid User id to be used in the query.
+ * @return {request} Returns the request information from the db.
+ */
+export const getRequestInfo = async (
+  accessToken: string | undefined,
+  setAccessToken: any,
+  uid: number,
+  rq_id: number,
+): Promise<ReqModel | undefined> => {
+  const endpoint = `${envs?.DEV_BUDDY_SERVICE_URL}/request/${rq_id}`;
+  try {
+    const res = await siriusFetch(
+      accessToken,
+      setAccessToken,
+      uid,
+      endpoint,
+    );
+    if (res?.success) {
+      return res.data;
+    }
+  } catch (e) {
+    console.log([e, 'Error in getRequestInfo.']);
   }
   return undefined;
 };

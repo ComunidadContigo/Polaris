@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { ReqModel } from '../models/request.model';
 import { mainPurple } from '../styles/colors';
+import { NotificationContext } from './context';
 
 export const RequestDetails = () => {
-  const [requestStatus] = useState('Unfulfilled');
+  const {
+    requestData,
+  }: {
+    requestData: ReqModel | undefined;
+  } = useContext(NotificationContext);
   return (
     <View style={styles.container}>
       <View>
         <Text style={styles.status}>
-          {`Trip Status: ${requestStatus}`}
+          {`Trip Status: ${requestData?.stat}`}
         </Text>
       </View>
       <Icon name="edit" color="#fff" size={26} />

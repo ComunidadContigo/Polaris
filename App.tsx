@@ -20,7 +20,12 @@ import RequestDetailsScreen from './screens/RequestDetailsScreen/RequestDetailsS
 
 // Routes
 import { MainRoutes } from './routing/StackRoutes';
+
 import RequestModal from './components/RequestModal';
+import { getRequestInfo } from './services/Buddy';
+import { ReqModel } from './models/request.model';
+import { getUserFromRid } from './services/User';
+import { NotificationData } from './models/Notification.model';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,20 +39,64 @@ Notifications.setNotificationHandler({
 
 export default function App() {
   const navigationRef = useNavigationContainerRef();
-  const [accessToken, setAccessToken] = useState('bababa');
-  const [uid, setUid] = useState('');
-
+  const [accessToken, setAccessToken] = useState('');
+  const [uid, setUid] = useState<number>(-1);
   const [showRequestModal, setShowRequestModal] = useState(false);
 
   const [expoPushToken, setExpoPushToken] = useState('');
-  const [notification, setNotification] =
-    useState<Notifications.Notification>();
   const notificationListener = useRef<Subscription>();
   const responseListener = useRef<Subscription>();
+
+  // These next 3 states compose the Notification Context Store
+  const [requestData, setRequestData] = useState<ReqModel | undefined>(
+    undefined,
+  );
+  const [activeRequestId, setActiveRequestId] = useState<number>(-1);
+  const [notificationContext, setNotificationContext] =
+    useState<NotificationData>();
 
   const handleShowModal = () => {
     setShowRequestModal(!showRequestModal);
   };
+
+  const setupNotificationContext = async (
+    n: Notifications.Notification,
+  ) => {
+    if (n) {
+      const requesterInfo = await getUserFromRid(
+        accessToken,
+        setAccessToken,
+        uid,
+        (n.request.content.data.request as ReqModel).r_id,
+      );
+      setNotificationContext({ requesterInfo });
+    }
+  };
+
+  async function updateActiveRequest() {
+    const updatedRequest = await getRequestInfo(
+      accessToken,
+      setAccessToken,
+      uid,
+      activeRequestId,
+    );
+    setRequestData(updatedRequest);
+    console.log(updatedRequest);
+    if (updatedRequest?.stat === 'CANCELLED') {
+      setActiveRequestId(-1);
+    }
+  }
+
+  useEffect(() => {
+    if (accessToken && activeRequestId > 0) {
+      updateActiveRequest();
+      const interval = setInterval(() => updateActiveRequest(), 5000);
+      return () => {
+        clearInterval(interval);
+      };
+    }
+    return undefined;
+  }, [activeRequestId]);
 
   useEffect(() => {
     if (accessToken) {
@@ -60,8 +109,11 @@ export default function App() {
       // This listener is fired whenever a notification is received while the app is foregrounded
       notificationListener.current =
         Notifications.addNotificationReceivedListener((n) => {
-          console.log('got notif');
-          setNotification(n);
+          console.log('got notif', n);
+          setupNotificationContext(n);
+          setActiveRequestId(
+            (n.request.content.data.request as ReqModel).rq_id,
+          );
           setShowRequestModal(true);
         });
 
@@ -94,12 +146,12 @@ export default function App() {
     >
       <NotificationContext.Provider
         value={{
-          requesterInfo: {
-            firstName: 'John',
-            lastName: 'Ham',
-          },
-          buddyInfo: '',
-          notification,
+          requestData,
+          setRequestData,
+          activeRequestId,
+          setActiveRequestId,
+          notificationContext,
+          setNotificationContext,
         }}
       >
         <RequestModal
@@ -107,12 +159,9 @@ export default function App() {
           handleShowModal={handleShowModal}
           animationType="slide"
           transparent
-          notification={notification}
+          notification={requestData}
           onAccept={() =>
-            navigationRef.navigate(
-              MainRoutes.RequestDetails as never,
-              { notification } as never,
-            )
+            navigationRef.navigate(MainRoutes.RequestDetails as never)
           }
         />
         <NavigationContainer ref={navigationRef}>

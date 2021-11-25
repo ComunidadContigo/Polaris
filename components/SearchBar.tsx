@@ -11,7 +11,7 @@ import SelectedLocation from './SelectedLocation';
 import Button from './Button';
 import { Location } from '../models/Location';
 import { createRequest } from '../services/Buddy/index';
-import { AuthContext } from './context';
+import { AuthContext, NotificationContext } from './context';
 import { RequestDetails } from './RequestDetails';
 
 interface Props {
@@ -30,6 +30,11 @@ const SearchBar = (props: Props) => {
   } = props;
 
   const { accessToken, setAccessToken, uid } = useContext(AuthContext);
+  const {
+    setActiveRequestId,
+  }: {
+    setActiveRequestId: React.Dispatch<React.SetStateAction<number>>;
+  } = useContext(NotificationContext);
   const [expandedSearchBar, setExpandedSearchBar] = useState(false);
   const [requestStatus, setRequestStatus] = useState('');
 
@@ -68,14 +73,17 @@ const SearchBar = (props: Props) => {
           />
           <Button
             label="Find me a buddy"
-            onPress={() => {
-              createRequest(
+            onPress={async () => {
+              const requestId = await createRequest(
                 accessToken,
                 setAccessToken,
                 uid,
                 meetingLocation,
                 destinationLocation,
               );
+              if (requestId) {
+                setActiveRequestId(requestId);
+              }
               setRequestStatus('ONGOING');
               setExpandedSearchBar(false);
             }}

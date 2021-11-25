@@ -35,7 +35,6 @@ export const siriusFetch = async (
   }
   let data: HttpResponse;
   try {
-    console.log('TOKEN USED: ', accessToken);
     const res = await fetch(endpoint, {
       method,
       headers,

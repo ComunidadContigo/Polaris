@@ -7,7 +7,6 @@ import envs from '../config/environment';
 export const getAccessToken = async (loginResponse: {}): Promise<
   string | undefined
 > => {
-  console.log('GET ACCESS TOKEN PARAMETERS: ', loginResponse);
   const settings = {
     headers: {
       Accept: 'application/json',
@@ -22,7 +21,6 @@ export const getAccessToken = async (loginResponse: {}): Promise<
       settings,
     );
     const res: HttpResponse = await response.json();
-    console.log('RESPONSE', res);
     if (res.success) {
       // TODO: Store token in local storage
       return res?.data;

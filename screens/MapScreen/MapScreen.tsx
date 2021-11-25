@@ -16,6 +16,7 @@ import {
   getLatitude,
   getLongitude,
 } from '../../services/directionService';
+import { ReqModel } from '../../models/request.model';
 
 const normalZoomLevel = {
   latitudeDelta: 0.0922,
@@ -24,9 +25,11 @@ const normalZoomLevel = {
 
 const MapScreen = () => {
   const { accessToken, setAccessToken, uid } = useContext(AuthContext);
-  const { requesterInfo, buddyInfo, notification } = useContext(
-    NotificationContext,
-  );
+  const {
+    requestData,
+  }: {
+    requestData: ReqModel | undefined;
+  } = useContext(NotificationContext);
   const [currentLocation, setCurrentLocation] = useState<Location>({
     coordinates: {
       latitude: 18.21194,
@@ -91,16 +94,12 @@ const MapScreen = () => {
   };
 
   const notificationMarker = () => {
-    if (notification) {
+    if (requestData) {
       const latitude: number = Number(
-        getLatitude(
-          notification.request.content.data.request.request_meeting_point,
-        ),
+        getLatitude(requestData.request_meeting_point),
       );
       const longitude: number = Number(
-        getLongitude(
-          notification.request.content.data.request.request_meeting_point,
-        ),
+        getLongitude(requestData.request_meeting_point),
       );
       const coordinates = {
         latitude,
@@ -175,7 +174,7 @@ const MapScreen = () => {
         destinationLocation={destinationLocation}
         setDestinationLocation={setDestinationLocation}
       />
-      {console.log(notification)}
+      {console.log(requestData)}
     </View>
   );
 };
