@@ -24,11 +24,12 @@ export const createRequest = async (
       request_date: currentDate.toISOString(),
       request_meeting_point: combineCoordinates(meetingPoint),
       request_destination: combineCoordinates(destinationPoint),
-      r_id: '1',
+      r_id: await getRidFromUid(accessToken, setAccessToken, uid),
       stat: 'UNFULLFILLED',
     }),
   };
   try {
+    console.log('SETTINGS: ', settings);
     const res = await siriusFetch(
       accessToken,
       setAccessToken,
@@ -71,6 +72,36 @@ export const getBidFromUid = async (
     }
   } catch (e) {
     console.log([e, 'Error while getting the buddy id.']);
+  }
+  return null;
+};
+
+/**
+ * Returns requester id from the user id.
+ *
+ * @param {string} accessToken JWT access token.
+ * @param {any}  setAccessToken Function that sets the accessToken in case it expires.
+ * @param {number}  uid User id to be used in the query.
+ * @return {number} requester id for the user if user is a requester, null otherwise.
+ */
+export const getRidFromUid = async (
+  accessToken: string | undefined,
+  setAccessToken: any,
+  uid: number,
+): Promise<number | null> => {
+  const endpoint = `${envs?.DEV_BUDDY_SERVICE_URL}/requester/user/${uid}`;
+  try {
+    const res = await siriusFetch(
+      accessToken,
+      setAccessToken,
+      uid,
+      endpoint,
+    );
+    if (res?.success) {
+      return res.data?.r_id;
+    }
+  } catch (e) {
+    console.log([e, 'Error while getting the requester id.']);
   }
   return null;
 };
