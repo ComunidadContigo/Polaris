@@ -14,7 +14,6 @@ import { registerForPushNotificationsAsync } from './services/localNotificationS
 import GreetingScreen from './screens/GreetingScreen/GreetingScreen';
 import SignInScreen from './screens/SignInScreen/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
-import EditProfileScreen from './screens/ProfileScreens/EditProfileScreen';
 import HomeScreen from './screens/HomeScreen/HomeScreen';
 import RequestDetailsScreen from './screens/RequestDetailsScreen/RequestDetailsScreen';
 
@@ -190,10 +189,6 @@ export default function App() {
                 <Stack.Screen
                   name={MainRoutes.RequestDetails}
                   component={RequestDetailsScreen}
-                />
-                <Stack.Screen
-                  name="EditProfile"
-                  component={EditProfileScreen}
                 />
               </>
             )}
