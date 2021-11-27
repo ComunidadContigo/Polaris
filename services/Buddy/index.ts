@@ -39,7 +39,7 @@ export const createRequest = async (
     );
     console.log(res);
     // TODO: HAVE THIS RETURN THE REQUEST ID FROM THE BACKEND
-    return 1;
+    return res?.data.rq_id;
   } catch (e) {
     console.log(e);
   }
