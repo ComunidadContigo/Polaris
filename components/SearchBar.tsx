@@ -31,16 +31,17 @@ const SearchBar = (props: Props) => {
 
   const { accessToken, setAccessToken, uid } = useContext(AuthContext);
   const {
+    activeRequestId,
     setActiveRequestId,
   }: {
+    activeRequestId: number;
     setActiveRequestId: React.Dispatch<React.SetStateAction<number>>;
   } = useContext(NotificationContext);
   const [expandedSearchBar, setExpandedSearchBar] = useState(false);
-  const [requestStatus, setRequestStatus] = useState('');
 
   return (
     <View style={styles.container}>
-      {requestStatus ? (
+      {activeRequestId > 0 ? (
         <RequestDetails />
       ) : (
         <View style={styles.search}>
@@ -84,7 +85,6 @@ const SearchBar = (props: Props) => {
               if (requestId) {
                 setActiveRequestId(requestId);
               }
-              setRequestStatus('ONGOING');
               setExpandedSearchBar(false);
             }}
           />
