@@ -1,8 +1,10 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useContext, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { RequestStatus } from '../models/constants/request';
 import { ReqModel } from '../models/request.model';
+import { MainRoutes } from '../routing/StackRoutes';
 import { cancelRequest } from '../services/Buddy';
 import { mainPurple } from '../styles/colors';
 import Button from './Button';
@@ -17,6 +19,10 @@ export const RequestDetails = () => {
     requestData: ReqModel | undefined;
     setActiveRequestId: any;
   } = useContext(NotificationContext);
+  const navigation = useNavigation();
+  const navigateToRequestDetails = () => {
+    navigation.navigate(MainRoutes.RequestDetails as any);
+  };
   const [expandedRequestDetails, setExpandedRequestDetails] =
     useState<Boolean>(false);
   const toggleExpandedDetails = () => {
@@ -54,7 +60,7 @@ export const RequestDetails = () => {
           <View style={styles.buttonWrapper}>
             <Button
               label="More details"
-              onPress={() => console.log('Bing Bong')}
+              onPress={() => navigateToRequestDetails()}
               customStyle="borderedButton"
             />
           </View>

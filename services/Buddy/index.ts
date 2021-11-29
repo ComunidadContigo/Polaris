@@ -25,7 +25,7 @@ export const createRequest = async (
       request_meeting_point: combineCoordinates(meetingPoint),
       request_destination: combineCoordinates(destinationPoint),
       r_id: await getRidFromUid(accessToken, setAccessToken, uid),
-      stat: 'UNFULLFILLED',
+      stat: 'UNFULFILLED',
     }),
   };
   try {

@@ -10,9 +10,13 @@ import {
 import Button from '../../components/Button';
 import { bigTextSize } from '../../styles/text';
 import { MainRoutes } from '../../routing/StackRoutes';
-import { NotificationContext } from '../../components/context';
+import {
+  AuthContext,
+  NotificationContext,
+} from '../../components/context';
 import { NotificationData } from '../../models/Notification.model';
 import { ReqModel } from '../../models/request.model';
+import { cancelRequest } from '../../services/Buddy';
 
 interface Props {
   navigation: any;
@@ -20,21 +24,16 @@ interface Props {
 
 const RequestDetailsScreen = (props: Props) => {
   const { navigation } = props;
+  const { accessToken, setAccessToken, uid } = useContext(AuthContext);
   const {
     requestData,
     notificationContext,
+    setActiveRequestId,
   }: {
     requestData: ReqModel | undefined;
     notificationContext: NotificationData;
+    setActiveRequestId: React.Dispatch<React.SetStateAction<number>>;
   } = useContext(NotificationContext);
-  // const { notification } = route.params;
-  // const requester = {
-  //   firstName: 'Mike',
-  //   lastName: 'Myers',
-  //   birthdate: '12/12/1997',
-  //   gender: 'male',
-  //   image: 'https://i.pravatar.cc/300',
-  // };
   let directionURL = '';
   let meetingCoordinates = '';
   if (requestData) {
@@ -55,6 +54,16 @@ const RequestDetailsScreen = (props: Props) => {
     }
   }, [directionURL]);
 
+  const isRequester = (): boolean =>
+    uid === notificationContext?.requesterInfo?.u_id;
+
+  const onCancel = () => {
+    if (requestData?.rq_id) {
+      cancelRequest(accessToken, setAccessToken, uid, requestData.rq_id);
+    }
+    setActiveRequestId(-1);
+  };
+
   return (
     <View style={styles.screenWrapper}>
       <View>
@@ -66,7 +75,7 @@ const RequestDetailsScreen = (props: Props) => {
         />
       </View>
       <View>
-        <Text style={styles.header}>Your trip is accepted</Text>
+        <Text style={styles.header}>Your trip is {requestData?.stat}</Text>
         <Text>{meetingCoordinates}</Text>
       </View>
       <View style={styles.horizontalLine} />
@@ -82,25 +91,42 @@ const RequestDetailsScreen = (props: Props) => {
                 size={100}
               />
             </View>
-            <View style={styles.profileInfo}>
-              <Text>{notificationContext.requesterInfo?.first_name}</Text>
-              <Text>
-                Lat:
-                {getLatitude(meetingCoordinates)}
-              </Text>
-              <Text>
-                Lon:
-                {getLongitude(meetingCoordinates)}
-              </Text>
-              <Text>{notificationContext.requesterInfo?.gender}</Text>
-            </View>
+            {isRequester() ? (
+              <View style={styles.profileInfo}>
+                <Text>{notificationContext.buddyInfo?.first_name}</Text>
+                <Text>
+                  Lat:
+                  {getLatitude(meetingCoordinates)}
+                </Text>
+                <Text>
+                  Lon:
+                  {getLongitude(meetingCoordinates)}
+                </Text>
+                <Text>{notificationContext.buddyInfo?.gender}</Text>
+              </View>
+            ) : (
+              <View style={styles.profileInfo}>
+                <Text>
+                  {notificationContext?.requesterInfo?.first_name}
+                </Text>
+                <Text>
+                  Lat:
+                  {getLatitude(meetingCoordinates)}
+                </Text>
+                <Text>
+                  Lon:
+                  {getLongitude(meetingCoordinates)}
+                </Text>
+                <Text>{notificationContext?.requesterInfo?.gender}</Text>
+              </View>
+            )}
           </View>
           <Button label="Get directions" onPress={() => handlePress()} />
         </View>
         <View>
           <Button
             label="Cancel trip"
-            onPress={() => console.log('cancelled')}
+            onPress={() => onCancel()}
             customStyle="cancelButton"
           />
         </View>
