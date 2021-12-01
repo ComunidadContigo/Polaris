@@ -14,7 +14,7 @@ export interface RequestBody {
 }
 
 export interface ReqModel {
-  rq_id?: number;
+  rq_id: number;
   request_date: string;
   request_meeting_point: string;
   stat: string;

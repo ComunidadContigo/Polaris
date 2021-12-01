@@ -12,8 +12,6 @@ import { Avatar } from 'react-native-paper';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { AuthContext } from '../../components/context';
-import Button from '../../components/Button';
-// import { getUserById } from '../../services/httpService';
 import HttpResponse from '../../models/response.model';
 import { siriusFetch } from '../../services/httpService';
 import envs from '../../config/environment';
@@ -159,7 +157,7 @@ const ProfileScreen = () => {
                     style={{ paddingLeft: '23%' }}
                   />
                 ) : (
-                  <Text style={styles.textinfo}> {status}</Text>
+                  <Text style={styles.textinfo}>{status}</Text>
                 )}
               </View>
               <View style={styles.profileInfo2}>
@@ -208,7 +206,7 @@ const ProfileScreen = () => {
               >
                 Edit Profile
               </Text>
-              <TouchableOpacity onPress={handleSubmit}>
+              <TouchableOpacity onPress={() => handleSubmit()}>
                 <Text
                   style={{
                     fontSize: 20,

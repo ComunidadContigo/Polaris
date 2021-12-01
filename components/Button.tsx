@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 // import { button } from '../styles/buttons';
-import colors, { mainPurple } from '../styles/colors';
+import colors, { mainPurple, errorRed } from '../styles/colors';
 import text from '../styles/text';
 
 interface Props {
@@ -67,6 +67,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     height: 20,
+  },
+  cancelButton: {
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '100%',
+    backgroundColor: errorRed,
   },
 });
 

@@ -1,11 +1,10 @@
 import * as Notifications from 'expo-notifications';
 import { Platform, Alert } from 'react-native';
 import Constants from 'expo-constants';
-import { Context, Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { ReqModel } from '../models/request.model';
 import { siriusFetch } from './httpService';
 import envs from '../config/environment';
-import { AuthContext } from '../components/context';
 
 export const sendNotification = async (
   title: string,
@@ -31,10 +30,10 @@ export const sendRequestToFulfillNotification = async () => {
   const request: ReqModel = {
     request_date: '01/01/1970',
     r_id: 1,
-    rq_id: 45,
+    rq_id: 73,
     stat: 'UNFULFILLED',
-    request_meeting_point: '(0,0)',
-    request_destination: '(30,30)',
+    request_meeting_point: '(18.243476957782352, -67.1633418799035)',
+    request_destination: '(18.443006, -67.140674)',
   };
   const content: Notifications.NotificationContentInput = {
     title: 'Someone could use a Buddy',
@@ -54,7 +53,7 @@ export const sendRequestToFulfillNotification = async () => {
 export const registerForPushNotificationsAsync = async (
   accessToken: string,
   setAccessToken: Dispatch<SetStateAction<string>>,
-  uid: string,
+  uid: number,
 ): Promise<string> => {
   let token: string;
   if (Constants.isDevice) {

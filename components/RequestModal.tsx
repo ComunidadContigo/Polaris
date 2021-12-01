@@ -1,18 +1,20 @@
 import React, { useContext } from 'react';
 import { Modal, StyleSheet, Text, View } from 'react-native';
-import * as Notifications from 'expo-notifications';
+// import * as Notifications from 'expo-notifications';
 import { ReqModel } from '../models/request.model';
 import Button from './Button';
 import textSize from '../styles/text';
 import { acceptRequest } from '../services/Buddy';
-import { AuthContext } from './context';
+import { AuthContext, NotificationContext } from './context';
 
 type RequestModalProps = {
   visible: boolean;
   handleShowModal: Function;
   animationType: 'none' | 'slide' | 'fade';
   transparent: boolean;
-  notification?: Notifications.Notification;
+  notification?: ReqModel;
+  onAccept: any;
+  // onDecline: any;
 };
 
 function RequestModal({
@@ -21,8 +23,11 @@ function RequestModal({
   animationType,
   transparent,
   notification,
+  onAccept,
+  // onDecline,
 }: RequestModalProps) {
   const { accessToken, setAccessToken, uid } = useContext(AuthContext);
+  const { setActiveRequestId } = useContext(NotificationContext);
 
   const handleAccept = async (requestId: number | undefined) => {
     console.log('Accepted!');
@@ -30,6 +35,7 @@ function RequestModal({
     if (requestId) {
       try {
         await acceptRequest(accessToken, setAccessToken, uid, requestId);
+        onAccept();
       } catch (e) {
         console.log(e);
       }
@@ -38,11 +44,12 @@ function RequestModal({
 
   const handleDecline = () => {
     console.log('Declined!');
+    setActiveRequestId(-1);
   };
 
   if (notification) {
-    const { title } = notification.request.content;
-    const { request } = notification.request.content.data;
+    // const { title } = notification.data.request.content;
+    // const { request } = notification.data.request.content.data;
     return (
       <Modal
         visible={visible}
@@ -52,20 +59,20 @@ function RequestModal({
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={[styles.modalTitle, textSize.mediumTextSize]}>
-              {title}
+              Someone could use a Buddy
             </Text>
             <Text style={styles.modalText}>
-              {`${(request as ReqModel).stat}, ${
-                (request as ReqModel).r_id
-              }, ${(request as ReqModel).rq_id}, ${
-                (request as ReqModel).request_meeting_point
-              }, ${(request as ReqModel).request_destination}`}
+              {`${notification?.stat}, ${
+                notification?.r_id
+              }, ${notification?.rq_id}, ${
+                notification?.request_meeting_point
+              }, ${notification?.request_destination}`}
             </Text>
             <View style={styles.buttonWrapper}>
               <Button
                 label="Accept"
                 onPress={() => {
-                  handleAccept((request as ReqModel).rq_id);
+                  handleAccept(notification.rq_id);
                 }}
                 customStyle="sideButtons"
               />
@@ -90,7 +97,7 @@ function RequestModal({
       </Modal>
     );
   }
-  return null;
+  return <></>;
 }
 
 const styles = StyleSheet.create({

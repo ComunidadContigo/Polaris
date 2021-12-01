@@ -50,4 +50,9 @@ export default {
       color: '#fff',
     },
   },
+  cancelButton: {
+    text: {
+      color: '#fff',
+    },
+  },
 };

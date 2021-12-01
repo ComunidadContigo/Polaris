@@ -11,8 +11,10 @@ import SelectedLocation from './SelectedLocation';
 import Button from './Button';
 import { Location } from '../models/Location';
 import { createRequest } from '../services/Buddy/index';
-import { AuthContext } from './context';
+import { AuthContext, NotificationContext } from './context';
 import { RequestDetails } from './RequestDetails';
+import { getUserFromUid } from '../services/User';
+import { NotificationData } from '../models/Notification.model';
 
 interface Props {
   meetingLocation: Location;
@@ -30,12 +32,22 @@ const SearchBar = (props: Props) => {
   } = props;
 
   const { accessToken, setAccessToken, uid } = useContext(AuthContext);
+  const {
+    activeRequestId,
+    setActiveRequestId,
+    setNotificationContext,
+  }: {
+    activeRequestId: number;
+    setActiveRequestId: React.Dispatch<React.SetStateAction<number>>;
+    setNotificationContext: React.Dispatch<
+      React.SetStateAction<NotificationData | undefined>
+    >;
+  } = useContext(NotificationContext);
   const [expandedSearchBar, setExpandedSearchBar] = useState(false);
-  const [requestStatus, setRequestStatus] = useState('');
 
   return (
     <View style={styles.container}>
-      {requestStatus ? (
+      {activeRequestId > 0 ? (
         <RequestDetails />
       ) : (
         <View style={styles.search}>
@@ -68,15 +80,27 @@ const SearchBar = (props: Props) => {
           />
           <Button
             label="Find me a buddy"
-            onPress={() => {
-              createRequest(
+            onPress={async () => {
+              const requestId = await createRequest(
                 accessToken,
                 setAccessToken,
                 uid,
                 meetingLocation,
                 destinationLocation,
               );
-              setRequestStatus('ONGOING');
+              if (requestId) {
+                setActiveRequestId(requestId);
+                try {
+                  const userInfo = await getUserFromUid(
+                    accessToken,
+                    setAccessToken,
+                    uid,
+                  );
+                  setNotificationContext({ requesterInfo: userInfo });
+                } catch (e) {
+                  console.log(e);
+                }
+              }
               setExpandedSearchBar(false);
             }}
           />
