@@ -104,6 +104,21 @@ const ProfileScreen = () => {
       setemail(res.data.email);
       setphone(res.data.phone_number);
       setbirth(res.data.birth_date);
+    }
+    return res;
+  };
+  const getUserVetting = async (
+    id: number,
+  ): Promise<void | HttpResponse> => {
+    const res = await siriusFetch(
+      accessToken,
+      setAccessToken,
+      uid,
+      `${envs?.DEV_USER_SERVICE_URL}/${id}`,
+    );
+    console.log(res);
+    if (isHttpResponse(res)) {
+      console.log('logging data');
       if (res.data.is_vetted) {
         setstatus('Vetted');
         setvetting('Buddy | Requester ');
@@ -113,6 +128,7 @@ const ProfileScreen = () => {
   };
   useEffect(() => {
     getUserById(uid);
+    getUserVetting(uid);
   }, []);
   return (
     <SafeAreaView style={styles.container}>
