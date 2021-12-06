@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   Switch,
+  Image,
 } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { useFormik } from 'formik';
@@ -55,6 +56,7 @@ const ProfileScreen = () => {
   const [email, setemail] = useState('place@holder.com');
   const [phone, setphone] = useState('000000000');
   const [birth, setbirth] = useState('00/00/0000');
+  const [profilepic, setprofilepic] = useState('');
   const [status, setstatus] = useState('In Review');
   const [bid, setbid] = useState(0);
   const [vetting, setvetting] = useState('');
@@ -102,6 +104,7 @@ const ProfileScreen = () => {
     setemail(res?.data.email);
     setphone(res?.data.phone_number);
     setbirth(res?.data.birth_date);
+    setprofilepic(res?.data.picture);
     return res;
   };
   const getBuddyById = async (
@@ -122,6 +125,18 @@ const ProfileScreen = () => {
     } else {
       setIsEnabled(false);
     }
+    return res;
+  };
+  const getProfilePictureById = async (
+    id: number,
+  ): Promise<void | HttpResponse> => {
+    console.log('Trying to get Prof Pic');
+    const res = await siriusFetch(
+      accessToken,
+      setAccessToken,
+      uid,
+      `${envs?.DEV_USER_SERVICE_URL}/profile/${id}`,
+    );
     return res;
   };
   const editBuddybyId = async (id: number) => {
@@ -188,6 +203,7 @@ const ProfileScreen = () => {
               }}
               size={85}
             />
+            <Image> source = {'/picture/${profilepic}'} </Image>
             <View style={{ paddingLeft: '50%' }}>
               <TouchableOpacity onPress={() => setAccessToken('')}>
                 <Text style={styles.topbutton}>Signout</Text>
