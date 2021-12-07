@@ -46,21 +46,20 @@ const ProfileScreen = () => {
     },
   });
   const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () =>
+  const toggleSwitch = () => {
     setIsEnabled((previousState) => !previousState);
+    editBuddybyId(bid);
+  };
   const [name, setname] = useState('jon');
   const [lastname, setlastname] = useState('doe');
   const [email, setemail] = useState('place@holder.com');
   const [phone, setphone] = useState('000000000');
   const [birth, setbirth] = useState('00/00/0000');
   const [status, setstatus] = useState('In Review');
+  const [bid, setbid] = useState(0);
   const [vetting, setvetting] = useState('');
   const [editstatus, seteditstatus] = useState(false);
   const { accessToken, setAccessToken, uid } = useContext(AuthContext);
-  // eslint-disable-next-line max-len
-  function isHttpResponse(dt: void | HttpResponse): dt is HttpResponse {
-    return (dt as HttpResponse).data !== undefined;
-  }
   const editUserbyId = async () => {
     const endpoint = `${envs?.DEV_USER_SERVICE_URL}/${uid}`;
     const settings = {
@@ -97,22 +96,86 @@ const ProfileScreen = () => {
       `${envs?.DEV_USER_SERVICE_URL}/${id}`,
     );
     console.log(res);
-    if (isHttpResponse(res)) {
-      console.log('logging data');
-      setname(res.data.first_name);
-      setlastname(res.data.last_name);
-      setemail(res.data.email);
-      setphone(res.data.phone_number);
-      setbirth(res.data.birth_date);
-      if (res.data.is_vetted) {
-        setstatus('Vetted');
-        setvetting('Buddy | Requester ');
-      }
+    console.log('logging data');
+    setname(res?.data.first_name);
+    setlastname(res?.data.last_name);
+    setemail(res?.data.email);
+    setphone(res?.data.phone_number);
+    setbirth(res?.data.birth_date);
+    return res;
+  };
+  const getBuddyById = async (
+    id: number,
+  ): Promise<void | HttpResponse> => {
+    console.log('Trying to get buddy data');
+    const res = await siriusFetch(
+      accessToken,
+      setAccessToken,
+      uid,
+      `${envs?.DEV_BUDDY_SERVICE_URL}/buddy/user/${id}`,
+    );
+    console.log('logging buddy data to get bid');
+    console.log(res);
+    setbid(res?.data.b_id);
+    if (res?.data.is_active) {
+      setIsEnabled(true);
+    } else {
+      setIsEnabled(false);
     }
     return res;
   };
+  const editBuddybyId = async (id: number) => {
+    const endpoint = `${envs?.DEV_BUDDY_SERVICE_URL}/buddy/${id}`;
+    const settings = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'PUT',
+      body: JSON.stringify({
+        is_active: !isEnabled,
+      }),
+    };
+    console.log(settings.body);
+    try {
+      const res = await siriusFetch(
+        accessToken,
+        setAccessToken,
+        uid,
+        endpoint,
+        settings,
+      );
+      console.log(res);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const getUserVetting = async (
+    id: number,
+  ): Promise<void | HttpResponse> => {
+    console.log('trying to get isvetted');
+    try {
+      const res = await siriusFetch(
+        accessToken,
+        setAccessToken,
+        uid,
+        `${envs?.DEV_USER_SERVICE_URL}/isvetted/${id}`,
+      );
+      console.log('logging isvetted data');
+      console.log(res);
+      if (res?.data.is_vetted) {
+        setstatus('Vetted');
+        setvetting('Buddy | Requester ');
+      }
+      return res;
+    } catch (e) {
+      console.log(e);
+      return undefined;
+    }
+  };
   useEffect(() => {
     getUserById(uid);
+    getUserVetting(uid);
+    getBuddyById(uid);
   }, []);
   return (
     <SafeAreaView style={styles.container}>

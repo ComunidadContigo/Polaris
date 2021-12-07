@@ -79,6 +79,8 @@ export const handleSignUp = async (
     body: JSON.stringify(user),
   };
   try {
+    console.log(`${envs?.DEV_USER_SERVICE_URL}`);
+    console.log(settings);
     const response = await fetch(
       `${envs?.DEV_USER_SERVICE_URL}`,
       settings,
