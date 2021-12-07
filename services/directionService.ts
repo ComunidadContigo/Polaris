@@ -11,6 +11,6 @@ export const getLongitude = (coordinates: string): string => {
 };
 
 export const getGoogleMapsURL = (coordinates: string): string =>
-  `https://www.google.com/maps/search/?api=1&query=${getLatitude(
+  `https://www.google.com/maps/search/?api=1&query=${getLongitude(
     coordinates,
-  )}%2C${getLongitude(coordinates)}`;
+  )}%2C${getLatitude(coordinates)}`;

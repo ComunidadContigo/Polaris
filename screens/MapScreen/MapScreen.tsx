@@ -93,21 +93,11 @@ const MapScreen = () => {
     }
   };
 
-  const notificationMarker = () => {
-    if (requestData) {
-      const latitude: number = Number(
-        getLatitude(requestData.request_meeting_point),
-      );
-      const longitude: number = Number(
-        getLongitude(requestData.request_meeting_point),
-      );
-      const coordinates = {
-        latitude,
-        longitude,
-      };
+  const meetingLocationMarker = () => {
+    if (meetingLocation.description !== 'Current location') {
       return (
         <Marker
-          coordinate={coordinates}
+          coordinate={meetingLocation.coordinates}
           // coordinate={meetingLocation.coordinates}
           pinColor="green"
           draggable
@@ -132,6 +122,61 @@ const MapScreen = () => {
     }
     return <></>;
   };
+  const destinationLocationMarker = () => {
+    if (destinationLocation.description !== 'Current location') {
+      return (
+        <Marker
+          coordinate={destinationLocation.coordinates}
+          // coordinate={meetingLocation.coordinates}
+          pinColor="green"
+          draggable
+          onDragStart={(e) => {
+            console.log('Drag started. ', e.nativeEvent.coordinate);
+          }}
+          onDragEnd={(e) => {
+            setDestinationLocation({
+              coordinates: {
+                latitude: e.nativeEvent.coordinate.latitude,
+                longitude: e.nativeEvent.coordinate.longitude,
+              },
+              description: 'Dragged Pin',
+            });
+          }}
+        >
+          <Callout>
+            <Text>Im Here!</Text>
+          </Callout>
+        </Marker>
+      );
+    }
+    return <></>;
+  };
+  const notificationMarker = () => {
+    if (requestData) {
+      const latitude: number = Number(
+        getLatitude(requestData.request_meeting_point),
+      );
+      const longitude: number = Number(
+        getLongitude(requestData.request_meeting_point),
+      );
+      const coordinates = {
+        latitude,
+        longitude,
+      };
+      return (
+        <Marker
+          coordinate={coordinates}
+          // coordinate={meetingLocation.coordinates}
+          pinColor="green"
+        >
+          <Callout>
+            <Text>Im Here!</Text>
+          </Callout>
+        </Marker>
+      );
+    }
+    return <></>;
+  };
   return (
     <View style={styles.container}>
       <View style={styles.mapView}>
@@ -146,26 +191,15 @@ const MapScreen = () => {
           <Marker
             coordinate={currentLocation.coordinates}
             // coordinate={meetingLocation.coordinates}
-            pinColor="green"
-            draggable
-            onDragStart={(e) => {
-              console.log('Drag started. ', e.nativeEvent.coordinate);
-            }}
-            onDragEnd={(e) => {
-              setMeetingLocation({
-                coordinates: {
-                  latitude: e.nativeEvent.coordinate.latitude,
-                  longitude: e.nativeEvent.coordinate.longitude,
-                },
-                description: 'Dragged Pin',
-              });
-            }}
+            pinColor="red"
           >
             <Callout>
               <Text>Im Here!</Text>
             </Callout>
           </Marker>
           {notificationMarker()}
+          {meetingLocationMarker()}
+          {destinationLocationMarker()}
         </MapView>
       </View>
       <SearchBar
