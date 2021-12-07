@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 // eslint-disable-next-line no-use-before-define
 import React, { useContext, useState, useEffect } from 'react';
 import {
@@ -91,53 +92,67 @@ const ProfileScreen = () => {
     }
   };
   const getUserById = async (id: number): Promise<void | HttpResponse> => {
-    const res = await siriusFetch(
-      accessToken,
-      setAccessToken,
-      uid,
-      `${envs?.DEV_USER_SERVICE_URL}/${id}`,
-    );
-    console.log(res);
-    console.log('logging data');
-    setname(res?.data.first_name);
-    setlastname(res?.data.last_name);
-    setemail(res?.data.email);
-    setphone(res?.data.phone_number);
-    setbirth(res?.data.birth_date);
-    setprofilepic(res?.data.picture);
-    return res;
+    try {
+      const res = await siriusFetch(
+        accessToken,
+        setAccessToken,
+        uid,
+        `${envs?.DEV_USER_SERVICE_URL}/${id}`,
+      );
+      console.log(res);
+      console.log('logging data');
+      setname(res?.data.first_name);
+      setlastname(res?.data.last_name);
+      setemail(res?.data.email);
+      setphone(res?.data.phone_number);
+      setbirth(res?.data.birth_date);
+      setprofilepic(res?.data.picture);
+      return res;
+    } catch (e) {
+      console.log(e);
+    }
   };
   const getBuddyById = async (
     id: number,
   ): Promise<void | HttpResponse> => {
-    console.log('Trying to get buddy data');
-    const res = await siriusFetch(
-      accessToken,
-      setAccessToken,
-      uid,
-      `${envs?.DEV_BUDDY_SERVICE_URL}/buddy/user/${id}`,
-    );
-    console.log('logging buddy data to get bid');
-    console.log(res);
-    setbid(res?.data.b_id);
-    if (res?.data.is_active) {
-      setIsEnabled(true);
-    } else {
-      setIsEnabled(false);
+    try {
+      console.log('Trying to get buddy data');
+      const res = await siriusFetch(
+        accessToken,
+        setAccessToken,
+        uid,
+        `${envs?.DEV_BUDDY_SERVICE_URL}/buddy/user/${id}`,
+      );
+      console.log('logging buddy data to get bid');
+      console.log(res);
+      setbid(res?.data.b_id);
+      if (res?.data.is_active) {
+        setIsEnabled(true);
+      } else {
+        setIsEnabled(false);
+      }
+      return res;
+    } catch (e) {
+      console.log(e);
     }
-    return res;
   };
   const getProfilePictureById = async (
     id: number,
   ): Promise<void | HttpResponse> => {
-    console.log('Trying to get Prof Pic');
-    const res = await siriusFetch(
-      accessToken,
-      setAccessToken,
-      uid,
-      `${envs?.DEV_USER_SERVICE_URL}/profile/${id}`,
-    );
-    return res;
+    try {
+      console.log('Trying to get Prof Pic');
+      const res = await siriusFetch(
+        accessToken,
+        setAccessToken,
+        uid,
+        `${envs?.DEV_USER_SERVICE_URL}/profile/${id}`,
+      );
+      console.log('Logging Prof Pic');
+      console.log(res);
+      return res;
+    } catch (e) {
+      console.log(e);
+    }
   };
   const editBuddybyId = async (id: number) => {
     const endpoint = `${envs?.DEV_BUDDY_SERVICE_URL}/buddy/${id}`;
@@ -189,6 +204,7 @@ const ProfileScreen = () => {
   };
   useEffect(() => {
     getUserById(uid);
+    getProfilePictureById(uid);
     getUserVetting(uid);
     getBuddyById(uid);
   }, []);
@@ -203,7 +219,12 @@ const ProfileScreen = () => {
               }}
               size={85}
             />
-            <Image> source = {'/picture/${profilepic}'} </Image>
+            <Avatar.Image
+              source={{
+                uri: `https://${envs?.DEV_USER_SERVICE_URL}/picture/f8aa376551141aa338e3744f906ee2f4`,
+              }}
+              size={85}
+            />
             <View style={{ paddingLeft: '50%' }}>
               <TouchableOpacity onPress={() => setAccessToken('')}>
                 <Text style={styles.topbutton}>Signout</Text>
@@ -247,8 +268,8 @@ const ProfileScreen = () => {
               <View style={styles.profileInfo2}>
                 <Text style={styles.textinfo}>Phone:</Text>
                 <Text style={styles.textinfo}>
-                  {phone.substring(0, 3)}-{phone.substring(3, 6)}-
-                  {phone.substring(6)}
+                  {phone?.substring(0, 3)}-{phone?.substring(3, 6)}-
+                  {phone?.substring(6)}
                 </Text>
               </View>
               <View style={styles.profileInfo2}>
