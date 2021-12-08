@@ -59,9 +59,9 @@ const ProfileScreen = () => {
   const [birth, setbirth] = useState('00/00/0000');
   // eslint-disable-next-line no-unused-vars
   const [profilepic, setprofilepic] = useState('');
-  const [status, setstatus] = useState('In Review');
+  const [status, setstatus] = useState('Vetting In Review');
   const [bid, setbid] = useState(0);
-  const [vetting, setvetting] = useState('');
+  const [vetting, setvetting] = useState('Not Vetted');
   const [editstatus, seteditstatus] = useState(false);
   const { accessToken, setAccessToken, uid } = useContext(AuthContext);
   const editUserbyId = async () => {
@@ -132,6 +132,10 @@ const ProfileScreen = () => {
       } else {
         setIsEnabled(false);
       }
+      if (res?.success) {
+        setstatus('Buddy');
+        setvetting('Buddy | Requester');
+      }
       return res;
     } catch (e) {
       console.log(e);
@@ -195,9 +199,10 @@ const ProfileScreen = () => {
       console.log('logging isvetted data');
       console.log(res);
       if (res?.data.is_vetted) {
-        setstatus('Vetted');
-        setvetting('Buddy | Requester ');
+        setstatus('Not a Buddy');
+        setvetting('Requester');
       }
+
       return res;
     } catch (e) {
       console.log(e);
@@ -205,6 +210,8 @@ const ProfileScreen = () => {
     }
   };
   useEffect(() => {
+    console.log('showing uid');
+    console.log(uid);
     getUserById(uid);
     // getProfilePictureById(uid);
     getUserVetting(uid);
@@ -244,7 +251,10 @@ const ProfileScreen = () => {
                 <Text style={{ fontSize: 21, paddingTop: '5%' }}>
                   Status:
                 </Text>
-                {status !== 'In Review' ? (
+                {status === 'Vetting In Review' ||
+                status === 'Not a Buddy' ? (
+                  <Text style={styles.textinfo}>{status}</Text>
+                ) : (
                   <Switch
                     trackColor={{ false: '#767577', true: mainPurple }}
                     thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
@@ -252,8 +262,6 @@ const ProfileScreen = () => {
                     value={isEnabled}
                     style={{ paddingLeft: '23%' }}
                   />
-                ) : (
-                  <Text style={styles.textinfo}>{status}</Text>
                 )}
               </View>
               <View style={styles.profileInfo2}>
