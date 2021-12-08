@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Dimensions, StyleSheet, Text } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
+import Constants from 'expo-constants';
 import SearchBar from '../../components/SearchBar';
 import { getlocation } from '../../services/locationService';
 import { siriusFetch } from '../../services/httpService';
@@ -50,7 +51,9 @@ const MapScreen = () => {
   // console.log('DL', destinationLocation);
 
   useEffect(() => {
-    LocationHandler();
+    if (Constants.isDevice) {
+      LocationHandler();
+    }
   });
   const LocationHandler = async () => {
     // eslint-disable-next-line camelcase
