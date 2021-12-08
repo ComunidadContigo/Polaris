@@ -93,7 +93,9 @@ const RequestDetailsScreen = (props: Props) => {
             </View>
             {isRequester() ? (
               <View style={styles.profileInfo}>
-                <Text>{notificationContext.buddyInfo?.first_name}</Text>
+                <Text>
+                  {notificationContext.requesterInfo?.first_name}
+                </Text>
                 <Text>
                   Lat:
                   {getLatitude(meetingCoordinates)}
@@ -102,7 +104,7 @@ const RequestDetailsScreen = (props: Props) => {
                   Lon:
                   {getLongitude(meetingCoordinates)}
                 </Text>
-                <Text>{notificationContext.buddyInfo?.gender}</Text>
+                <Text>{notificationContext.requesterInfo?.gender}</Text>
               </View>
             ) : (
               <View style={styles.profileInfo}>
