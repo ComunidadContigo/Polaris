@@ -57,6 +57,7 @@ const ProfileScreen = () => {
   const [email, setemail] = useState('place@holder.com');
   const [phone, setphone] = useState('000000000');
   const [birth, setbirth] = useState('00/00/0000');
+  // eslint-disable-next-line no-unused-vars
   const [profilepic, setprofilepic] = useState('');
   const [status, setstatus] = useState('In Review');
   const [bid, setbid] = useState(0);
@@ -136,6 +137,7 @@ const ProfileScreen = () => {
       console.log(e);
     }
   };
+  // eslint-disable-next-line no-unused-vars
   const getProfilePictureById = async (
     id: number,
   ): Promise<void | HttpResponse> => {
@@ -204,7 +206,7 @@ const ProfileScreen = () => {
   };
   useEffect(() => {
     getUserById(uid);
-    getProfilePictureById(uid);
+    // getProfilePictureById(uid);
     getUserVetting(uid);
     getBuddyById(uid);
   }, []);
@@ -216,12 +218,6 @@ const ProfileScreen = () => {
             <Avatar.Image
               source={{
                 uri: 'https://randomuser.me/api/portraits/lego/1.jpg',
-              }}
-              size={85}
-            />
-            <Avatar.Image
-              source={{
-                uri: `https://${envs?.DEV_USER_SERVICE_URL}/picture/f8aa376551141aa338e3744f906ee2f4`,
               }}
               size={85}
             />
