@@ -95,7 +95,7 @@ export const registerForPushNotificationsAsync = async (
       console.log(e);
     }
   } else {
-    Alert.alert('Must use physical device for Push Notifications');
+    // Alert.alert('Must use physical device for Push Notifications');
   }
 
   if (Platform.OS === 'android') {
