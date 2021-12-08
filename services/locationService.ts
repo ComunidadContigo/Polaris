@@ -1,5 +1,5 @@
 import * as expoLocation from 'expo-location';
-import { Location } from '../models/Location';
+import { Location } from '../models/Location.model';
 
 export const getlocation = async () => {
   const { status } =

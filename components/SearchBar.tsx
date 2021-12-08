@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import PlacesSearchBar from './PlacesSearchBar';
 import SelectedLocation from './SelectedLocation';
 import Button from './Button';
-import { Location } from '../models/Location';
+import { Location } from '../models/Location.model';
 import { createRequest } from '../services/Buddy/index';
 import { AuthContext, NotificationContext } from './context';
 import { RequestDetails } from './RequestDetails';

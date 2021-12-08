@@ -3,14 +3,13 @@ import { View, Dimensions, StyleSheet, Text } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import SearchBar from '../../components/SearchBar';
 import { getlocation } from '../../services/locationService';
-// import { Location } from '../../models/location';
 import { siriusFetch } from '../../services/httpService';
 import envs from '../../config/environment';
 import {
   AuthContext,
   NotificationContext,
 } from '../../components/context';
-import { Location } from '../../models/Location';
+import { Location } from '../../models/Location.model';
 import { combineCoordinates } from '../../services/Buddy/common/functions';
 import {
   getLatitude,
