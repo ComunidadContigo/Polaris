@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useRef, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import envs from '../config/environment';
-import { Location } from '../models/Location';
+import { Location } from '../models/Location.model';
 
 interface Props {
   currentPin: { latitude: number; longitude: number };
