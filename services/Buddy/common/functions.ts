@@ -1,4 +1,4 @@
-import { Location } from '../../../models/Location';
+import { Location } from '../../../models/Location.model';
 
 /* eslint-disable arrow-body-style */
 export const combineCoordinates = (location: Location): string => {

@@ -1,0 +1,11 @@
+/* eslint-disable no-undef */
+import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
+
+jest.mock(
+  '@react-native-async-storage/async-storage',
+  () => mockAsyncStorage,
+);
+
+jest.mock('react-native-vector-icons/MaterialIcons', () => 'Icon');
+jest.mock('react-native-vector-icons/FontAwesome', () => 'Icon');
+jest.mock('react-native-vector-icons/EvilIcons', () => 'Icon');

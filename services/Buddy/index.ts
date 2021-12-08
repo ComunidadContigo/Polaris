@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { Location } from '../../models/Location';
+import { Location } from '../../models/Location.model';
 import envs from '../../config/environment';
 import { siriusFetch } from '../httpService';
 import { ReqModel, RequestSettings } from '../../models/request.model';

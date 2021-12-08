@@ -32,8 +32,8 @@ export const sendRequestToFulfillNotification = async () => {
     r_id: 1,
     rq_id: 73,
     stat: 'UNFULFILLED',
-    request_meeting_point: '(18.243476957782352, -67.1633418799035)',
-    request_destination: '(18.443006, -67.140674)',
+    request_meeting_point: '(-67.1633418799035, 18.243476957782352)',
+    request_destination: '(-67.140674, 18.443006)',
   };
   const content: Notifications.NotificationContentInput = {
     title: 'Someone could use a Buddy',
